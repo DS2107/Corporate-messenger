@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Corporate_messenger.Views.ChatsListPage" Title="Сообщения" IconImageSource="chat1.png" Shell.BackgroundColor="#0E0915" Shell.TitleColor="Wheat">
+    <AbsoluteLayout >
+        <ListView 
+                AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
+                IsPullToRefreshEnabled="True"
+                RefreshControlColor="DarkSeaGreen"
+                RefreshCommand="{Binding RefreshCommand}"
+                   x:Name="MyListView"
+                   Margin="0"
+                   RowHeight="80"
+                   SeparatorColor="DarkGray"
+                   BackgroundColor="Transparent"
+                   ItemsSource="{Binding Items}"
+                   ItemTapped="Handle_ItemTapped"
+                   CachingStrategy="RecycleElement" >
+
+            <ListView.ItemTemplate>
+                <DataTemplate >
+                    <ViewCell >
+                        <Frame x:Name="Frame1"  Margin="0" Padding="0" >
+                            <FlexLayout Direction="Row" JustifyContent="SpaceAround"  Margin="0,0,0,0" AlignItems="Center" BackgroundColor="Transparent">
+
+                                <RelativeLayout x:Name="RlB"  HorizontalOptions="Center" VerticalOptions="Center"  >
+                                    <Image Source="{Binding Image}"  Aspect="AspectFill" 
+                                           WidthRequest="60"   
+                                           HeightRequest="60"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center">
+                                        <Image.Clip >
+                                            <EllipseGeometry
+                                            
+                                            Center="30,30"
+                                            RadiusX="30"
+                                            RadiusY="30"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </RelativeLayout>
+                                <RelativeLayout  FlexLayout.AlignSelf="Center" WidthRequest="270">
+                                    <StackLayout>
+                                        <Label x:Name="LabelAvtor" Text="{Binding Avtor}" TextColor="Black" FontSize="16"/>
+                                        <Label Text="Lorem ipsum dolor sit amet, consectetur." TextColor="#556271"/>
+                                    </StackLayout>
+
+                                </RelativeLayout>
+                                <StackLayout >
+
+                                    <Label HorizontalTextAlignment="End" Text="16:40" TextColor="#556271"/>
+
+                                    <Frame CornerRadius="10"
+                                       WidthRequest="20"
+                                       OutlineColor="Red" 
+                                       Padding="0">
+                                        <Label HorizontalTextAlignment="Center" Text="1" TextColor="#556271" >
+
+                                        </Label>
+                                    </Frame>
+
+
+
+                                </StackLayout>
+
+                            </FlexLayout>
+
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+        <ImageButton x:Name="New_message" Source="new_message2.png" 
+            BackgroundColor="Transparent"
+            AbsoluteLayout.LayoutFlags="PositionProportional"  
+            AbsoluteLayout.LayoutBounds=".95,.97,60,60" 
+            />
+    </AbsoluteLayout>
+</ContentPage>
