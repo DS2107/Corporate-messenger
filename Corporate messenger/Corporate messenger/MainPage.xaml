@@ -2,13 +2,19 @@
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:local="clr-namespace:Corporate_messenger.Views"
-             x:Class="Corporate_messenger.MainPage">
+             x:Class="Corporate_messenger.MainPage"
+      
+       FlyoutBackgroundImageAspect="AspectFill"
+    
+       >
 
 
     <Tab x:Name="LoginShell" >
         <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"/>
     </Tab>
-    <FlyoutItem   Route="chats_list" Title="Сообщения"
+   
+    
+    <FlyoutItem   Route="chats_list" Title="Сообщения" 
                 Icon="messageTitle.png" >
         <Tab>
             <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
@@ -26,7 +32,33 @@
             <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
         </Tab>
     </FlyoutItem>
-   
+    <FlyoutItem Title="Настройки"
+                Icon="Settings.png">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:Settings}" />
+        </Tab>
+    </FlyoutItem>
+    
+    <!--<Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid  ColumnDefinitions="0.2*,0.8*">
+                <Image Source="{Binding FlyoutIcon}"
+                       Margin="10,10,0,0"
+                       HeightRequest="30"
+                      
+                       />
+                <Label
+                    
+                    Grid.Column="1"
+                       FontSize="16"
+                       Margin="0,10,0,0"
+                       Text="{Binding Title}"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>-->
+
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
             <Grid BackgroundColor="black"   HeightRequest="170">
@@ -59,6 +91,8 @@
             </Grid>
         </DataTemplate>
     </Shell.FlyoutHeaderTemplate>
+   
+
 
 
 
