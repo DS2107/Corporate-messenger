@@ -17,7 +17,7 @@ namespace Corporate_messenger.Views
        
         string image1 = "";
         string title1 = "";
-        List<Chat> dsfdsf = new List<Chat>();
+        List<ChatModel> dsfdsf = new List<ChatModel>();
 
         public ChatPage(string title, string image)
         {
@@ -29,8 +29,8 @@ namespace Corporate_messenger.Views
              // mat = "Red";
              image1 = image;
             title1 = title;
-            dsfdsf = new Chat().GetMessages(image, title);         
-            MyListView.ItemsSource = new Chat().GetMessages(image, title);
+            dsfdsf = new ChatModel().GetMessages(image, title);         
+            MyListView.ItemsSource = new ChatModel().GetMessages(image, title);
             Title = title;
         }
 
@@ -39,7 +39,7 @@ namespace Corporate_messenger.Views
             throw new NotImplementedException();
         }
 
-        Chat c = new Chat();
+        ChatModel c = new ChatModel();
         private void send_message_Clicked(object sender, EventArgs e)
         {
             MyListView.ItemsSource = null;

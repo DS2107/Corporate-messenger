@@ -16,7 +16,7 @@ namespace Corporate_messenger.Views
         private bool back = true;
       
         //Список сообщений 
-        public List<Message> messages { get; set; }
+        public List<ChatListModel> messages { get; set; }
 
         public ChatsListPage()
         {
@@ -42,19 +42,19 @@ namespace Corporate_messenger.Views
                 MyListView.IsRefreshing = false;
             });
             // Заполнение списка
-            messages = new List<Message>
+            messages = new List<ChatListModel>
             {
-                new Message {Image="logan.jpg", Avtor="Нач",Id=1 },
-                new Message {Image="ge.jpg", Avtor="Таня",Id=2 },
-                new Message {Image="women.jpg", Avtor="Ваня",Id=3},
-                new Message {Image="teacher.png", Avtor="Даня",Id=4 },
-                new Message {Image="child.png",Avtor="Саня",Id=5 },
-                new Message {Image="anon.jpg", Avtor="Анонимус",Id=6 },
-                new Message {Image="enot.jpg", Avtor="Енот",Id=7 },
-                new Message {Image="kot.jpg", Avtor="Кот",Id=8 },
-                new Message {Image="kot3.jpg", Avtor="Страшный кот",Id=9 },
-                new Message {Image="chel.jpg", Avtor="Бухгалтер",Id=10 },
-                new Message {Image="wolf.jpg", Avtor="Друган",Id=11 }
+                new ChatListModel {Image="logan.jpg", Avtor="Нач",Id=1 },
+                new ChatListModel {Image="ge.jpg", Avtor="Таня",Id=2 },
+                new ChatListModel {Image="women.jpg", Avtor="Ваня",Id=3},
+                new ChatListModel {Image="teacher.png", Avtor="Даня",Id=4 },
+                new ChatListModel {Image="child.png",Avtor="Саня",Id=5 },
+                new ChatListModel {Image="anon.jpg", Avtor="Анонимус",Id=6 },
+                new ChatListModel {Image="enot.jpg", Avtor="Енот",Id=7 },
+                new ChatListModel {Image="kot.jpg", Avtor="Кот",Id=8 },
+                new ChatListModel {Image="kot3.jpg", Avtor="Страшный кот",Id=9 },
+                new ChatListModel {Image="chel.jpg", Avtor="Бухгалтер",Id=10 },
+                new ChatListModel {Image="wolf.jpg", Avtor="Друган",Id=11 }
             };
 
             // Заполняем список
@@ -67,7 +67,7 @@ namespace Corporate_messenger.Views
             if (e.Item == null)
                 return;
 
-            var v = (Message)e.Item;
+            var v = (ChatListModel)e.Item;
             // await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
             var i = v.Id;
            await Navigation.PushAsync(new ChatPage(v.Avtor, v.Image));

@@ -16,7 +16,7 @@
                 PlaceholderColor="#f1f1f1" 
                 Text="{Binding Path=Login}">
                 <Entry.BindingContext>
-                    <local:LogUser/>
+                    <local:LoginModel/>
                 </Entry.BindingContext>
             </Entry>
                     
@@ -26,7 +26,7 @@
                    PlaceholderColor="#f1f1f1" 
                    Text="{Binding Path=Pass}">
                 <Entry.BindingContext>
-                    <local:LogUser/>
+                    <local:LoginModel/>
                 </Entry.BindingContext>
             </Entry>
 

@@ -11,7 +11,7 @@ namespace Corporate_messenger.Service
         public DataTemplate ToTemplate { get; set; }
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
-            return ((Models.Chat)item).status.ToUpper().Equals("SENT") ? FromTemplate : ToTemplate;
+            return ((Models.ChatModel)item).status.ToUpper().Equals("SENT") ? FromTemplate : ToTemplate;
         }
     }
 }

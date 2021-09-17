@@ -6,8 +6,9 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
-    class LogUser:INotifyPropertyChanged
+    class LoginModel:INotifyPropertyChanged
     {
+        
         private static string email { get; set; }
 
         private static string password { get; set; }
@@ -19,7 +20,9 @@ namespace Corporate_messenger.Models
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
+        /// <summary>
+        /// Логин пользователя
+        /// </summary>
         [JsonProperty("email")]
         public string Login
         {
@@ -33,6 +36,9 @@ namespace Corporate_messenger.Models
                 }
             }
         }
+        /// <summary>
+        /// Пароль пользователя
+        /// </summary>
         [JsonProperty("password")]
         public string Pass
         {

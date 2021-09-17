@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
-    public class Message
+    public class ChatListModel
     {
         public string Image { get; set; }
         public string Avtor { get; set; }

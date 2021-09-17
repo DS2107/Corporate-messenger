@@ -15,7 +15,9 @@ namespace Corporate_messenger.ViewModels
 {
     public class LoginViewModel
     {
-
+        /// <summary>
+        /// Команда для кнопки авторизации
+        /// </summary>
         public ICommand AuthorizationUserCommand { get; set; }
 
         /// <summary>
@@ -23,6 +25,7 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public LoginViewModel()
         {
+            // Регестрирую команду для кнопки на LoginPage
             AuthorizationUserCommand = new Command(AuthorizationUserAsync);
            
         }
@@ -36,58 +39,77 @@ namespace Corporate_messenger.ViewModels
             await Shell.Current.GoToAsync("//chats_list", true);
         }
 
+        
         private void AuthorizationUserAsync(object obj)
         {
             _ = AuthorizationUserAsync();
         }
 
+        /// <summary>
+        /// Метод для отправки данных о авторизации пользователя
+        /// </summary>
+        /// <returns></returns>
         private async Task AuthorizationUserAsync( )
         {
-            LogUser log = new LogUser();
-            
-           // var lo = log.Login;
-           // var pa = log.Pass;
+            // Модель авторизации
+            LoginModel log = new LoginModel();
 
-            // токен юзера который мы получим при успешной авторизации
-            string UserToken = "";
+            // Модель спец данных
+            SpecialDataModel specialData = new SpecialDataModel();
 
-            //ЛОГИРОВАНИЕ**********
+            // Данные о пользователе которые пришли с сервера в случае удачной авторизации
+            UserDataModel userdata = null;
+           
+
+            //********** ЛОГИРОВАНИЕ **********
             // Перед отправкой , превращаем все в json
             string jsonLog = JsonConvert.SerializeObject(log);
+            
+            // Устанавливаем соеденение 
             HttpClient client = new HttpClient();
-            var contentType = "application/json"; //May vary based on your app
-            var httpMethod = HttpMethod.Post; //or Get, or whatever HTTP verb your API endpoint needs
+
+            // Тип данных который мы принимаем от сервера 
+            var contentType = "application/json"; 
+
+            // Тип Запроса
+            var httpMethod = HttpMethod.Post; 
             var request = new HttpRequestMessage()
             {
                 RequestUri = new Uri("http://192.168.0.105:8098/api/login"),
                 Method = httpMethod,
                 Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
             };
+            // Отправка данных авторизации
             var httpResponse = await client.SendAsync(request);
+
+            // Ответ от сервера 
             var contenJSON = await httpResponse.Content.ReadAsStringAsync();
 
-            //РАСШИФРОВКА ОТВЕТА******
-            JObject a = JObject.Parse(contenJSON);
-            UserData userdata = null;
-            string status = "";
-            foreach (var o in a)
+            //****** РАСШИФРОВКА_ОТВЕТА ******
+            JObject contentJobjects = JObject.Parse(contenJSON);
+    
+            foreach (var KeyJobject in contentJobjects)
             {
-                if (o.Key == "status")
+                if (KeyJobject.Key == "status")
                 {
-                    var s = JsonConvert.SerializeObject(o.Value);
-                    status = JsonConvert.DeserializeObject<string>(s);
+                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                    if (JsonConvert.DeserializeObject<string>(ValueJobject) == "true")
+                        specialData.Status = true;
+                    else
+                        specialData.Status = false;
+                 
                 }
-                if (status == "true")
+                if (specialData.Status)
                 {
-                    if (o.Key == "user")
+                    if (KeyJobject.Key == "user")
                     {
-                        var s = JsonConvert.SerializeObject(o.Value);
-                        userdata = JsonConvert.DeserializeObject<UserData>(s);
+                        var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                        userdata = JsonConvert.DeserializeObject<UserDataModel>(ValueJobject);
                     }
-                    if (o.Key == "token")
+                    if (KeyJobject.Key == "token")
                     {
-                        var s = JsonConvert.SerializeObject(o.Value);
-                        UserToken = JsonConvert.DeserializeObject<string>(s);
+                        var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                        specialData.Token = JsonConvert.DeserializeObject<string>(ValueJobject);
                     }
                 }
                 else
@@ -97,11 +119,11 @@ namespace Corporate_messenger.ViewModels
 
 
             }
-
-          
-
+            
+          if(specialData.Token != "" || specialData.Status)
             _ = GoChatListPageAsync();
-
+          
+                
 
         }
 
