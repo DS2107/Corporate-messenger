@@ -13,7 +13,8 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatPage : ContentPage
     {
-
+      //  public string mat { get { return mat; } set  { mat = "Red"; } }
+       
         string image1 = "";
         string title1 = "";
         List<Chat> dsfdsf = new List<Chat>();
@@ -21,11 +22,21 @@ namespace Corporate_messenger.Views
         public ChatPage(string title, string image)
         {
             InitializeComponent();
-            image1 = image;
+         
+         
+
+          //  Shell.SetBackgroundColor(this, value);
+             // mat = "Red";
+             image1 = image;
             title1 = title;
             dsfdsf = new Chat().GetMessages(image, title);         
             MyListView.ItemsSource = new Chat().GetMessages(image, title);
             Title = title;
+        }
+
+        private void SetTitleColor(ChatPage chatPage, Color red)
+        {
+            throw new NotImplementedException();
         }
 
         Chat c = new Chat();

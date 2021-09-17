@@ -16,6 +16,8 @@ namespace Corporate_messenger
         {
             InitializeComponent();
             OnAppearing();
+          
+            
            // SetPhotoAsync();
 
 

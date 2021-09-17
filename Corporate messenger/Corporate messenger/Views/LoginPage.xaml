@@ -11,7 +11,7 @@
             <Entry 
                 x:Name="UsernameTxt"
                 Placeholder="Username" PlaceholderColor="#f1f1f1"/>
-            <Entry Placeholder="Password" IsPassword="True" PlaceholderColor="#f1f1f1"/>
+            <Entry Placeholder="Password" x:Name="Pass" IsPassword="True" PlaceholderColor="#f1f1f1"/>
 
             <Button Text="Login"
                    x:Name="B_login"

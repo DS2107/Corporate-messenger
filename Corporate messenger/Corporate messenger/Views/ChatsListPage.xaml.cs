@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,14 +14,16 @@ namespace Corporate_messenger.Views
     public partial class ChatsListPage : ContentPage
     {
         private bool back = true;
-
+      
         //Список сообщений 
         public List<Message> messages { get; set; }
 
         public ChatsListPage()
         {
             InitializeComponent();
-
+           // var i = Preferences.Get("Image", Color.BlueViolet.ToString());
+           // var color = ;
+           // Shell.SetBackgroundColor(this, Color.FromHex(i as string));
             // Обновление списка
             MyListView.RefreshCommand = new Command(() =>
             {
