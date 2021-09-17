@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
-    public class LogUser:INotifyPropertyChanged
+    class LogUser:INotifyPropertyChanged
     {
-        public static string email { get; set; }
+        private static string email { get; set; }
 
-        public static string password { get; set; }
+        private static string password { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
       
