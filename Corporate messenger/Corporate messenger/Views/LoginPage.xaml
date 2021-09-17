@@ -1,23 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Models"
              Title="Login"
              BackgroundColor="CornflowerBlue"
              Shell.NavBarIsVisible="False"
              x:Class="Corporate_messenger.Views.LoginPage">
-    <ContentPage.Content>
-        <StackLayout Margin="50,15" VerticalOptions="Center" Spacing="12">
+    
+            <ContentPage.Content>
+        
+                <StackLayout Margin="50,15" VerticalOptions="Center" Spacing="12">
             <!-- 1. clear button -->
             <Entry 
-                x:Name="UsernameTxt"
-                Placeholder="Username" PlaceholderColor="#f1f1f1"/>
-            <Entry Placeholder="Password" x:Name="Pass" IsPassword="True" PlaceholderColor="#f1f1f1"/>
+                   x:Name="UsernameTxt"
+                   Placeholder="Username" 
+                PlaceholderColor="#f1f1f1" 
+                Text="{Binding Path=Login}">
+                <Entry.BindingContext>
+                    <local:LogUser/>
+                </Entry.BindingContext>
+            </Entry>
+                    
+            <Entry Placeholder="Password" 
+                   x:Name="Pass" 
+                   IsPassword="True" 
+                   PlaceholderColor="#f1f1f1" 
+                   Text="{Binding Path=Pass}">
+                <Entry.BindingContext>
+                    <local:LogUser/>
+                </Entry.BindingContext>
+            </Entry>
 
             <Button Text="Login"
-                   x:Name="B_login"
+                    x:Name="B_login"
                     BackgroundColor="Blue"
                     TextColor="White"
-                    Clicked="B_login_Clicked"
+                  
+                    Command="{Binding AuthorizationUserCommand}"
+                    CommandParameter="{Binding}"
                     />
 
             <!-- 2. Register -->

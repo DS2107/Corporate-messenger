@@ -20,7 +20,7 @@ namespace Corporate_messenger.Views
         private void UpdateImageFly_Clicked(object sender, EventArgs e)
         {
 
-            SetPhotoAsync();
+            _ = SetPhotoAsync();
         }
 
         public async Task SetPhotoAsync()
