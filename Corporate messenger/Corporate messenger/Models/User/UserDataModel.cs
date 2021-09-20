@@ -9,7 +9,7 @@ namespace Corporate_messenger.Models
     class UserDataModel: INotifyPropertyChanged
     {
 
-        private static string id { get; set; }
+        private static int id { get; set; }
 
         private static string usernmae { get; set; }
 
@@ -29,7 +29,7 @@ namespace Corporate_messenger.Models
         /// ID пользователя
         /// </summary>
         [JsonProperty("id")]
-        public string Id
+        public int Id
         {
             get { return id; }
             set

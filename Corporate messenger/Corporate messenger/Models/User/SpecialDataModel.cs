@@ -12,6 +12,8 @@ namespace Corporate_messenger.Models
 
         private static string  token { get; set; }
 
+        private static int id { get; set; }
+
         /// <summary>
         /// Статус пользователя
         /// </summary>
@@ -41,6 +43,24 @@ namespace Corporate_messenger.Models
                 {
                     token = value;
                     OnPropertyChanged("Token");
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Токен пользователя
+        /// </summary>
+        [JsonProperty("id")]
+        public int Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged("Id");
                 }
             }
         }

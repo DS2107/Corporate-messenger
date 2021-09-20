@@ -51,6 +51,7 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         private async Task AuthorizationUserAsync( )
         {
+            
             // Модель авторизации
             LoginModel log = new LoginModel();
 
@@ -105,6 +106,7 @@ namespace Corporate_messenger.ViewModels
                     {
                         var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                         userdata = JsonConvert.DeserializeObject<UserDataModel>(ValueJobject);
+                        specialData.Id = userdata.Id;
                     }
                     if (KeyJobject.Key == "token")
                     {

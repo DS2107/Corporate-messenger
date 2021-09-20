@@ -1,14 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:local="clr-namespace:Corporate_messenger.Views"
-             x:Class="Corporate_messenger.MainPage"
-      
-       FlyoutBackgroundImageAspect="AspectFill"
-    
-       >
-
-
+             xmlns:local="clr-namespace:Corporate_messenger.Views"
+             x:Class="Corporate_messenger.MainPage"      
+             FlyoutBackgroundImageAspect="AspectFill" >
     <Tab x:Name="LoginShell" >
         <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"/>
     </Tab>
@@ -23,7 +18,7 @@
     <FlyoutItem Title="Создать группу"
                 Icon="createGroupTitle.png">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:CreateGroupPage}" />
         </Tab>
     </FlyoutItem>
     <FlyoutItem Title="Звонки"
