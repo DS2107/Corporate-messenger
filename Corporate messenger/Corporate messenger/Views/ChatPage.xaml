@@ -96,7 +96,7 @@
                     <ColumnDefinition Width="60" />
                 </Grid.ColumnDefinitions>
                 <Editor x:Name="MessageEditor" Placeholder="Введите сообщение..." AutoSize="TextChanges"   HorizontalOptions="FillAndExpand"></Editor>
-                <ImageButton Source="send_message.png" Grid.Row="0" Grid.Column="1" BackgroundColor="Transparent" WidthRequest="60" HeightRequest="60" x:Name="send_message" Clicked="send_message_Clicked"/>
+                <ImageButton Source="send_message.png" Grid.Row="0" Grid.Column="1" BackgroundColor="Transparent" WidthRequest="60" HeightRequest="60" x:Name="send_message" />
             </Grid>
 
 

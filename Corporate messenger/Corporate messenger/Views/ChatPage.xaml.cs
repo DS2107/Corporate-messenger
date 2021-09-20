@@ -13,25 +13,12 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatPage : ContentPage
     {
-      //  public string mat { get { return mat; } set  { mat = "Red"; } }
-       
-        string image1 = "";
-        string title1 = "";
-        List<ChatModel> dsfdsf = new List<ChatModel>();
+     
 
-        public ChatPage(string title, string image)
+        public ChatPage()
         {
             InitializeComponent();
-         
-         
 
-          //  Shell.SetBackgroundColor(this, value);
-             // mat = "Red";
-             image1 = image;
-            title1 = title;
-            dsfdsf = new ChatModel().GetMessages(image, title);         
-            MyListView.ItemsSource = new ChatModel().GetMessages(image, title);
-            Title = title;
         }
 
         private void SetTitleColor(ChatPage chatPage, Color red)
@@ -39,19 +26,7 @@ namespace Corporate_messenger.Views
             throw new NotImplementedException();
         }
 
-        ChatModel c = new ChatModel();
-        private void send_message_Clicked(object sender, EventArgs e)
-        {
-            MyListView.ItemsSource = null;
-
-            MyListView.ItemsSource = c.SendMessage(MessageEditor.Text, title1, dsfdsf, image1);
-            MessageEditor.Text = "";
-            object d = 0;
-            foreach (var s in MyListView.ItemsSource)
-            {
-                d = s;
-            }
-            MyListView.ScrollTo(d, ScrollToPosition.End, true);
-        }
+       
     }
+    
 }

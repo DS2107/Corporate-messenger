@@ -24,7 +24,7 @@ namespace Corporate_messenger
         }
         protected override void OnAppearing()
         {
-            var ImageFly = Preferences.Get("ImageFly", "enot.jpg");
+            var ImageFly = Preferences.Get("ImageFly", "");
             FlyoutBackgroundImage = ImageFly;
             base.OnAppearing();
 
