@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
+    [Table("ChatList")]
     public class ChatListModel: INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -22,6 +24,7 @@ namespace Corporate_messenger.Models
         /// ID пользователя 
         /// </summary>
         [JsonProperty("id")]
+        [PrimaryKey, AutoIncrement, Column("_id")]
         public int Id
         {
             get { return id; }

@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Text;
@@ -36,10 +37,37 @@ namespace Corporate_messenger.ViewModels
             }
         }
         SpecialDataModel user = new SpecialDataModel();
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
         public ChatListViewModel()
         {
+            chatList = App.Database.GetItems();
            _ = SendToken_GetChatsAsync();
+            ChatList.CollectionChanged += ChatList_CollectionChanged;
         }
+
+        private void ChatList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
+        {
+            switch (args.Action)
+            {
+                case NotifyCollectionChangedAction.Add: // если добавление
+                    ChatListModel newUser = args.NewItems[0] as ChatListModel;
+                    
+                    break;
+                case NotifyCollectionChangedAction.Remove: // если удаление
+                    ChatListModel oldUser = args.OldItems[0] as ChatListModel;
+                  
+                    break;
+                case NotifyCollectionChangedAction.Replace: // если замена
+                    ChatListModel replacedUser = args.OldItems[0] as ChatListModel;
+                    ChatListModel replacingUser = args.NewItems[0] as ChatListModel;
+                 
+                    break;
+            }
+        }
+
         /// <summary>
         /// ОТправить токен и получить Чаты
         /// </summary>
@@ -76,9 +104,17 @@ namespace Corporate_messenger.ViewModels
                 {
                     var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                     ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
-
+                   
                 }
             }
+
+                   
+            // Добавить в базу последние элементы
+            foreach (var item in ChatList)
+            {
+                App.Database.SaveItem(item);
+            }
+           
         }
     }
 }
