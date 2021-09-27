@@ -59,14 +59,14 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client">
-      <Version>5.0.10</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.8.116</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.WebSockets.Client">
+      <Version>4.3.2</Version>
     </PackageReference>
     <PackageReference Include="TinyAccountManager">
       <Version>1.0.9</Version>

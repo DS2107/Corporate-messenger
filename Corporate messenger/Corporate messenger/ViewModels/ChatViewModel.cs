@@ -1,143 +1,31 @@
-﻿using Corporate_messenger.Models.Chat;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Diagnostics;
+using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Forms;
+
+
 
 namespace Corporate_messenger.ViewModels
 {
-    class ChatViewModel : INotifyPropertyChanged
+    class ChatViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-        HubConnection hubConnection;
-
-        public string UserName { get; set; }
-        public string Message { get; set; }
-        // список всех полученных сообщений
-        public ObservableCollection<ChatModel> Messages { get; }
-        public Command SendMessageCommand { get; }
-        // идет ли отправка сообщений
-        bool isBusy;
-        public bool IsBusy
-        {
-            get => isBusy;
-            set
-            {
-                if (isBusy != value)
-                {
-                    isBusy = value;
-                    OnPropertyChanged("IsBusy");
-                }
-            }
-        }
-        // осуществлено ли подключение
-        bool isConnected;
-        public bool IsConnected
-        {
-            get => isConnected;
-            set
-            {
-                if (isConnected != value)
-                {
-                    isConnected = value;
-                    OnPropertyChanged("IsConnected");
-                }
-            }
-        }
-        // команда отправки сообщений
-    
-
-
+        ClientWebSocket client = new ClientWebSocket();
         public ChatViewModel()
         {
-            // создание подключения
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl("http://192.168.0.103:3000/chat")
-                .Build();
-
-            Messages = new ObservableCollection<ChatModel>();
-
-            IsConnected = false;    // по умолчанию не подключены
-            IsBusy = false;         // отправка сообщения не идет
-
-            SendMessageCommand = new Command(async () => await SendMessage(), () => IsConnected);
-
-            hubConnection.Closed += async (error) =>
-            {
-                SendLocalMessage(String.Empty, "Подключение закрыто...");
-                IsConnected = false;
-                await Task.Delay(5000);
-                await Connect();
-            };
-
-            hubConnection.On<string, string>("Receive", (user, message) =>
-            {
-                SendLocalMessage(user, message);
-            });
+            ConnectToServerAsync();
         }
-
-        // подключение к чату
-        public async Task Connect()
+        async void ConnectToServerAsync()
         {
-            if (IsConnected)
-                return;
-            try
-            {
-                await hubConnection.StartAsync();
-                SendLocalMessage(String.Empty, "Вы вошли в чат...");
-
-                IsConnected = true;
-            }
-            catch (Exception ex)
-            {
-                SendLocalMessage(String.Empty, $"Ошибка подключения: {ex.Message}");
-            }
-        }
-        // Отключение от чата
-        public async Task Disconnect()
-        {
-            if (!IsConnected)
-                return;
-
-            await hubConnection.StopAsync();
-            IsConnected = false;
-            SendLocalMessage(String.Empty, "Вы покинули чат...");
-        }
-
-        // Отправка сообщения
-        async Task SendMessage()
-        {
-            try
-            {
-                IsBusy = true;
-                await hubConnection.InvokeAsync("Send", UserName, Message);
-            }
-            catch (Exception ex)
-            {
-                SendLocalMessage(String.Empty, $"Ошибка отправки: {ex.Message}");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-        // Добавление сообщения
-        private void SendLocalMessage(string user, string message)
-        {
-            Messages.Insert(0, new ChatModel
-            {
-                Message = message,
-                User = user
-            });
+            await client.ConnectAsync(new Uri("ws://192.168.0.105:6001/app/ABCDEFG"), CancellationToken.None);
+            var data = "Helo";
+            var encoder = Encoding.UTF8.GetBytes(data);
+            var buffer = new ArraySegment<Byte>(encoder, 0, encoder.Length);
+            await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+            //client.Abort();
         }
     }
 }

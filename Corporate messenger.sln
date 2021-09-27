@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corporate messenger.Android
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corporate messenger.iOS", "Corporate messenger\Corporate messenger.iOS\Corporate messenger.iOS.csproj", "{DCFC935C-BA51-4A2A-B327-41D3271DB626}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Corporate messenger", "Corporate messenger\Corporate messenger\Corporate messenger.csproj", "{4FAF65BC-354E-40CF-A2A6-411014A28FD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Corporate messenger", "Corporate messenger\Corporate messenger\Corporate messenger.csproj", "{4FAF65BC-354E-40CF-A2A6-411014A28FD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
