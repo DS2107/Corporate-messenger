@@ -2,63 +2,222 @@
 using Corporate_messenger.Models;
 using Corporate_messenger.Models.Chat;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-
+using System.Windows.Input;
+using Xamarin.Forms;
+using WebSocketSharp;
+using SocketIOClient;
+using System.Collections.Generic;
+using System.Text;
+using System.Diagnostics;
+using Corporate_messenger.Views;
 
 namespace Corporate_messenger.ViewModels
 {
-    class ChatViewModel
+    class ChatViewModel: INotifyPropertyChanged
     {
+        /// <summary>
+        /// Клиент для связи с сокетом
+        /// </summary>
         ClientWebSocket client = new ClientWebSocket();
-        public ChatViewModel()
-        {
-            ConnectToServerAsync();
-        }
+
+        /// <summary>
+        /// Модель данных чат
+        /// </summary>
+        ChatModel chat = new ChatModel();
+
+
+        //Сокет 
+        WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+
+        // Модель юзера
         SpecialDataModel user = new SpecialDataModel();
-        async void ConnectToServerAsync()
+      
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string prop = "")
         {
-            await client.ConnectAsync(new Uri("ws://192.168.0.105:6001/app/ABCDEFG"), CancellationToken.None);
-            var data = "Helo";
-            var encoder = Encoding.UTF8.GetBytes(data);
-            var buffer = new ArraySegment<Byte>(encoder, 0, encoder.Length);
-            await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
-            //client.Abort();
-            ChatModel chat_to = new ChatModel();
-            chat_to.Sender_id = user.Id;
-            chat_to.Message = "ss";
-            chat_to.Chat_room_id = 1;
-            // Перед отправкой , превращаем все в json
-            string jsonLog = JsonConvert.SerializeObject(chat_to);
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
 
+        private ObservableCollection<ChatModel> messageList = new ObservableCollection<ChatModel>();
+        /// <summary>
+        /// Список друзей
+        /// </summary>
+        public ObservableCollection<ChatModel> MessageList
+        {
+            get { return messageList; }
+            set
+            {
+                if (messageList != value)
+                {
+                    messageList = value;
+                    OnPropertyChanged("MessageList");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Изменение коллекции
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void MessageList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            switch (args.Action)
+            {
+                case NotifyCollectionChangedAction.Add: // если добавление
+                    ChatModel newMesaage = args.NewItems[0] as ChatModel;
+
+                    break;
+                case NotifyCollectionChangedAction.Remove: // если удаление
+                    ChatModel oldMesaage = args.OldItems[0] as ChatModel;
+
+                    break;
+                case NotifyCollectionChangedAction.Replace: // если замена
+                    ChatModel replacedMesaage = args.OldItems[0] as ChatModel;
+                    ChatModel replacingMesaage = args.NewItems[0] as ChatModel;
+
+                    break;
+            }
+        }
+
+        
+        private string input_message { get; set; }
+        /// <summary>
+        /// Сообщение пользователя
+        /// </summary>
+        public string Input_message
+        {
+            get { return input_message; }
+            set
+            {
+                if (input_message != value)
+                {
+                    input_message = value;
+                    OnPropertyChanged("Input_message");
+                }
+            }
+        }
+       
+        /// <summary>
+        /// Конструктор 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        public ChatViewModel(int id, string title)
+        {
+            chat.Chat_room_id = id;
+            chat.Sender_id = user.Id;
+            // Регестрирую команду для кнопки 
+            SendMessage = new Command(SendMessageCommand);
+            MessageList.CollectionChanged += MessageList_CollectionChanged;
+            ConnectToServerAsync();
+            SendToken_GetChatsAsync();    
+        }
+
+     
+       
+        private void WsOnMEssage(object sender, MessageEventArgs e)
+        {
+            ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>( e.Data);
+            MessageList.Add(new_message);
+            MessagingCenter.Send<ChatViewModel>(this, "Scrol");
+        }
+
+       
+       
+
+       
+
+        /// <summary>
+        /// Команда для кнопки отправки сообщения
+        /// </summary>
+        public ICommand SendMessage { get; set; }
+        public void SendMessageCommand(object obj)
+        {
+            SendAsync();
+        }
+
+        /// <summary>
+        /// Отправка сообщения
+        /// </summary>
+        /// <returns></returns>
+        public async Task SendAsync()
+        {
+            var message = JsonConvert.SerializeObject(new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message });
+            ws.Send(message);
+            Input_message = "";
+            
+        }
+
+
+        async Task SendToken_GetChatsAsync()
+        {
+            
             // Устанавливаем соеденение 
-            HttpClient client2 = new HttpClient();
+            HttpClient client = new HttpClient();
 
-            // Тип данных который мы принимаем от сервера 
-            var contentType = "application/json";
 
             // Тип Запроса
-            var httpMethod = HttpMethod.Post;
+            var httpMethod = HttpMethod.Get;
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri("http://192.168.0.105:8098/api/chat/1"),
+                RequestUri = new Uri("http://192.168.0.105:8098/api/chat/" + chat.Chat_room_id + "/dialog"),
                 Method = httpMethod,
-                Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
+
             };
+            user.Input_chat = chat.Chat_room_id;
             // Отправка заголовка
             request.Headers.Add("Authorization", "Bearer " + user.Token);
-            // Отправка данных авторизации
-            var httpResponse = await client2.SendAsync(request);
+
+            // Отправка данных 
+            var httpResponse = await client.SendAsync(request);
 
             // Ответ от сервера 
             var contenJSON = await httpResponse.Content.ReadAsStringAsync();
+
+            //****** РАСШИФРОВКА_ОТВЕТА ******
+            JObject contentJobjects = JObject.Parse(contenJSON);
+
+            foreach (var KeyJobject in contentJobjects)
+            {
+                if (KeyJobject.Key == "dialog")
+                {
+                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                    MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
+
+                }
+            }
+
+
+           /* // Добавить в базу последние элементы
+            foreach (var item in MessageList)
+            {
+                App.Database.SaveItem(item);
+            }*/
+
         }
+
+        async Task ConnectToServerAsync()
+        {
+            ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001/app");
+
+            ws.OnMessage += WsOnMEssage;
+            ws.Connect();
+           
+
+
+        }
+
     }
 }

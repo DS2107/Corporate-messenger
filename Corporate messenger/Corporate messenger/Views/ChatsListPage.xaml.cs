@@ -3,11 +3,15 @@ using Corporate_messenger.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using WebSocketSharp;
+using System.Diagnostics;
 
 namespace Corporate_messenger.Views
 {
@@ -42,17 +46,22 @@ namespace Corporate_messenger.Views
         }
 
         // Нажатие по ячейке чата
-         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e.Item == null)
                 return;
 
-          //  var v = (ChatListModel)e.Item;
-            // await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
-          //  var i = v.id;
-           await Navigation.PushAsync(new ChatPage());
-            //Deselect Item
-            ((ListView)sender).SelectedItem = null;
+            var v = (ChatListModel)e.Item;
+
+            var i = v.Id;
+            //ChatPage s = new ChatPage(v.Id, v.Title);
+            await Navigation.PushAsync(new ChatPage(v.Id, v.Title));
+          
+               
+           
+
         }
+
+      
     }
 }

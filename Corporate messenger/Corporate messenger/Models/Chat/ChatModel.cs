@@ -8,7 +8,7 @@ namespace Corporate_messenger.Models.Chat
 {
     class ChatModel: INotifyPropertyChanged
     {
-        private int sender_id { get; set; }
+        private  int sender_id { get; set; }
         private string message { get; set; }
         private int chat_room_id { get; set; }
 
@@ -37,6 +37,8 @@ namespace Corporate_messenger.Models.Chat
                 }
             }
         }
+
+     
 
         /// <summary>
         /// Логин пользователя

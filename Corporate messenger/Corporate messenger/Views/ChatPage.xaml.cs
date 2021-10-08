@@ -16,18 +16,26 @@ namespace Corporate_messenger.Views
     {
      
 
-        public ChatPage()
+        public ChatPage(int id,string title)
         {
             InitializeComponent();
-            BindingContext = new ChatViewModel();
+            BindingContext = new ChatViewModel(id,title);
+
+            MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) => {
+                object d = 0;
+                foreach (var s in MyListView.ItemsSource)
+                {
+                    d = s;
+
+                }
+                MyListView.ScrollTo(d, ScrollToPosition.End, true);
+
+
+            });
+
         }
 
-        private void SetTitleColor(ChatPage chatPage, Color red)
-        {
-            throw new NotImplementedException();
-        }
-
-       
+      
     }
     
 }

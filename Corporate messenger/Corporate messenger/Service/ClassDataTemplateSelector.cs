@@ -9,14 +9,12 @@ namespace Corporate_messenger.Service
     {
         public DataTemplate FromTemplate { get; set; }
         public DataTemplate ToTemplate { get; set; }
+        Models.SpecialDataModel s = new Models.SpecialDataModel();
+     
 
-        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
-        {
-            throw new NotImplementedException();
-        }
-        //   protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
-        // {
-        //   return ((Models.UserData.)item).status.ToUpper().Equals("SENT") ? FromTemplate : ToTemplate;
-        // }
+           protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+         {
+           return ((Models.Chat.ChatModel)item).Sender_id.Equals(s.Id) ? FromTemplate : ToTemplate;
+         }
     }
 }

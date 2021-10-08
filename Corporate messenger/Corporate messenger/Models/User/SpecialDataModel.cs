@@ -12,6 +12,8 @@ namespace Corporate_messenger.Models
 
         private static string  token { get; set; }
 
+        private static int input_chat { get; set; }
+
         private static int id { get; set; }
 
         /// <summary>
@@ -30,6 +32,24 @@ namespace Corporate_messenger.Models
                 }
             }
         }
+
+        /// <summary>
+        /// Комната чата
+        /// </summary>   
+        public int Input_chat
+        {
+            get { return input_chat; }
+            set
+            {
+                if (input_chat != value)
+                {
+                    input_chat = value;
+                    OnPropertyChanged("Input_chat");
+                }
+            }
+        }
+
+
         /// <summary>
         /// Токен пользователя
         /// </summary>
