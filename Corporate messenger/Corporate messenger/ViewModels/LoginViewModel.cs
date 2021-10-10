@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,6 +113,13 @@ namespace Corporate_messenger.ViewModels
                     {
                         var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                         specialData.Token = JsonConvert.DeserializeObject<string>(ValueJobject);
+                        string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                        string path = System.IO.Path.Combine(folder, "token.txt");
+                        File.Create(path);
+                        using (StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Default))
+                        {
+                            sw.WriteLine(specialData.Token);
+                        }
                     }
                 }
                 else
