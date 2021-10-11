@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 using Corporate_messenger.ViewModels;
 using TinyAccountManager;
 using TinyAccountManager.Abstraction;
-
+using Corporate_messenger.Service;
 
 namespace Corporate_messenger.Views
 {
@@ -29,33 +29,7 @@ namespace Corporate_messenger.Views
         {
             InitializeComponent();
             BindingContext = new LoginViewModel();
-            //testcAsync();
-            GetAsync();
-
-
-        }
-
-      
-
-
-        public async Task GetAsync()
-        {
-            Account account = null;
-
-            var exists = await AccountManager.Current.Exists("TinyAccountManagerSample");
-
-            if (exists)
-                account = await AccountManager.Current.Get("TinyAccountManagerSample");
-        }
-        public async Task testcAsync()
-        {
-            var account = new TinyAccountManager.Abstraction.Account()
-            {
-                ServiceId = "TinyAccountManagerSample",
-                Username = "dhindrik"
-            };
-            account.Properties.Add("Password", "MySecretPassword");
-            await TinyAccountManager.Abstraction.AccountManager.Current.Save(account);
-        }
+            DependencyService.Get<IFileService>().Delete();
+        }    
     }
 }

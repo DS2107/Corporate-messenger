@@ -1,14 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Corporate_messenger.Views"
-             x:Class="Corporate_messenger.MainPage"      
-             FlyoutBackgroundImageAspect="AspectFill" >
-    <Tab x:Name="LoginShell" >
-        <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"/>
-    </Tab>
-   
-    
+             x:Class="Corporate_messenger.Views.AuthorizationMainPage"
+        xmlns:local="clr-namespace:Corporate_messenger.Views"
+       >
     <FlyoutItem   Route="chats_list" Title="Сообщения" 
                 Icon="messageTitle.png" >
         <Tab>
@@ -39,26 +34,6 @@
             <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" />
         </Tab>
     </FlyoutItem>
-    
-    <!--<Shell.ItemTemplate>
-        <DataTemplate>
-            <Grid  ColumnDefinitions="0.2*,0.8*">
-                <Image Source="{Binding FlyoutIcon}"
-                       Margin="10,10,0,0"
-                       HeightRequest="30"
-                      
-                       />
-                <Label
-                    
-                    Grid.Column="1"
-                       FontSize="16"
-                       Margin="0,10,0,0"
-                       Text="{Binding Title}"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center" />
-            </Grid>
-        </DataTemplate>
-    </Shell.ItemTemplate>-->
 
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
@@ -92,10 +67,4 @@
             </Grid>
         </DataTemplate>
     </Shell.FlyoutHeaderTemplate>
-   
-
-
-
-
-
 </Shell>

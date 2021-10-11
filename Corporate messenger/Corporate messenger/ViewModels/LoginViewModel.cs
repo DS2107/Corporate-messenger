@@ -1,4 +1,5 @@
 ﻿using Corporate_messenger.Models;
+using Corporate_messenger.Service;
 using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,6 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Corporate_messenger.ViewModels
@@ -26,9 +28,10 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public LoginViewModel()
         {
+            _ = Permission();
             // Регестрирую команду для кнопки на LoginPage
             AuthorizationUserCommand = new Command(AuthorizationUserAsync);
-           
+            
         }
 
         /// <summary>
@@ -40,6 +43,24 @@ namespace Corporate_messenger.ViewModels
             await Shell.Current.GoToAsync("//chats_list", true);
         }
 
+
+        async Task Permission()
+        {
+            // Даю разрешения для микрофона и (зписи/чтения файлов)
+            var PermissionsStrorage_Write = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+            // Даю разрешения для микрофона и (зписи/чтения файлов)
+            var PermissionsStrorage_Read = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+            // Прверка разрешенний
+            if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
+            {
+                PermissionsStrorage_Write = await Permissions.RequestAsync<Permissions.StorageWrite>();
+                PermissionsStrorage_Read = await Permissions.RequestAsync<Permissions.StorageRead>();
+            }
+            if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
+            {
+                return;
+            }
+        }
         
         private void AuthorizationUserAsync(object obj)
         {
@@ -113,13 +134,8 @@ namespace Corporate_messenger.ViewModels
                     {
                         var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                         specialData.Token = JsonConvert.DeserializeObject<string>(ValueJobject);
-                        string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-                        string path = System.IO.Path.Combine(folder, "token.txt");
-                        File.Create(path);
-                        using (StreamWriter sw = new StreamWriter(path, false, System.Text.Encoding.Default))
-                        {
-                            sw.WriteLine(specialData.Token);
-                        }
+                        DependencyService.Get<IFileService>().CreateFile(specialData.Token,specialData.Id);
+
                     }
                 }
                 else

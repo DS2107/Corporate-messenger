@@ -20,7 +20,7 @@ namespace Corporate_messenger.Views
         {
             InitializeComponent();
             BindingContext = new ChatViewModel(id,title);
-
+            Title = title;
             MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) => {
                 object d = 0;
                 foreach (var s in MyListView.ItemsSource)
@@ -29,13 +29,12 @@ namespace Corporate_messenger.Views
 
                 }
                 MyListView.ScrollTo(d, ScrollToPosition.End, true);
-
-
+                MessageEditor.Focus();
             });
 
         }
 
-      
+        
     }
     
 }

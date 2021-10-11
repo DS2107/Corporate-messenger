@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Corporate_messenger.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Corporate_messenger
         public MainPage()
         {
             InitializeComponent();
+          
             OnAppearing();
           
             
@@ -22,6 +24,9 @@ namespace Corporate_messenger
 
 
         }
+
+      
+
         protected override void OnAppearing()
         {
             var ImageFly = Preferences.Get("ImageFly", "");

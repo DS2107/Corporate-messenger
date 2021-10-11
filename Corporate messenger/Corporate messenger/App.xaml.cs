@@ -1,4 +1,7 @@
 ﻿using Corporate_messenger.DB.Repository;
+using Corporate_messenger.Models;
+using Corporate_messenger.Service;
+using Corporate_messenger.Views;
 using System;
 using System.IO;
 using Xamarin.Forms;
@@ -28,7 +31,27 @@ namespace Corporate_messenger
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+
+            var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
+           var data = token.Split('/');
+          
+            if (data[0] != "")
+            {
+                SpecialDataModel special = new SpecialDataModel();
+                special.Token = data[0];
+                special.Id = Int32.Parse(data[1]);
+
+                MainPage = new AuthorizationMainPage();
+            }
+            else
+            {
+                MainPage = new MainPage();
+            }
+
+
+           
+            
+          
         }
 
         protected override void OnStart()

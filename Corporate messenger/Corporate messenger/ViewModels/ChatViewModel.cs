@@ -195,7 +195,7 @@ namespace Corporate_messenger.ViewModels
                 {
                     var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                     MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
-
+                    MessagingCenter.Send<ChatViewModel>(this, "Scrol");
                 }
             }
 
