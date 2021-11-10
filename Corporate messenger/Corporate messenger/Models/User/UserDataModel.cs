@@ -11,7 +11,7 @@ namespace Corporate_messenger.Models
 
         private static int id { get; set; }
 
-        private static string usernmae { get; set; }
+        private static string username { get; set; }
 
         private static string email { get; set; }
 
@@ -45,16 +45,16 @@ namespace Corporate_messenger.Models
         /// <summary>
         /// Имя пользователя пользователя
         /// </summary>
-        [JsonProperty("usernmae")]
-        public string Usernmae
+        [JsonProperty("username")]
+        public string Username
         {
-            get { return usernmae; }
+            get { return username; }
             set
             {
-                if (usernmae != value)
+                if (username != value)
                 {
-                    usernmae = value;
-                    OnPropertyChanged("Usernmae");
+                    username = value;
+                    OnPropertyChanged("Username");
                 }
             }
         }

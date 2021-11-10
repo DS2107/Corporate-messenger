@@ -1,17 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Corporate_messenger.Views.ChatsListPage" Title="Сообщения" IconImageSource="chat1.png" Shell.BackgroundColor="#0E0915" Shell.TitleColor="Wheat">
+             x:Class="Corporate_messenger.Views.ChatsListPage" Title="Чаты" IconImageSource="chat1.png" Shell.BackgroundColor="#04283C" Shell.TitleColor="White"  Background="#04283C">
     <AbsoluteLayout >
+        <Label x:Name="LabelAvtor" Text="{Binding Title}" TextColor="White" FontAttributes="none" FontSize="24"/>
         <ListView 
                 AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
                 IsPullToRefreshEnabled="True"
                 RefreshControlColor="DarkSeaGreen"
-                RefreshCommand="{Binding RefreshCommand}"
+                RefreshCommand="{Binding UpdateList}"
+                   IsRefreshing="{Binding IsRefreshing}"
+           
                    x:Name="MyListView"
                    Margin="0"
                    RowHeight="80"
-                   SeparatorColor="DarkGray"
+                   SeparatorColor="Transparent"
                    BackgroundColor="Transparent"
                    ItemsSource="{Binding ChatList}"
                    ItemTapped="Handle_ItemTapped"
@@ -19,12 +22,13 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate >
+                    
                     <ViewCell >
-                        <Frame x:Name="Frame1"  Margin="0" Padding="0" >
-                            <FlexLayout Direction="Row" JustifyContent="SpaceAround"  Margin="0,0,0,0" AlignItems="Center" BackgroundColor="Transparent">
+                        <Frame Background="Transparent" x:Name="Frame1"  Margin="0" Padding="25,0,0,0" HorizontalOptions="StartAndExpand" BorderColor="Transparent" >
+                            <StackLayout Orientation="Horizontal" BackgroundColor="Transparent">
 
-                                <RelativeLayout x:Name="RlB"  HorizontalOptions="Center" VerticalOptions="Center"  >
-                                    <Image Source="kot.jpg"  Aspect="AspectFill" 
+                                <FlexLayout x:Name="RlB" HorizontalOptions="Center" VerticalOptions="Center"  >
+                                    <Image Source="kot.jpg"  Aspect="AspectFill" FlexLayout.AlignSelf="Center"
                                            WidthRequest="60"   
                                            HeightRequest="60"
                                            HorizontalOptions="Center"
@@ -37,32 +41,15 @@
                                             RadiusY="30"/>
                                         </Image.Clip>
                                     </Image>
-                                </RelativeLayout>
-                                <RelativeLayout  FlexLayout.AlignSelf="Center" WidthRequest="270">
-                                    <StackLayout>
-                                        <Label x:Name="LabelAvtor" Text="{Binding Title}" TextColor="Black" FontSize="16"/>
-                                        <Label Text="{Binding Last_message}" TextColor="#556271"/>
+                                </FlexLayout>
+                                <FlexLayout x:Name="FlexL">
+                                    <StackLayout FlexLayout.AlignSelf="Center" >
+                                        
+                                        <Label  x:Name="LabelAvtor" Text="{Binding Title}" TextColor="White" FontAttributes="none" FontSize="24"/>
+                                        <Label x:Name="LstMessage" Text="{Binding Last_message}" TextColor="#B0BBBF"/>
                                     </StackLayout>
-
-                                </RelativeLayout>
-                                <StackLayout >
-
-                                    <Label HorizontalTextAlignment="End" Text="16:40" TextColor="#556271"/>
-
-                                    <Frame CornerRadius="10"
-                                       WidthRequest="20"
-                                       OutlineColor="Red" 
-                                       Padding="0">
-                                        <Label HorizontalTextAlignment="Center" Text="1" TextColor="#556271" >
-
-                                        </Label>
-                                    </Frame>
-
-
-
-                                </StackLayout>
-
-                            </FlexLayout>
+                                </FlexLayout>
+                            </StackLayout>
 
                         </Frame>
                     </ViewCell>

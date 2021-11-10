@@ -3,6 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.App">
     <Application.Resources>
-
+       
     </Application.Resources>
 </Application>

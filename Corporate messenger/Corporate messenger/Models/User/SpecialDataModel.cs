@@ -8,6 +8,7 @@ namespace Corporate_messenger.Models
 {
     class SpecialDataModel: INotifyPropertyChanged
     {
+        private static string name { get; set; }
         private static bool status { get; set; }
 
         private static string  token { get; set; }
@@ -15,6 +16,39 @@ namespace Corporate_messenger.Models
         private static int input_chat { get; set; }
 
         private static int id { get; set; }
+
+        private int receiver_id { get; set; }
+
+       
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if (name != value)
+                {
+                    name = value;
+                    OnPropertyChanged("name");
+                }
+            }
+        }
+
+        /// <summary>
+        /// id пользователя
+        /// </summary>
+        [JsonProperty("receiverId")]
+        public int receiverId
+        {
+            get { return receiver_id; }
+            set
+            {
+                if (receiver_id != value)
+                {
+                    receiver_id = value;
+                    OnPropertyChanged("Sender_id");
+                }
+            }
+        }
 
         /// <summary>
         /// Статус пользователя

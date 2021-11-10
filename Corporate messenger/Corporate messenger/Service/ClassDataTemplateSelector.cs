@@ -14,7 +14,7 @@ namespace Corporate_messenger.Service
 
            protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
          {
-           return ((Models.Chat.ChatModel)item).Sender_id.Equals(s.Id) ? FromTemplate : ToTemplate;
+           return ((Models.Chat.ChatModel)item).Sender_id.Equals(s.Id) ?  ToTemplate: FromTemplate;
          }
     }
 }

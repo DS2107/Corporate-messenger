@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace Corporate_messenger.ViewModels
 {
@@ -19,6 +21,20 @@ namespace Corporate_messenger.ViewModels
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private bool isRefreshing = false;
+        public bool IsRefreshing
+        {
+            get { return isRefreshing; }
+            set
+            {
+                if (isRefreshing != value)
+                {
+                    isRefreshing = value;
+                    OnPropertyChanged("IsRefreshing");
+                }
+            }
         }
         public ObservableCollection<ChatListModel> chatList = new ObservableCollection<ChatListModel>();
         /// <summary>
@@ -43,10 +59,15 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public ChatListViewModel()
         {
-            chatList = App.Database.GetItems();
+           // chatList = App.Database.GetItems();
            _ = SendToken_GetChatsAsync();
             ChatList.CollectionChanged += ChatList_CollectionChanged;
+          
+            //CallClass call = new CallClass();
+            //call.LessPort();
         }
+
+       
 
         private void ChatList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
         {
@@ -65,6 +86,21 @@ namespace Corporate_messenger.ViewModels
                     ChatListModel replacingUser = args.NewItems[0] as ChatListModel;
                  
                     break;
+            }
+        }
+        public ICommand UpdateList {
+
+            get
+            {
+                return new Command(async () =>
+                {
+                    IsRefreshing = true;
+
+                    await SendToken_GetChatsAsync();
+
+                    IsRefreshing = false;
+                });
+
             }
         }
 
@@ -103,6 +139,7 @@ namespace Corporate_messenger.ViewModels
                 if (KeyJobject.Key == "chats")
                 {
                     var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                    chatList = null; 
                     ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
                    
                 }

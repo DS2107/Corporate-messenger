@@ -9,16 +9,13 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Net.WebSockets;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using WebSocketSharp;
-using SocketIOClient;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using Corporate_messenger.Views;
+using System.IO;
+using Android.Media;
+using Xamarin.Essentials;
 
 namespace Corporate_messenger.ViewModels
 {
@@ -34,9 +31,8 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         ChatModel chat = new ChatModel();
 
-
-        //Сокет 
-        WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+         //Сокет 
+         WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
 
         // Модель юзера
         SpecialDataModel user = new SpecialDataModel();
@@ -48,8 +44,11 @@ namespace Corporate_messenger.ViewModels
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+      
 
         private ObservableCollection<ChatModel> messageList = new ObservableCollection<ChatModel>();
+        private ObservableCollection<ChatModel> BufferList;
+        private ObservableCollection<ChatModel> lastMessage = new ObservableCollection<ChatModel>();
         /// <summary>
         /// Список друзей
         /// </summary>
@@ -65,6 +64,23 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
+       
+
+        public ObservableCollection<ChatModel> LastMessage
+        {
+            get { return lastMessage; }
+            set
+            {
+                if (lastMessage != value)
+                {
+                    lastMessage = value;
+                    OnPropertyChanged("LastMessage");
+                }
+            }
+        }
+
+
+
 
         /// <summary>
         /// Изменение коллекции
@@ -108,7 +124,8 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-       
+
+
         /// <summary>
         /// Конструктор 
         /// </summary>
@@ -120,24 +137,84 @@ namespace Corporate_messenger.ViewModels
             chat.Sender_id = user.Id;
             // Регестрирую команду для кнопки 
             SendMessage = new Command(SendMessageCommand);
+            GoBack = new Command(GoBackCommand);
+         
+           
             MessageList.CollectionChanged += MessageList_CollectionChanged;
-            ConnectToServerAsync();
-            SendToken_GetChatsAsync();    
+             ConnectToServerAsync();
+           _ = SendToken_GetChatsAsync();
+          
         }
 
-     
        
+
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {
-            ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>( e.Data);
-            MessageList.Add(new_message);
+          
+                ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
+            LastMessage.Add(new_message);
             MessagingCenter.Send<ChatViewModel>(this, "Scrol");
         }
 
+
+      
+        public void StopSendMessageAudioCommandAsync()
+        {
+           
+            if (ClassMedia != null)
+            {
+                ClassMedia.Stop();
+                ClassMedia.Release();
+                ClassMedia = null;
+            }
+        }
+        MediaRecorder ClassMedia;
+        string folderPath = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "MyRecord");
        
        
 
-       
+        public async Task SendMessageAudioCommand()
+        {
+            
+            // try
+            //{
+            // Даю разрешения для микрофона и (зписи/чтения файлов)
+            var PermissionsStrorage = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+            var PermissionsMicrophone = await Permissions.CheckStatusAsync<Permissions.Microphone>();
+
+            // Прверка разрешенний
+            if (PermissionsStrorage != PermissionStatus.Granted && PermissionsMicrophone != PermissionStatus.Granted)
+            {
+                PermissionsStrorage = await Permissions.RequestAsync<Permissions.StorageWrite>();
+                PermissionsMicrophone = await Permissions.RequestAsync<Permissions.Microphone>();
+            }
+            if (PermissionsStrorage != PermissionStatus.Granted && PermissionsMicrophone != PermissionStatus.Granted)
+            {
+                return;
+            }
+
+
+
+         /*   if (!File.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            if (ClassMedia == null)
+                ClassMedia = new MediaRecorder();
+            else
+                ClassMedia.Reset();
+
+            ClassMedia.SetAudioSource(AudioSource.VoiceCall);
+            ClassMedia.SetOutputFormat(OutputFormat.AmrNb);
+            ClassMedia.SetAudioEncoder(AudioEncoder.AmrNb);
+            ClassMedia.SetOutputFile(folderPath + "/" + "temp" + DateTime.Now.ToString("HH:mm:ss") + ".amr");
+
+
+
+            ClassMedia.Prepare();
+            ClassMedia.Start();*/
+        }
 
         /// <summary>
         /// Команда для кнопки отправки сообщения
@@ -152,14 +229,59 @@ namespace Corporate_messenger.ViewModels
         /// Отправка сообщения
         /// </summary>
         /// <returns></returns>
-        public async Task SendAsync()
+        public void SendAsync()
         {
-            var message = JsonConvert.SerializeObject(new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message });
+            var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = user.receiverId, TypeMessage = "message" };
+            var message = JsonConvert.SerializeObject(new_message);
             ws.Send(message);
             Input_message = "";
+           
             
         }
+       
+        public ICommand GoBack { get; set; }
+        private void GoBackCommand(object obj)
+        {
+           _ = BaskShellPageAsync();
+        }
+        private async Task BaskShellPageAsync()
+        {
+            ws.CloseAsync();
+            await Shell.Current.GoToAsync("//chats_list", true);
+            ChatListViewModel chatList = new ChatListViewModel();
+        }
 
+    
+        private bool isRefreshing = false;
+        public bool IsRefreshing
+        {
+            get { return isRefreshing; }
+            set
+            {
+                if (isRefreshing != value)
+                {
+                    isRefreshing = value;
+                    OnPropertyChanged("IsRefreshing");
+                }
+            }
+        }
+        bool updateFlag = false;
+        public ICommand UpdateList
+        {
+
+            get
+            {
+                return new Command(async () =>
+                {
+                    IsRefreshing = true;
+                    updateFlag = true;
+                    LastMessageAdd(LastElement);
+                    updateFlag = false;
+                    IsRefreshing = false;
+                });
+
+            }
+        }
 
         async Task SendToken_GetChatsAsync()
         {
@@ -172,7 +294,7 @@ namespace Corporate_messenger.ViewModels
             var httpMethod = HttpMethod.Get;
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri("http://192.168.0.105:8098/api/chat/" + chat.Chat_room_id + "/dialog"),
+                RequestUri = new Uri("http://192.168.0.105:8098/api/chat/" + chat.Chat_room_id +"/"+user.Id+ "/dialog"),
                 Method = httpMethod,
 
             };
@@ -188,36 +310,112 @@ namespace Corporate_messenger.ViewModels
 
             //****** РАСШИФРОВКА_ОТВЕТА ******
             JObject contentJobjects = JObject.Parse(contenJSON);
-
+           
             foreach (var KeyJobject in contentJobjects)
             {
                 if (KeyJobject.Key == "dialog")
                 {
                     var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                  
                     MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
-                    MessagingCenter.Send<ChatViewModel>(this, "Scrol");
+                    
+                   
+                }
+                if (KeyJobject.Key == "receiver_id")
+                {
+                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                   var rec  = JsonConvert.DeserializeObject(ValueJobject);
+                    string recc = rec.ToString();
+                    string[] words = recc.Split("\n\t% ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    user.receiverId = Int32.Parse(words[2]);
                 }
             }
-
-
-           /* // Добавить в базу последние элементы
-            foreach (var item in MessageList)
-            {
-                App.Database.SaveItem(item);
-            }*/
+            LastMessageAdd(MessageList.Count-1);
+            /* // Добавить в базу последние элементы
+             foreach (var item in MessageList)
+             {
+                 App.Database.SaveItem(item);
+             }*/
 
         }
 
-        async Task ConnectToServerAsync()
+        public int LastElement { get; set; }
+        void LastMessageAdd(int count)
+        {
+            BufferList = new ObservableCollection<ChatModel>();
+            var BufferCount = count;
+            int BufferIndex = 0;
+            int maxBufferIndex = 20;
+          
+            if(BufferCount < maxBufferIndex)
+            {
+                maxBufferIndex = BufferCount;
+            }
+            if (BufferCount != 0)
+            {
+                for (int i = BufferCount; i >= 0; i--)
+                {
+                    
+                    if (BufferIndex != maxBufferIndex)
+                    {
+                        BufferList.Add(MessageList[i]);
+                        LastElement = i;
+                        BufferIndex++;
+
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+                var count1 = BufferList.Count;
+                for (int i = count1-1; i >= 0; i--)
+                {
+                    if(updateFlag)
+                    {
+                        LastMessage.Insert(0, BufferList[i]);
+                    }
+                    else
+                    {
+                        LastMessage.Add(BufferList[i]);
+                       
+                    }
+                    
+                   
+                }
+                BufferList = null;
+                if (updateFlag != true)             
+                    MessagingCenter.Send<ChatViewModel>(this, "Scrol");
+            }
+            
+
+
+        }
+
+        void ConnectToServerAsync()
         {
             ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001/app");
 
             ws.OnMessage += WsOnMEssage;
+            ws.OnOpen += WsOnOpen;
             ws.Connect();
            
 
 
         }
 
+        class dataRoom {
+            [JsonProperty("type")]
+            public string subs { get; set; }
+            [JsonProperty("sender_id")]
+            public int sendr_id { get; set; }
+        }
+
+        private void WsOnOpen(object sender, EventArgs e)
+        {
+            var message = JsonConvert.SerializeObject(new dataRoom { subs = "subscribe", sendr_id = chat.Sender_id });
+            ws.Send(message);
+        }
     }
 }

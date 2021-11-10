@@ -18,7 +18,7 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatsListPage : ContentPage
     {
-        private bool back = true;
+        
       
         
 
@@ -26,28 +26,16 @@ namespace Corporate_messenger.Views
         {
             InitializeComponent();
             BindingContext = new ChatListViewModel();
-            MyListView.RefreshCommand = new Command(() =>
-            {
-                if (back)
-                {
-
-                    Title = "Обнови";
-                    back = false;
-                }
-                else
-                {
-                    Title = "Сообщение";
-                    back = true;
-                }
-
-                MyListView.IsRefreshing = false;
-            });
            
         }
+
+        
 
         // Нажатие по ячейке чата
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
         {
+           
+
             if (e.Item == null)
                 return;
 

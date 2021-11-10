@@ -44,7 +44,7 @@ namespace Corporate_messenger.Models
         [JsonProperty("title")]
         public string Title
         {
-            get { return title; }
+            get {return title; }
             set
             {
                 if (title != value)
@@ -61,7 +61,18 @@ namespace Corporate_messenger.Models
         [JsonProperty("last_message")]
         public string Last_message
         {
-            get { return last_message; }
+            get {
+                if (last_message.Length > 35)
+                {
+                    last_message = last_message.Substring(0, 35) + "...";
+                    return last_message;
+                }
+                else
+                {
+                    return last_message;
+                }
+
+                }
             set
             {
                 if (last_message != value)

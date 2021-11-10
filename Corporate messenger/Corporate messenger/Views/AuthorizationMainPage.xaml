@@ -30,7 +30,8 @@
     </FlyoutItem>
     <FlyoutItem Title="Выход"
                 Icon="exit.png">
-        <Tab>
+        <Tab >
+            
             <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" />
         </Tab>
     </FlyoutItem>
@@ -54,12 +55,12 @@
                     </Image>
 
                 </StackLayout>
-                <Label FontFamily="mulish" Margin="20,0,0,0" HorizontalOptions="StartAndExpand"   Grid.Row="1" Grid.Column="0" Text="Danil"
+                <Label FontFamily="mulish" Margin="20,0,0,0" HorizontalOptions="StartAndExpand"   Grid.Row="1" Grid.Column="0" x:Name="MyText" Text="{Binding UserName}"
                            TextColor="Wheat" FontSize="Medium"
                            VerticalOptions="Center"
                       
                            />
-                <Label FontFamily="mulish"  Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"   Text="+380713916173"
+                <Label FontFamily="mulish"  Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"   Text="Описание тебя"
                            TextColor="Wheat" FontSize="Small"
                            VerticalOptions="Center"
                            HorizontalOptions="StartAndExpand"/>

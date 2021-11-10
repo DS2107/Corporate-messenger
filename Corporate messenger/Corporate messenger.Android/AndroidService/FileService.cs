@@ -1,16 +1,9 @@
 ﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using Corporate_messenger.Droid;
 using Corporate_messenger.Service;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+
 
 [assembly: Xamarin.Forms.Dependency(typeof(FileService))]
 namespace Corporate_messenger.Droid
@@ -22,13 +15,13 @@ namespace Corporate_messenger.Droid
             return Application.Context.GetExternalFilesDir(null).ToString();
         }
 
-        public void CreateFile(string token,int userID)
+        public void CreateFile(string token,int userID,string name)
         {
             var filename = "token.txt";
 
             var destination = Path.Combine(GetRootPath(), filename);
 
-            File.WriteAllText(destination, token + "/" + userID);
+            File.WriteAllText(destination, token + "/" + userID + "/" + name);
         }
 
         public string ReadFile(string file)
@@ -53,5 +46,13 @@ namespace Corporate_messenger.Droid
 
             File.Delete(destination);
         }
+
+
+        public void MyToast()
+        {
+            Toast.MakeText(Application.Context, "Неправильный пароль или логин", ToastLength.Short).Show();
+        }
+
+        
     }
 }

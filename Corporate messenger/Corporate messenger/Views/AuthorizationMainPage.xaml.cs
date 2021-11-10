@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Corporate_messenger.Models;
+using Corporate_messenger.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,14 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AuthorizationMainPage : Shell
     {
+      
         public AuthorizationMainPage()
         {
             InitializeComponent();
+            
+            BindingContext = new AuthorizationMainPageViewModel();
+      
+     
         }
     }
 }

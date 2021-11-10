@@ -40,7 +40,7 @@ namespace Corporate_messenger
                 SpecialDataModel special = new SpecialDataModel();
                 special.Token = data[0];
                 special.Id = Int32.Parse(data[1]);
-
+                special.Name = data[2];
                 MainPage = new AuthorizationMainPage();
             }
             else

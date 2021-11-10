@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.corporate_messenger" android:installLocation="preferExternal">
 	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="30" />
-	<application android:requestLegacyExternalStorage="true" android:label="Corporate_messenger.Android" android:theme="@style/MainTheme" android:usesCleartextTraffic="true" android:icon="@drawable/MyChat"></application>
+	<application android:requestLegacyExternalStorage="true" android:label="Corporate_messenger.Android" android:theme="@style/MainTheme" android:usesCleartextTraffic="true" android:icon="@drawable/MyChat">
+		<receiver android:name="com.companyname.corporate_messenger.IncomingCallReceiver" android:enabled="true" android:exported="true"></receiver>
+		<service android:name="com.companyname.corporate_messenger.SipService" android:enabled="true" />
+	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -9,4 +12,19 @@
 	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
 	<uses-permission android:name="android.permission.ACCOUNT_MANAGER" />
 	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+	<uses-permission android:name="android.permission.CALL_PRIVILEGED" />
+	<uses-permission android:name="android.permission.USE_SIP" />
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.sip.voip" android:required="true" />
+	<uses-feature android:name="android.software.sip.voip" android:required="true" />
+	<uses-feature android:name="android.hardware.wifi" android:required="true" />
+	<uses-feature android:name="android.hardware.microphone" android:required="true" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
 </manifest>

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Corporate_messenger.Views.CallPage" Title="Звонок" >
+    <ContentPage.Background>
+        <!-- StartPoint defaults to (0,0) -->
+        <LinearGradientBrush EndPoint="0,1">
+            <GradientStop Color="#8BC0F2"
+                          Offset="0.1" />
+            <GradientStop Color="white"
+                          Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <Grid RowDefinitions="50,*,60,30">
+       
+        <RelativeLayout VerticalOptions="FillAndExpand" 
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="#CCC"
+                        Grid.RowSpan="4"
+                        IsVisible="false"/>
+        <Frame Margin="0"
+               Padding="0"
+               IsVisible="false">
+            <Grid ColumnDefinitions="*, 50,50">
+                <Label VerticalOptions="Center"
+                   Text="Someone is calling..."
+                   Padding="0"
+                   Margin="10,0,0,0"/>
+                <Image Grid.Column="1"
+                       HeightRequest="25"
+                       VerticalOptions="Center"
+                       Source="outline_call.png"/>
+                <Image Grid.Column="2"
+                       HeightRequest="25"
+                       VerticalOptions="Center"
+                       Source="end_call.png"/>
+            </Grid>
+        </Frame>
+        <StackLayout Grid.Row="2"
+                     Margin="0,0,10,0"
+                     Orientation="Horizontal"
+                     HorizontalOptions="Center"
+                     BackgroundColor="Transparent">
+            <Frame HasShadow="True"
+                   CornerRadius="50"
+                   HeightRequest="60"
+                   WidthRequest="60"
+                   Padding="1"
+                   BackgroundColor="Gray"
+                   BorderColor="LightGray"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center">
+                <ImageButton Source="mic_off.png"
+                             Margin="10"
+                             CornerRadius="50"
+                             HeightRequest="50"
+                             WidthRequest="50"
+                             HorizontalOptions="Center"
+                             BackgroundColor="Transparent"
+                            />
+            </Frame>
+
+            <Frame HasShadow="True"
+                   CornerRadius="50"
+                   HeightRequest="60"
+                   WidthRequest="60"
+                   Padding="1"
+                   BackgroundColor="#CC0000"
+                   BorderColor="LightGray"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center">
+                <ImageButton Source="end_call.png"
+                             Margin="10"
+                             CornerRadius="50"
+                             HeightRequest="50"
+                             WidthRequest="50"
+                             HorizontalOptions="Center"
+                             BackgroundColor="Transparent"
+                            
+                             />
+            </Frame>
+
+            <Frame HasShadow="True"
+                   CornerRadius="50"
+                   HeightRequest="60"
+                   WidthRequest="60"
+                   Padding="1"
+                   BackgroundColor="Green"
+                   BorderColor="LightGray"
+                   HorizontalOptions="EndAndExpand"
+                   VerticalOptions="Center">
+                <ImageButton Source="enableCallWhite.png"
+                             Margin="10"
+                             CornerRadius="50"
+                             HeightRequest="50"
+                             WidthRequest="50"
+                             HorizontalOptions="Center"
+                             BackgroundColor="Transparent"
+                             />
+            </Frame>
+
+        </StackLayout>
+    </Grid>
+</ContentPage>

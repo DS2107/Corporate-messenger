@@ -1,32 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
-             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="Black" Shell.TitleColor="Wheat" x:Name="set_pqage">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <DataTemplate x:Key="FromTemplate">
-                <ViewCell x:Name="FromUserCell" IsEnabled="False" >
-
-                    <Frame BackgroundColor="LightBlue"
-              Padding="10"
-              HasShadow="false"
-              Margin="10,10,80,10">
-                        <Label Text="{Binding Message}"/>
-                    </Frame>
-                  
-
-                </ViewCell>
-            </DataTemplate>
-            <DataTemplate x:Key="ToTemplate">
-                <ViewCell  x:Name="ToUserCell" IsEnabled="False">
-
-                    <Frame BackgroundColor="Gray"
-            Padding="10"
+             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="Black" Shell.TitleColor="Wheat" x:Name="set_pqage" >
+    <ContentPage.ToolbarItems>
+    <ToolbarItem Icon="callTitle.png" Text="Search" x:Name="CallButton" Clicked="CallButton_Clicked"/>
+</ContentPage.ToolbarItems>
+<Shell.BackButtonBehavior>
+    <BackButtonBehavior Command="{Binding GoBack}"></BackButtonBehavior>
+</Shell.BackButtonBehavior>
+<ContentPage.Resources>
+    
+    <ResourceDictionary>
+        
+        <DataTemplate x:Key="FromTemplate">
+            <ViewCell x:Name="FromUserCell" IsEnabled="False" >
+                <FlexLayout JustifyContent="Start"  >
+                    <Frame 
+                           
+                        BackgroundColor="#ECEDF1"
+                        CornerRadius="14"
+                           
+            Padding="5,10,10,10"
             HasShadow="false"
-            Margin="80,10,10,10">
-                        <Label Text="{Binding Message}"
-                  TextColor="White"/>
+                
+            Margin="10,10,40,0"  >
+                        <StackLayout Orientation="Horizontal">
+
+                            <Label   Text="{Binding Message}" HorizontalTextAlignment="Start"   
+                TextColor="Black"/>
+                                <Label  Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
+                TextColor="DimGray"/>
+                            </StackLayout>
                     </Frame>
+                </FlexLayout>
+            </ViewCell>
+        </DataTemplate>
+        <DataTemplate x:Key="ToTemplate">
+            <ViewCell  x:Name="ToUserCell" IsEnabled="False">
+                <FlexLayout JustifyContent="End" >
+                    <Frame
+                       
+                    CornerRadius="14" 
+                    BackgroundColor="#CCE4FF"
+        Padding="5,10,10,10"
+                        Margin="50,10,20,0"
+        HasShadow="false"
+                            
+                        IsClippedToBounds="True"
+        >
+                        <StackLayout Orientation="Horizontal">
+
+                            <Label  Text="{Binding Message}" HorizontalTextAlignment="Start"   
+                TextColor="Black"/>
+                                <Label  Text="{Binding Time_LstMessage,StringFormat='{}{0:h:mm }'}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
+                TextColor="DimGray"/>
+                        </StackLayout>
+
+
+                    </Frame>
+                </FlexLayout>
+                   
 
                 </ViewCell>
             </DataTemplate>
@@ -36,29 +69,39 @@
     <ContentPage.Content>
         <StackLayout >
 
-            <ListView  Margin="0,0,0,0" SeparatorColor="Transparent"  x:Name="MyListView" HasUnevenRows="true" ItemTemplate="{StaticResource chatDataTemplateSelector}"  ItemsSource="{Binding MessageList}" >
+            <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding UpdateList}" RefreshControlColor="Cyan"  Margin="0,0,0,0" SeparatorColor="Transparent"  x:Name="MyListView" HasUnevenRows="true" ItemTemplate="{StaticResource chatDataTemplateSelector}"  ItemsSource="{Binding LastMessage}" >
 
             </ListView>
-            <StackLayout>
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="60" />
-                    </Grid.ColumnDefinitions>
-                    <Editor x:Name="MessageEditor" HorizontalOptions="FillAndExpand" Keyboard="Chat" TextColor="Black" Placeholder="Введите сообщение..." AutoSize="TextChanges" Text="{Binding Input_message}" ></Editor>
-                    <ImageButton Source="send_message.png" Grid.Row="0" Grid.Column="1" BackgroundColor="Transparent" WidthRequest="60" HeightRequest="60" x:Name="send_message" 
+
+            <Grid RowSpacing="0" 
+           ColumnSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <Editor  Margin="5,0,0,0"  x:Name="MessageEditor"  Keyboard="Chat" TextColor="Black" Placeholder="Введите сообщение..." AutoSize="TextChanges" Text="{Binding Input_message}"  Grid.Row="0" 
+                 Grid.Column="0"></Editor>
+               
+                    
+                
+                <ImageButton  Grid.Row="0" 
+               Grid.Column="1" Source="send_msg.png" BackgroundColor="Transparent"  WidthRequest="32" HeightRequest="32" x:Name="send_message" 
+                   
                     Command="{Binding SendMessage}"
                     CommandParameter="{Binding}"/>
-                </Grid>
-            </StackLayout>
-          
-
-
-
-
+                <ImageButton Pressed="mic_message_Pressed" Released="mic_message_Released" Grid.Row="0" 
+               Grid.Column="2" Source="mic.png" Padding="0" BackgroundColor="Transparent"  WidthRequest="32" HeightRequest="32" x:Name="mic_message" 
+                    Margin="0,0,10,0"
+                  
+                    
+                    />
+            </Grid>
+           
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

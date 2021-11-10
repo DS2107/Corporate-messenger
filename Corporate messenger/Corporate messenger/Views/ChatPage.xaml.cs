@@ -1,11 +1,6 @@
-﻿using Corporate_messenger.Models;
-using Corporate_messenger.ViewModels;
+﻿using Corporate_messenger.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,12 +9,12 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatPage : ContentPage
     {
-     
 
+        ChatViewModel chat;
         public ChatPage(int id,string title)
         {
             InitializeComponent();
-            BindingContext = new ChatViewModel(id,title);
+            BindingContext = chat= new ChatViewModel(id,title);
             Title = title;
             MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) => {
                 object d = 0;
@@ -31,10 +26,33 @@ namespace Corporate_messenger.Views
                 MyListView.ScrollTo(d, ScrollToPosition.End, true);
                 MessageEditor.Focus();
             });
-
+            
         }
 
-        
+        private void CallButton_Clicked(object sender, EventArgs e)
+        {
+            _ = GoToPagaeCall();
+        }
+
+        async Task GoToPagaeCall()
+        {
+            await Navigation.PushAsync(new CallPage());
+          
+        }
+
+       private void mic_message_Released(object sender, EventArgs e)
+        {
+            mic_message.Background = Brush.Transparent;
+            chat.StopSendMessageAudioCommandAsync();
+        }
+
+     
+
+        private void mic_message_Pressed(object sender, EventArgs e)
+        {
+            mic_message.Background = Brush.Red;
+            chat.SendMessageAudioCommand();
+        }
     }
     
 }

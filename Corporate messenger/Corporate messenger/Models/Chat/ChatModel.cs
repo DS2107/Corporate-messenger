@@ -11,6 +11,10 @@ namespace Corporate_messenger.Models.Chat
         private  int sender_id { get; set; }
         private string message { get; set; }
         private int chat_room_id { get; set; }
+        private string time_LstMessage { get; set; } 
+   
+        private string type { get; set; }
+        private int receiver_id { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -38,7 +42,61 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
-     
+
+        /// <summary>
+        /// Время ласт сообщения
+        /// </summary>
+        [JsonProperty("created_at")]
+        public string Time_LstMessage
+        {
+            
+            get {
+               
+                return time_LstMessage; }
+            set
+            {
+                if (time_LstMessage != value)
+                {
+                    time_LstMessage = value;
+                    OnPropertyChanged("Time_LstMessage");
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// ID Отправителя
+        /// </summary>
+        [JsonProperty("receiverId")]
+        public int Receiver_id
+        {
+            get { return receiver_id; }
+            set
+            {
+                if (receiver_id != value)
+                {
+                    receiver_id = value;
+                    OnPropertyChanged("Sender_id");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Логин пользователя
+        /// </summary>
+        [JsonProperty("type")]
+        public string TypeMessage
+        {
+            get { return type; }
+            set
+            {
+                if (type != value)
+                {
+                    type = value;
+                    OnPropertyChanged("TypeMessage");
+                }
+            }
+        }
 
         /// <summary>
         /// Логин пользователя

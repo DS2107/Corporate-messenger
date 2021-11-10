@@ -18,10 +18,7 @@ namespace Corporate_messenger.ViewModels
 {
     public class LoginViewModel
     {
-        /// <summary>
-        /// Команда для кнопки авторизации
-        /// </summary>
-        public ICommand AuthorizationUserCommand { get; set; }
+       
 
         /// <summary>
         /// Конструктор класса
@@ -31,7 +28,7 @@ namespace Corporate_messenger.ViewModels
             _ = Permission();
             // Регестрирую команду для кнопки на LoginPage
             AuthorizationUserCommand = new Command(AuthorizationUserAsync);
-            
+         
         }
 
         /// <summary>
@@ -48,8 +45,16 @@ namespace Corporate_messenger.ViewModels
         {
             // Даю разрешения для микрофона и (зписи/чтения файлов)
             var PermissionsStrorage_Write = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-            // Даю разрешения для микрофона и (зписи/чтения файлов)
+
             var PermissionsStrorage_Read = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+
+            var PermissionsRecord = await Permissions.CheckStatusAsync<Permissions.Microphone>();
+            // Прверка разрешенний
+            if (PermissionsRecord != PermissionStatus.Granted )
+            {
+                PermissionsRecord = await Permissions.RequestAsync<Permissions.Microphone>();
+              
+            }
             // Прверка разрешенний
             if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
             {
@@ -61,7 +66,10 @@ namespace Corporate_messenger.ViewModels
                 return;
             }
         }
-        
+        /// <summary>
+        /// Команда для кнопки авторизации
+        /// </summary>
+        public ICommand AuthorizationUserCommand { get; set; }
         private void AuthorizationUserAsync(object obj)
         {
             _ = AuthorizationUserAsync();
@@ -129,14 +137,17 @@ namespace Corporate_messenger.ViewModels
                         var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                         userdata = JsonConvert.DeserializeObject<UserDataModel>(ValueJobject);
                         specialData.Id = userdata.Id;
+                        specialData.Name = userdata.Username;
                     }
                     if (KeyJobject.Key == "token")
                     {
                         var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                         specialData.Token = JsonConvert.DeserializeObject<string>(ValueJobject);
-                        DependencyService.Get<IFileService>().CreateFile(specialData.Token,specialData.Id);
+                        DependencyService.Get<IFileService>().CreateFile(specialData.Token, specialData.Id, specialData.Name);
+
 
                     }
+                    
                 }
                 else
                 {
@@ -145,9 +156,16 @@ namespace Corporate_messenger.ViewModels
 
 
             }
-            
-          if(specialData.Token != "" || specialData.Status)
-            _ = GoChatListPageAsync();
+
+            if (specialData.Status != false)
+            {
+                _ = GoChatListPageAsync();
+            }
+            else
+            {
+                DependencyService.Get<IFileService>().MyToast();
+            }
+           
           
                 
 
