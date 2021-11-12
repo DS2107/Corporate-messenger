@@ -23,6 +23,33 @@ namespace Corporate_messenger.Droid
 
             File.WriteAllText(destination, token + "/" + userID + "/" + name);
         }
+        public string CreateAudioFile()
+        {
+            string filename = Path.Combine(GetRootPath(), "audio.amr");
+
+            if(File.Exists(filename))
+            {
+                File.Delete(filename);
+            }
+           
+
+            return  Path.Combine(GetRootPath(), filename);
+
+        }
+
+        public string GetAudioFile()
+        {
+            string filename = Path.Combine(GetRootPath(), "audio.amr");
+            return Path.Combine(GetRootPath(), filename);
+        }
+        
+        public string SaveFile(byte[] audio)
+        {
+            string filename = Path.Combine(GetRootPath(), "audio2.amr");
+            File.WriteAllBytes(filename, audio);
+            return filename;
+
+        }
 
         public string ReadFile(string file)
         {

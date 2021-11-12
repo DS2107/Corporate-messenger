@@ -12,7 +12,7 @@ namespace Corporate_messenger.Models.Chat
         private string message { get; set; }
         private int chat_room_id { get; set; }
         private string time_LstMessage { get; set; } 
-   
+        private byte[] audio { get; set; }
         private string type { get; set; }
         private int receiver_id { get; set; }
 
@@ -23,6 +23,55 @@ namespace Corporate_messenger.Models.Chat
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+
+        private bool isMessageVisible { get; set; }
+
+        public bool IsMessageVisible
+        {
+            get { return isMessageVisible; }
+            set
+            {
+                if (isMessageVisible != value)
+                {
+                    isMessageVisible = value;
+                    OnPropertyChanged("IsMessageVisible");
+                }
+            }
+        }
+
+        private bool isAuidoVisible { get; set; }
+
+        public bool IsAuidoVisible
+        {
+            get { return isAuidoVisible; }
+            set
+            {
+                if (isAuidoVisible != value)
+                {
+                    isAuidoVisible = value;
+                    OnPropertyChanged("IsAuidoVisible");
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Аудио сообщение
+        /// </summary>
+        [JsonProperty("audio")]
+        public byte[] Audio
+        {
+            get { return audio; }
+            set
+            {
+                if (audio != value)
+                {
+                    audio = value;
+                    OnPropertyChanged("Audio");
+                }
+            }
         }
 
         /// <summary>
@@ -107,6 +156,7 @@ namespace Corporate_messenger.Models.Chat
             get { return message; }
             set
             {
+                
                 if (message != value)
                 {
                     message = value;

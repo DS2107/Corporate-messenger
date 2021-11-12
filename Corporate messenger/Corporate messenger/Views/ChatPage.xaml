@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
-             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="Black" Shell.TitleColor="Wheat" x:Name="set_pqage" >
+             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#04283C" Shell.TitleColor="White" x:Name="set_pqage" >
     <ContentPage.ToolbarItems>
     <ToolbarItem Icon="callTitle.png" Text="Search" x:Name="CallButton" Clicked="CallButton_Clicked"/>
 </ContentPage.ToolbarItems>
@@ -13,8 +13,9 @@
     <ResourceDictionary>
         
         <DataTemplate x:Key="FromTemplate">
-            <ViewCell x:Name="FromUserCell" IsEnabled="False" >
-                <FlexLayout JustifyContent="Start"  >
+            <ViewCell x:Name="FromUserCell" IsEnabled="True" Tapped="FromUserCell_Tapped" >
+                    <ViewCell.View >
+                        <FlexLayout JustifyContent="Start"  >
                     <Frame 
                            
                         BackgroundColor="#ECEDF1"
@@ -26,17 +27,20 @@
             Margin="10,10,40,0"  >
                         <StackLayout Orientation="Horizontal">
 
-                            <Label   Text="{Binding Message}" HorizontalTextAlignment="Start"   
+                                    <Label IsEnabled="True"   Text="{Binding Message}" HorizontalTextAlignment="Start"   
                 TextColor="Black"/>
-                                <Label  Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
+                                    <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding Audio}"  Source="play.png"  x:Name="LeftPlay"     IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
+                                <ProgressBar IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></ProgressBar>
+                                <Label   Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
                 TextColor="DimGray"/>
                             </StackLayout>
                     </Frame>
                 </FlexLayout>
+               </ViewCell.View>      
             </ViewCell>
         </DataTemplate>
         <DataTemplate x:Key="ToTemplate">
-            <ViewCell  x:Name="ToUserCell" IsEnabled="False">
+            <ViewCell  x:Name="ToUserCell" IsEnabled="True">
                 <FlexLayout JustifyContent="End" >
                     <Frame
                        
@@ -50,9 +54,13 @@
         >
                         <StackLayout Orientation="Horizontal">
 
-                            <Label  Text="{Binding Message}" HorizontalTextAlignment="Start"   
+                                <Label IsEnabled="True"  Text="{Binding Message}" IsVisible="{Binding IsMessageVisible, Mode=TwoWay}" HorizontalTextAlignment="Start"   
                 TextColor="Black"/>
-                                <Label  Text="{Binding Time_LstMessage,StringFormat='{}{0:h:mm }'}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
+                                <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding Audio}" Source="play.png" x:Name="RightPlay" IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
+                               
+                                <ProgressBar  IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></ProgressBar>
+
+                                    <Label  Text="{Binding Time_LstMessage,StringFormat='{}{0:h:mm }'}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
                 TextColor="DimGray"/>
                         </StackLayout>
 
@@ -69,12 +77,13 @@
     <ContentPage.Content>
         <StackLayout >
 
-            <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding UpdateList}" RefreshControlColor="Cyan"  Margin="0,0,0,0" SeparatorColor="Transparent"  x:Name="MyListView" HasUnevenRows="true" ItemTemplate="{StaticResource chatDataTemplateSelector}"  ItemsSource="{Binding LastMessage}" >
-
+            <ListView Background="#04283C" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding UpdateList}" RefreshControlColor="Cyan"  Margin="0,0,0,0" SeparatorColor="Transparent"  x:Name="MyListView" HasUnevenRows="true" ItemTemplate="{StaticResource chatDataTemplateSelector}"  ItemsSource="{Binding LastMessage}" >
+               
             </ListView>
 
             <Grid RowSpacing="0" 
            ColumnSpacing="0">
+               
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -94,7 +103,7 @@
                    
                     Command="{Binding SendMessage}"
                     CommandParameter="{Binding}"/>
-                <ImageButton Pressed="mic_message_Pressed" Released="mic_message_Released" Grid.Row="0" 
+                <ImageButton  Pressed="mic_message_Pressed" Released="mic_message_Released" Grid.Row="0" 
                Grid.Column="2" Source="mic.png" Padding="0" BackgroundColor="Transparent"  WidthRequest="32" HeightRequest="32" x:Name="mic_message" 
                     Margin="0,0,10,0"
                   

@@ -26,16 +26,57 @@ namespace Corporate_messenger.Droid.AndroidService
         MediaPlayer player;
         public void PlayAudioFile(string fileName)
         {
-             player = new MediaPlayer();
-            var fd = global::Android.App.Application.Context.Assets.OpenFd(fileName);
-            player.Prepared += (s, e) =>
+            if (player == null)
             {
-                player.Start();
-            };
-            player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);
+                player = new MediaPlayer();
+            }
+            player.Reset();
+            player.SetDataSource(fileName);
             player.Prepare();
+            player.Start();
+            // var fd = global::Android.App.Application.Context.Assets.OpenFd(fileName);
+            /* player.Prepared += (s, e) =>
+             {
+                 player.Start();
+             };
+             player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);*/
 
-            
+
+        }
+
+        MediaRecorder ClassMedia;
+        public void StopSendMessageAudioCommandAsync()
+        {
+
+            if (ClassMedia != null)
+            {
+              
+                ClassMedia.Stop();
+                ClassMedia.Release();
+                ClassMedia = null;
+            }
+        }
+
+
+
+
+        FileService FileService = new FileService();
+        public void SendMessageAudioCommand()
+        {
+            if (ClassMedia == null)
+                ClassMedia = new MediaRecorder();
+            else
+                ClassMedia.Reset();
+
+            ClassMedia.SetAudioSource(AudioSource.Mic);
+            ClassMedia.SetOutputFormat(OutputFormat.AmrNb);
+            ClassMedia.SetAudioEncoder(AudioEncoder.AmrNb);
+            ClassMedia.SetOutputFile(FileService.CreateAudioFile());
+
+
+
+            ClassMedia.Prepare();
+            ClassMedia.Start();
         }
 
         public void PlayStop()

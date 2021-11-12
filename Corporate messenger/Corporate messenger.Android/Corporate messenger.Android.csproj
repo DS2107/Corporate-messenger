@@ -60,6 +60,9 @@
     <PackageReference Include="FFmpeg.AutoGen">
       <Version>4.4.1</Version>
     </PackageReference>
+    <PackageReference Include="Karamunting.Android.EmadAbdalRahman.MusicBar">
+      <Version>1.0.2</Version>
+    </PackageReference>
     <PackageReference Include="LibVLCSharp">
       <Version>3.6.1</Version>
     </PackageReference>
@@ -233,6 +236,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\mic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\stop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

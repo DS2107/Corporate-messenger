@@ -16,6 +16,7 @@ using WebSocketSharp;
 using System.IO;
 using Android.Media;
 using Xamarin.Essentials;
+using Corporate_messenger.Service;
 
 namespace Corporate_messenger.ViewModels
 {
@@ -64,7 +65,9 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-       
+
+        
+
 
         public ObservableCollection<ChatModel> LastMessage
         {
@@ -79,7 +82,7 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
-
+        
 
 
         /// <summary>
@@ -135,6 +138,7 @@ namespace Corporate_messenger.ViewModels
         {
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
+          
             // Регестрирую команду для кнопки 
             SendMessage = new Command(SendMessageCommand);
             GoBack = new Command(GoBackCommand);
@@ -151,70 +155,31 @@ namespace Corporate_messenger.ViewModels
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {
           
-                ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
-            LastMessage.Add(new_message);
+            ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
+            if(new_message.Audio == null)
+            {
+               
+                new_message.IsAuidoVisible = false;
+                new_message.IsMessageVisible = true;
+                LastMessage.Add(new_message);
+            }
+            else
+            {
+              
+                new_message.IsAuidoVisible = true;
+                new_message.IsMessageVisible = false;
+                LastMessage.Add(new_message);
+            }
+          
+            if(new_message.Audio != null)
+            {
+                DependencyService.Get<IFileService>().SaveFile(new_message.Audio);
+            }
             MessagingCenter.Send<ChatViewModel>(this, "Scrol");
         }
 
 
-      
-        public void StopSendMessageAudioCommandAsync()
-        {
-           
-            if (ClassMedia != null)
-            {
-                ClassMedia.Stop();
-                ClassMedia.Release();
-                ClassMedia = null;
-            }
-        }
-        MediaRecorder ClassMedia;
-        string folderPath = Path.Combine(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "MyRecord");
        
-       
-
-        public async Task SendMessageAudioCommand()
-        {
-            
-            // try
-            //{
-            // Даю разрешения для микрофона и (зписи/чтения файлов)
-            var PermissionsStrorage = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-            var PermissionsMicrophone = await Permissions.CheckStatusAsync<Permissions.Microphone>();
-
-            // Прверка разрешенний
-            if (PermissionsStrorage != PermissionStatus.Granted && PermissionsMicrophone != PermissionStatus.Granted)
-            {
-                PermissionsStrorage = await Permissions.RequestAsync<Permissions.StorageWrite>();
-                PermissionsMicrophone = await Permissions.RequestAsync<Permissions.Microphone>();
-            }
-            if (PermissionsStrorage != PermissionStatus.Granted && PermissionsMicrophone != PermissionStatus.Granted)
-            {
-                return;
-            }
-
-
-
-         /*   if (!File.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            if (ClassMedia == null)
-                ClassMedia = new MediaRecorder();
-            else
-                ClassMedia.Reset();
-
-            ClassMedia.SetAudioSource(AudioSource.VoiceCall);
-            ClassMedia.SetOutputFormat(OutputFormat.AmrNb);
-            ClassMedia.SetAudioEncoder(AudioEncoder.AmrNb);
-            ClassMedia.SetOutputFile(folderPath + "/" + "temp" + DateTime.Now.ToString("HH:mm:ss") + ".amr");
-
-
-
-            ClassMedia.Prepare();
-            ClassMedia.Start();*/
-        }
 
         /// <summary>
         /// Команда для кнопки отправки сообщения
@@ -222,21 +187,28 @@ namespace Corporate_messenger.ViewModels
         public ICommand SendMessage { get; set; }
         public void SendMessageCommand(object obj)
         {
-            SendAsync();
+            if (Input_message != null)
+            {
+                byte[] audio = null;
+                SendMyMessage(audio);
+            }
         }
 
         /// <summary>
         /// Отправка сообщения
         /// </summary>
         /// <returns></returns>
-        public void SendAsync()
+        public void SendMyMessage(byte[] audio)
         {
-            var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = user.receiverId, TypeMessage = "message" };
+           
+
+            
+            var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = user.receiverId, TypeMessage = "message",Audio=audio };
             var message = JsonConvert.SerializeObject(new_message);
             ws.Send(message);
             Input_message = "";
-           
             
+
         }
        
         public ICommand GoBack { get; set; }
@@ -283,6 +255,32 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
+        public ICommand Test
+        {
+
+            get
+            {
+                return new Command(async (object obj) =>
+                {
+                    if (obj is byte[] item)
+                    {
+                        string file = DependencyService.Get<IFileService>().SaveFile(item);
+                        if (File.Exists(file))
+                        {
+                            DependencyService.Get<IAudio>().PlayAudioFile(file);
+                        }
+                        
+                    }
+                       
+                  
+                    
+                });
+
+            }
+        }
+
+
+
         async Task SendToken_GetChatsAsync()
         {
             
@@ -316,9 +314,28 @@ namespace Corporate_messenger.ViewModels
                 if (KeyJobject.Key == "dialog")
                 {
                     var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                  
-                    MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
+                   
                     
+                    MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
+                  
+                        foreach (var item in MessageList)
+                        {
+                            if (item.Audio != null)
+                            {
+                                item.IsMessageVisible = false;
+                                item.IsAuidoVisible = true;
+
+
+
+                            }
+                            else
+                            {
+                                item.IsMessageVisible = true;
+                                item.IsAuidoVisible = false;
+                            }
+                        
+                    }
+                   
                    
                 }
                 if (KeyJobject.Key == "receiver_id")
@@ -330,7 +347,10 @@ namespace Corporate_messenger.ViewModels
                     user.receiverId = Int32.Parse(words[2]);
                 }
             }
-            LastMessageAdd(MessageList.Count-1);
+            if (MessageList.Count > 20)
+                LastMessageAdd(MessageList.Count - 1);
+            else
+                LastMessage = MessageList;
             /* // Добавить в базу последние элементы
              foreach (var item in MessageList)
              {

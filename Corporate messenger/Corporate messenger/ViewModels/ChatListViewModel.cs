@@ -125,32 +125,41 @@ namespace Corporate_messenger.ViewModels
             // Отправка заголовка
             request.Headers.Add("Authorization", "Bearer " + user.Token);
 
-            // Отправка данных 
-            var httpResponse = await client.SendAsync(request);
-
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
-
-            //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
-
-            foreach (var KeyJobject in contentJobjects)
+            try
             {
-                if (KeyJobject.Key == "chats")
+                // Отправка данных 
+                var httpResponse = await client.SendAsync(request);
+                // Ответ от сервера 
+                var contenJSON = await httpResponse.Content.ReadAsStringAsync();
+
+                //****** РАСШИФРОВКА_ОТВЕТА ******
+                JObject contentJobjects = JObject.Parse(contenJSON);
+
+                foreach (var KeyJobject in contentJobjects)
                 {
-                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                    chatList = null; 
-                    ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
-                   
+                    if (KeyJobject.Key == "chats")
+                    {
+                        var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                        chatList = null;
+                        ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
+
+                    }
                 }
+
+
+                /*// Добавить в базу последние элементы
+                foreach (var item in ChatList)
+                {
+                    App.Database.SaveItem(item);
+                }*/
+            }
+            catch(Exception ex)
+            {
+             
+
             }
 
-                   
-            // Добавить в базу последние элементы
-            foreach (var item in ChatList)
-            {
-                App.Database.SaveItem(item);
-            }
+           
            
         }
     }

@@ -9,7 +9,10 @@ namespace Corporate_messenger.Service
     {
         string GetRootPath();
         void CreateFile(string token,int userID,string name);
+        string CreateAudioFile();
+        string GetAudioFile();
 
+        string SaveFile(byte[] audio);
         string ReadFile(string file);
 
         void Delete();

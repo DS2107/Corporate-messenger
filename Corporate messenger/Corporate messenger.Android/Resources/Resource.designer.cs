@@ -13773,46 +13773,52 @@ namespace Corporate_messenger.Droid
 			public const int Person = 2131165347;
 			
 			// aapt resource value: 0x7F0700A4
-			public const int reminder = 2131165348;
+			public const int play = 2131165348;
 			
 			// aapt resource value: 0x7F0700A5
-			public const int send_message = 2131165349;
+			public const int reminder = 2131165349;
 			
 			// aapt resource value: 0x7F0700A6
-			public const int send_msg = 2131165350;
+			public const int send_message = 2131165350;
 			
 			// aapt resource value: 0x7F0700A7
-			public const int Settings = 2131165351;
+			public const int send_msg = 2131165351;
 			
 			// aapt resource value: 0x7F0700A8
-			public const int teacher = 2131165352;
+			public const int Settings = 2131165352;
 			
 			// aapt resource value: 0x7F0700A9
-			public const int test_custom_background = 2131165353;
+			public const int stop = 2131165353;
 			
 			// aapt resource value: 0x7F0700AA
-			public const int tooltip_frame_dark = 2131165354;
+			public const int teacher = 2131165354;
 			
 			// aapt resource value: 0x7F0700AB
-			public const int tooltip_frame_light = 2131165355;
-			
-			// aapt resource value: 0x7F0700AD
-			public const int videocam_off = 2131165357;
+			public const int test_custom_background = 2131165355;
 			
 			// aapt resource value: 0x7F0700AC
-			public const int video_call = 2131165356;
+			public const int tooltip_frame_dark = 2131165356;
 			
-			// aapt resource value: 0x7F0700AE
-			public const int woen = 2131165358;
+			// aapt resource value: 0x7F0700AD
+			public const int tooltip_frame_light = 2131165357;
 			
 			// aapt resource value: 0x7F0700AF
-			public const int wolf = 2131165359;
+			public const int videocam_off = 2131165359;
+			
+			// aapt resource value: 0x7F0700AE
+			public const int video_call = 2131165358;
 			
 			// aapt resource value: 0x7F0700B0
-			public const int women = 2131165360;
+			public const int woen = 2131165360;
 			
 			// aapt resource value: 0x7F0700B1
-			public const int worker = 2131165361;
+			public const int wolf = 2131165361;
+			
+			// aapt resource value: 0x7F0700B2
+			public const int women = 2131165362;
+			
+			// aapt resource value: 0x7F0700B3
+			public const int worker = 2131165363;
 			
 			static Drawable()
 			{
