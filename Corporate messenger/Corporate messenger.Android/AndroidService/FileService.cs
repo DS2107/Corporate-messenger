@@ -15,6 +15,18 @@ namespace Corporate_messenger.Droid
             return Application.Context.GetExternalFilesDir(null).ToString();
         }
 
+        public string CreateFile()
+        {
+            string filename = Path.Combine(GetRootPath(), "config.txt");
+            if (!File.Exists(filename))
+            {
+               // File.Create(filename);
+                File.WriteAllText(filename, "http://192.168.0.105:8098");
+            }
+            string adress = File.ReadAllText(filename);
+            return adress;
+        }
+
         public void CreateFile(string token,int userID,string name)
         {
             var filename = "token.txt";

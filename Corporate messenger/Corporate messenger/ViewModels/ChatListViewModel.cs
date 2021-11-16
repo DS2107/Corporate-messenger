@@ -1,4 +1,6 @@
 ﻿using Corporate_messenger.Models;
+using Corporate_messenger.Service;
+using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -59,10 +61,12 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public ChatListViewModel()
         {
-           // chatList = App.Database.GetItems();
-           _ = SendToken_GetChatsAsync();
+            // chatList = App.Database.GetItems();
+            ChatList.Clear();
+            _ = SendToken_GetChatsAsync();
+            
             ChatList.CollectionChanged += ChatList_CollectionChanged;
-          
+         
             //CallClass call = new CallClass();
             //call.LessPort();
         }
@@ -103,6 +107,10 @@ namespace Corporate_messenger.ViewModels
 
             }
         }
+        public INavigation Navigation { get; set; }
+        
+     
+
 
         /// <summary>
         /// ОТправить токен и получить Чаты
@@ -110,15 +118,18 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         async Task SendToken_GetChatsAsync()
         {
+           
             // Устанавливаем соеденение 
             HttpClient client = new HttpClient();
 
 
             // Тип Запроса
             var httpMethod = HttpMethod.Get;
+            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/user/" + user.Id + "/chatroom";
+
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri("http://192.168.0.105:8098/api/user/" + user.Id + "/chatroom"),
+                RequestUri = new Uri(address),
                 Method = httpMethod,
 
             };

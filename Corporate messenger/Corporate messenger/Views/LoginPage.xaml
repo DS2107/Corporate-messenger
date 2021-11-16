@@ -88,7 +88,7 @@
                     TextColor="White"
                   CornerRadius="20"
                     Command="{Binding AuthorizationUserCommand}"
-                    CommandParameter="{Binding}"
+                   
                     />
 
 

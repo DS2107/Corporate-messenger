@@ -24,6 +24,7 @@ namespace Corporate_messenger.Droid.AndroidService
 
         }
         MediaPlayer player;
+       
         public void PlayAudioFile(string fileName)
         {
             if (player == null)
@@ -31,16 +32,53 @@ namespace Corporate_messenger.Droid.AndroidService
                 player = new MediaPlayer();
             }
             player.Reset();
+            
             player.SetDataSource(fileName);
             player.Prepare();
             player.Start();
-            // var fd = global::Android.App.Application.Context.Assets.OpenFd(fileName);
-            /* player.Prepared += (s, e) =>
-             {
-                 player.Start();
-             };
-             player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);*/
+            var s = player.CurrentPosition;
+             var time  = player.Duration/1000.0;
+            var doubletime = TimeSpan.FromSeconds(time);
+            var sd = GetInfo();
+            
 
+        }
+
+        public void Resume()
+        {
+           // player.SeekTo( GetPosition());
+            player.Start();
+        }
+
+        public double GetPosition()
+        {
+            if (player != null)
+                return player.CurrentPosition/1000.0;
+            else
+                return 0;
+        }
+        public double GetInfo()
+        {
+            double arr =0;
+            if (player != null)
+            {
+                arr = player.Duration/1000.0;
+
+                return arr;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public void StopAudioFile()
+        {
+            if (player != null)
+            {
+             
+                player.Pause();
+            }
 
         }
 
@@ -50,7 +88,7 @@ namespace Corporate_messenger.Droid.AndroidService
 
             if (ClassMedia != null)
             {
-              
+             
                 ClassMedia.Stop();
                 ClassMedia.Release();
                 ClassMedia = null;
@@ -61,6 +99,9 @@ namespace Corporate_messenger.Droid.AndroidService
 
 
         FileService FileService = new FileService();
+
+       
+
         public void SendMessageAudioCommand()
         {
             if (ClassMedia == null)
@@ -69,8 +110,8 @@ namespace Corporate_messenger.Droid.AndroidService
                 ClassMedia.Reset();
 
             ClassMedia.SetAudioSource(AudioSource.Mic);
-            ClassMedia.SetOutputFormat(OutputFormat.AmrNb);
-            ClassMedia.SetAudioEncoder(AudioEncoder.AmrNb);
+            ClassMedia.SetOutputFormat(OutputFormat.AmrWb);
+            ClassMedia.SetAudioEncoder(AudioEncoder.AmrWb);
             ClassMedia.SetOutputFile(FileService.CreateAudioFile());
 
 
@@ -79,9 +120,5 @@ namespace Corporate_messenger.Droid.AndroidService
             ClassMedia.Start();
         }
 
-        public void PlayStop()
-        {
-            player.Stop();
-        }
     }
 }

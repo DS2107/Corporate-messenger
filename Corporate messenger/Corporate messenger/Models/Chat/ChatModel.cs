@@ -15,7 +15,9 @@ namespace Corporate_messenger.Models.Chat
         private byte[] audio { get; set; }
         private string type { get; set; }
         private int receiver_id { get; set; }
+        private string sourceImage { get; set; }
 
+        private double valueSlider { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -25,6 +27,23 @@ namespace Corporate_messenger.Models.Chat
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
+
+       
+
+        private bool isEnableSlider { get; set; }
+
+        public bool IsEnableSlider
+        {
+            get { return isEnableSlider; }
+            set
+            {
+                if (isEnableSlider != value)
+                {
+                    isEnableSlider = value;
+                    OnPropertyChanged("IsEnableSlider");
+                }
+            }
+        }
 
         private bool isMessageVisible { get; set; }
 
@@ -56,6 +75,48 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
+        private double maximumSlider { get; set; }
+        public double ValueSlider
+        {
+            get { return valueSlider; }
+            set
+            {
+               
+                if (valueSlider != value)
+                {
+                    valueSlider = value;
+                    OnPropertyChanged("ValueSlider");
+                }
+            }
+        }
+
+        public double MaximumSlider
+        {
+            get { return maximumSlider; }
+            set
+            {
+                
+                if (maximumSlider != value)
+                {
+                    maximumSlider = value;
+                    OnPropertyChanged("MaximumSlider");
+                }
+            }
+        }
+
+
+        public string SourceImage
+        {
+            get { return sourceImage; }
+            set
+            {
+                if (sourceImage != value)
+                {
+                    sourceImage = value;
+                    OnPropertyChanged("SourceImage");
+                }
+            }
+        }
 
         /// <summary>
         /// Аудио сообщение

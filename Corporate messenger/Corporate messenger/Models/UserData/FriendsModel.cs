@@ -12,9 +12,29 @@ namespace Corporate_messenger.Models.UserData
 
         private string email { get; set; }
 
-        private string avatar { get; set; }
+        //private string avatar { get; set; }
+
+        private int id { get; set; }
 
         private string last_login { get; set; }
+
+
+        /// <summary>
+        /// ID друга
+        /// </summary>
+        [JsonProperty("id")]
+        public int Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged("Id");
+                }
+            }
+        }
 
         /// <summary>
         /// Имя друга
@@ -50,7 +70,7 @@ namespace Corporate_messenger.Models.UserData
             }
         }
 
-        /// <summary>
+      /*  /// <summary>
         /// Аватар друга
         /// </summary>
         [JsonProperty("id")]
@@ -65,7 +85,7 @@ namespace Corporate_messenger.Models.UserData
                     OnPropertyChanged("Avatar");
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// Последний раз когда заходил друг

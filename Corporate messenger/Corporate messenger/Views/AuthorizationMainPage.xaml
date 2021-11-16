@@ -10,10 +10,10 @@
             <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Создать группу"
+    <FlyoutItem Title="Контакты"
                 Icon="createGroupTitle.png">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:CreateGroupPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:FriendPage}" />
         </Tab>
     </FlyoutItem>
     <FlyoutItem Title="Звонки"

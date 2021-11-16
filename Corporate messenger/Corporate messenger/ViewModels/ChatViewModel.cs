@@ -66,7 +66,9 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
-        
+      
+
+
 
 
         public ObservableCollection<ChatModel> LastMessage
@@ -138,7 +140,7 @@ namespace Corporate_messenger.ViewModels
         {
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
-          
+            chat.SourceImage = "play.png";
             // Регестрирую команду для кнопки 
             SendMessage = new Command(SendMessageCommand);
             GoBack = new Command(GoBackCommand);
@@ -156,18 +158,31 @@ namespace Corporate_messenger.ViewModels
         {
           
             ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
-            if(new_message.Audio == null)
+             if(new_message.Audio == null)
             {
-               
+                new_message.MaximumSlider = 1;
                 new_message.IsAuidoVisible = false;
                 new_message.IsMessageVisible = true;
-                LastMessage.Add(new_message);
+                new_message.SourceImage = "play.png";
+                new_message.ValueSlider = 1;
+                try
+                {
+                    LastMessage.Add(new_message);
+                }
+                catch(Exception ex)
+                {
+
+                }
+               
             }
             else
             {
-              
+                new_message.ValueSlider = 1;
+                new_message.SourceImage = "play.png";
                 new_message.IsAuidoVisible = true;
                 new_message.IsMessageVisible = false;
+                new_message.MaximumSlider = 1;
+                
                 LastMessage.Add(new_message);
             }
           
@@ -254,7 +269,8 @@ namespace Corporate_messenger.ViewModels
 
             }
         }
-
+        bool PlayStopStart = true;
+        ChatModel PLayItem;
         public ICommand Test
         {
 
@@ -262,16 +278,30 @@ namespace Corporate_messenger.ViewModels
             {
                 return new Command(async (object obj) =>
                 {
-                    if (obj is byte[] item)
+                    if (obj is ChatModel item)
                     {
-                        string file = DependencyService.Get<IFileService>().SaveFile(item);
-                        if (File.Exists(file))
+                        if (PLayItem != item && PLayItem != null)
                         {
-                            DependencyService.Get<IAudio>().PlayAudioFile(file);
+                            PLayItem.IsEnableSlider = false;
+                            Stop(PLayItem);
+                            Play(item);
+
                         }
-                        
+                        else
+                        {
+                            if (PlayStopStart)
+                            {
+                                Play(item);
+                            }
+                            else
+                            {
+
+                                Stop(item);
+                            }
+                        }
+                      
+
                     }
-                       
                   
                     
                 });
@@ -279,7 +309,51 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
+        private void Play(ChatModel item)
+        {
+          
+            string file = DependencyService.Get<IFileService>().SaveFile(item.Audio);
+            if (File.Exists(file))
+            {
+                DependencyService.Get<IAudio>().PlayAudioFile(file);
+                item.MaximumSlider = DependencyService.Get<IAudio>().GetInfo();
+                item.IsEnableSlider = true;
+                item.SourceImage = "stop.png";
 
+                int count = 0;
+                Device.StartTimer(new TimeSpan(0, 0, 0,1), () =>
+                {
+                  
+
+
+                        if (item.MaximumSlider != item.ValueSlider)
+                        {
+                            item.ValueSlider = DependencyService.Get<IAudio>().GetPosition();
+                            var s = DependencyService.Get<IAudio>().GetPosition();
+                            return true; // runs again, or false to stop
+                        }
+                        else
+                        {
+                            item.SourceImage = "Play.png";
+                            PlayStopStart = true;
+                            item.ValueSlider = 0;
+                            return false;
+
+                        }
+                    
+                  
+                });
+               
+            }
+            PlayStopStart = false;
+            PLayItem = item;
+        }
+        private void Stop(ChatModel item)
+        {
+            DependencyService.Get<IAudio>().StopAudioFile();
+            item.SourceImage = "play.png";
+            PlayStopStart = true;
+        }
 
         async Task SendToken_GetChatsAsync()
         {
@@ -290,9 +364,11 @@ namespace Corporate_messenger.ViewModels
 
             // Тип Запроса
             var httpMethod = HttpMethod.Get;
+            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog";
+
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri("http://192.168.0.105:8098/api/chat/" + chat.Chat_room_id +"/"+user.Id+ "/dialog"),
+                RequestUri = new Uri(address),
                 Method = httpMethod,
 
             };
@@ -322,15 +398,19 @@ namespace Corporate_messenger.ViewModels
                         {
                             if (item.Audio != null)
                             {
+                                item.ValueSlider = 1;
+                                item.MaximumSlider = 1;
                                 item.IsMessageVisible = false;
                                 item.IsAuidoVisible = true;
-
-
+                                item.SourceImage = "play.png";
+                            
 
                             }
                             else
                             {
-                                item.IsMessageVisible = true;
+                            item.ValueSlider = 1;
+                            item.MaximumSlider = 1;
+                            item.IsMessageVisible = true;
                                 item.IsAuidoVisible = false;
                             }
                         

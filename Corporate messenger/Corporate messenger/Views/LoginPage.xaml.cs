@@ -3,6 +3,7 @@ using Xamarin.Forms.Xaml;
 using Corporate_messenger.Models;
 using Corporate_messenger.ViewModels;
 using Corporate_messenger.Service;
+using System.Threading.Tasks;
 
 namespace Corporate_messenger.Views
 {
@@ -19,7 +20,7 @@ namespace Corporate_messenger.Views
             DependencyService.Get<IFileService>().Delete();
             SpecialDataModel special = new SpecialDataModel();
             SizeChanged += LoginPage_SizeChanged;
-           
+        
             special.Id = 0;
             special.Token = null;
             UsernameTxt.Text = "";
@@ -36,6 +37,11 @@ namespace Corporate_messenger.Views
             }
 
 
+        }
+
+        private async Task CloseAsync()
+        {
+         
         }
 
         private void LoginPage_SizeChanged(object sender, System.EventArgs e)
@@ -85,6 +91,7 @@ namespace Corporate_messenger.Views
                 LabelPassword.IsVisible = false;
             }
         }
-        
+
+       
     }
 }

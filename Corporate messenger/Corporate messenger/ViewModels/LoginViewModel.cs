@@ -32,12 +32,14 @@ namespace Corporate_messenger.ViewModels
         }
 
         /// <summary>
-        /// Переход в нутрь приложения 
+        /// Переход в приложения 
         /// </summary>
         /// <returns></returns>
         async Task GoChatListPageAsync()
         {
+           //  ChatsListPage page = new ChatsListPage();
             await Shell.Current.GoToAsync("//chats_list", true);
+          
         }
 
 
@@ -103,10 +105,11 @@ namespace Corporate_messenger.ViewModels
             var contentType = "application/json"; 
 
             // Тип Запроса
-            var httpMethod = HttpMethod.Post; 
+            var httpMethod = HttpMethod.Post;
+            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/login";
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri("http://192.168.0.105:8098/api/login"),
+                RequestUri = new Uri(address),
                 Method = httpMethod,
                 Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
             };

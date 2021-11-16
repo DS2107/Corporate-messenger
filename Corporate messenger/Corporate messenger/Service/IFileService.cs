@@ -8,6 +8,7 @@ namespace Corporate_messenger.Service
     public interface IFileService
     {
         string GetRootPath();
+        string CreateFile();
         void CreateFile(string token,int userID,string name);
         string CreateAudioFile();
         string GetAudioFile();

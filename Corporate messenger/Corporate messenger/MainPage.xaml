@@ -4,21 +4,22 @@
              xmlns:local="clr-namespace:Corporate_messenger.Views"
              x:Class="Corporate_messenger.MainPage"      
              FlyoutBackgroundImageAspect="AspectFill" >
-    <Tab x:Name="LoginShell" >
+    <ShellItem x:Name="LoginShell" >
         <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"/>
-    </Tab>
+    </ShellItem>
+
    
-    
+
     <FlyoutItem   Route="chats_list" Title="Сообщения" 
                 Icon="messageTitle.png" >
         <Tab>
             <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Создать группу"
+    <FlyoutItem Title="Контакты"
                 Icon="createGroupTitle.png">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:CreateGroupPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:FriendPage}" />
         </Tab>
     </FlyoutItem>
     <FlyoutItem Title="Звонки"
@@ -40,25 +41,7 @@
         </Tab>
     </FlyoutItem>
     
-    <!--<Shell.ItemTemplate>
-        <DataTemplate>
-            <Grid  ColumnDefinitions="0.2*,0.8*">
-                <Image Source="{Binding FlyoutIcon}"
-                       Margin="10,10,0,0"
-                       HeightRequest="30"
-                      
-                       />
-                <Label
-                    
-                    Grid.Column="1"
-                       FontSize="16"
-                       Margin="0,10,0,0"
-                       Text="{Binding Title}"
-                       FontAttributes="Bold"
-                       VerticalTextAlignment="Center" />
-            </Grid>
-        </DataTemplate>
-    </Shell.ItemTemplate>-->
+    
 
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>

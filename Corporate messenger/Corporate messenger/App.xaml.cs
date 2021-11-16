@@ -56,6 +56,7 @@ namespace Corporate_messenger
 
         protected override void OnStart()
         {
+            var file = DependencyService.Get<IFileService>().CreateFile();
         }
 
         protected override void OnSleep()

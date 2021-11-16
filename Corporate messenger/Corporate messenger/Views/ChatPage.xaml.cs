@@ -72,9 +72,9 @@ namespace Corporate_messenger.Views
 
         }
 
-        private void FromUserCell_Tapped(object sender, EventArgs e)
+        private void LeftSlider_ValueChanged(object sender, ValueChangedEventArgs e)
         {
-            
+
         }
     }
    

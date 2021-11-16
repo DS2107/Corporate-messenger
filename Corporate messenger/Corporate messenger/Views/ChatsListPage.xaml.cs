@@ -25,6 +25,7 @@ namespace Corporate_messenger.Views
         public ChatsListPage()
         {
             InitializeComponent();
+           
             BindingContext = new ChatListViewModel();
            
         }
@@ -50,6 +51,14 @@ namespace Corporate_messenger.Views
 
         }
 
-      
+        private void CallButton_Clicked(object sender, EventArgs e)
+        {
+            GoToPagaeFriend();
+        }
+        async Task GoToPagaeFriend()
+        {
+            await Navigation.PushAsync(new FriendPage());
+
+        }
     }
 }

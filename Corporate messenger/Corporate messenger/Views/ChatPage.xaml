@@ -13,7 +13,7 @@
     <ResourceDictionary>
         
         <DataTemplate x:Key="FromTemplate">
-            <ViewCell x:Name="FromUserCell" IsEnabled="True" Tapped="FromUserCell_Tapped" >
+            <ViewCell x:Name="FromUserCell" IsEnabled="True"  >
                     <ViewCell.View >
                         <FlexLayout JustifyContent="Start"  >
                     <Frame 
@@ -29,8 +29,8 @@
 
                                     <Label IsEnabled="True"   Text="{Binding Message}" HorizontalTextAlignment="Start"   
                 TextColor="Black"/>
-                                    <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding Audio}"  Source="play.png"  x:Name="LeftPlay"     IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
-                                <ProgressBar IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></ProgressBar>
+                                    <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding .}"  Source="{Binding Path=SourceImage,Mode=TwoWay}"  x:Name="LeftPlay"     IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
+                                    <Slider x:Name="LeftSlider" ValueChanged="LeftSlider_ValueChanged" Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}" WidthRequest="150" IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
                                 <Label   Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
                 TextColor="DimGray"/>
                             </StackLayout>
@@ -56,9 +56,9 @@
 
                                 <Label IsEnabled="True"  Text="{Binding Message}" IsVisible="{Binding IsMessageVisible, Mode=TwoWay}" HorizontalTextAlignment="Start"   
                 TextColor="Black"/>
-                                <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding Audio}" Source="play.png" x:Name="RightPlay" IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
-                               
-                                <ProgressBar  IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></ProgressBar>
+                                <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding .}"  Source="{Binding Path=SourceImage,Mode=TwoWay}" x:Name="RightPlay" IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
+
+                                <Slider Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}"  WidthRequest="150"  IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
 
                                     <Label  Text="{Binding Time_LstMessage,StringFormat='{}{0:h:mm }'}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
                 TextColor="DimGray"/>
