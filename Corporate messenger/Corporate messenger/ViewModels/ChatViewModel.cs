@@ -20,8 +20,22 @@ using Corporate_messenger.Service;
 
 namespace Corporate_messenger.ViewModels
 {
+    class MyAudio
+    {
+        [JsonProperty("voice_audio")]
+        public byte[] audio { get; set; }
+        [JsonProperty("type")]
+        public string type { get; set; }
+        [JsonProperty("sender_id")]
+        public int sendr_id { get; set; }
+
+        [JsonProperty("receiverId")]
+        public int receiverId { get; set; }
+
+    }
     class ChatViewModel: INotifyPropertyChanged
     {
+        static string addressWS = "ws://192.168.0.105:6001";
         /// <summary>
         /// Клиент для связи с сокетом
         /// </summary>
@@ -30,13 +44,13 @@ namespace Corporate_messenger.ViewModels
         /// <summary>
         /// Модель данных чат
         /// </summary>
-        ChatModel chat = new ChatModel();
+       public ChatModel chat = new ChatModel();
 
          //Сокет 
-         WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+        public  WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
 
         // Модель юзера
-        SpecialDataModel user = new SpecialDataModel();
+        public SpecialDataModel user = new SpecialDataModel();
       
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -147,54 +161,64 @@ namespace Corporate_messenger.ViewModels
          
            
             MessageList.CollectionChanged += MessageList_CollectionChanged;
-             ConnectToServerAsync();
+           
            _ = SendToken_GetChatsAsync();
-          
+            
+
         }
 
-       
 
+        
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {
-          
-            ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
-             if(new_message.Audio == null)
-            {
-                new_message.MaximumSlider = 1;
-                new_message.IsAuidoVisible = false;
-                new_message.IsMessageVisible = true;
-                new_message.SourceImage = "play.png";
-                new_message.ValueSlider = 1;
-                try
-                {
-                    LastMessage.Add(new_message);
-                }
-                catch(Exception ex)
-                {
+           var message = JsonConvert.DeserializeObject(e.Data).ToString();
+           // message = message.Substring(13,4);
+           
+                var myAudio = JsonConvert.DeserializeObject<MyAudio>(e.Data);
+                DependencyService.Get<IAudioSocket>().PlayVoiceChat(myAudio.audio);
 
-                }
-               
-            }
-            else
-            {
-                new_message.ValueSlider = 1;
-                new_message.SourceImage = "play.png";
-                new_message.IsAuidoVisible = true;
-                new_message.IsMessageVisible = false;
-                new_message.MaximumSlider = 1;
-                
-                LastMessage.Add(new_message);
-            }
-          
-            if(new_message.Audio != null)
-            {
-                DependencyService.Get<IFileService>().SaveFile(new_message.Audio);
-            }
-            MessagingCenter.Send<ChatViewModel>(this, "Scrol");
+            /* else
+             {
+                 ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
+                 if (new_message.Audio == null)
+                 {
+                     new_message.MaximumSlider = 1;
+                     new_message.IsAuidoVisible = false;
+                     new_message.IsMessageVisible = true;
+                     new_message.SourceImage = "play.png";
+                     new_message.ValueSlider = 1;
+                     try
+                     {
+                         LastMessage.Add(new_message);
+                     }
+                     catch (Exception ex)
+                     {
+
+                     }
+
+                 }
+                 else
+                 {
+                     new_message.ValueSlider = 1;
+                     new_message.SourceImage = "play.png";
+                     new_message.IsAuidoVisible = true;
+                     new_message.IsMessageVisible = false;
+                     new_message.MaximumSlider = 1;
+
+                     LastMessage.Add(new_message);
+                 }
+
+                 if (new_message.Audio != null)
+                 {
+                     DependencyService.Get<IFileService>().SaveFile(new_message.Audio);
+                 }
+                 MessagingCenter.Send<ChatViewModel>(this, "Scrol"); }*/
+
+
         }
 
 
-       
+
 
         /// <summary>
         /// Команда для кнопки отправки сообщения
@@ -202,6 +226,7 @@ namespace Corporate_messenger.ViewModels
         public ICommand SendMessage { get; set; }
         public void SendMessageCommand(object obj)
         {
+           
             if (Input_message != null)
             {
                 byte[] audio = null;
@@ -431,6 +456,8 @@ namespace Corporate_messenger.ViewModels
                 LastMessageAdd(MessageList.Count - 1);
             else
                 LastMessage = MessageList;
+
+            ConnectToServerAsync();
             /* // Добавить в базу последние элементы
              foreach (var item in MessageList)
              {
@@ -495,10 +522,11 @@ namespace Corporate_messenger.ViewModels
 
         void ConnectToServerAsync()
         {
-            ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001/app");
+            ws = new WebSocketSharp.WebSocket(addressWS);
 
-            ws.OnMessage += WsOnMEssage;
+           ws.OnMessage += WsOnMEssage;
             ws.OnOpen += WsOnOpen;
+            DependencyService.Get<IAudioSocket>().Init(user.Id,user.receiverId);
             ws.Connect();
            
 
@@ -510,11 +538,13 @@ namespace Corporate_messenger.ViewModels
             public string subs { get; set; }
             [JsonProperty("sender_id")]
             public int sendr_id { get; set; }
+            [JsonProperty("reciever_id")]
+            public int reciever_id { get; set; }
         }
 
         private void WsOnOpen(object sender, EventArgs e)
         {
-            var message = JsonConvert.SerializeObject(new dataRoom { subs = "subscribe", sendr_id = chat.Sender_id });
+            var message = JsonConvert.SerializeObject(new dataRoom { subs = "subscribe", sendr_id = chat.Sender_id,reciever_id=user.receiverId });
             ws.Send(message);
         }
     }

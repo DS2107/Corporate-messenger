@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Models"
              Title="Login"
              BackgroundColor="#052243"
-             Shell.NavBarIsVisible="False"
-             x:Class="Corporate_messenger.Views.LoginPage">
+            Shell.PresentationMode="Animated"
+             x:Class="Corporate_messenger.Views.LoginPage" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="False">
 
 
 
@@ -21,7 +21,7 @@
                           Offset="1" />
         </LinearGradientBrush>
     </Frame.Background>
-            <StackLayout x:Name="FirstContainer" Margin="40,100,40,20">
+            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"  x:Name="FirstContainer" >
                 <StackLayout>
                     <Label
                         x:Name="LabelTitle"

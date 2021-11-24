@@ -18,17 +18,19 @@ namespace Corporate_messenger.ViewModels
 {
     public class LoginViewModel
     {
-       
 
+        private INavigation Nav { get; set; }
         /// <summary>
         /// Конструктор класса
         /// </summary>
-        public LoginViewModel()
+        public LoginViewModel(INavigation navigation)
         {
             _ = Permission();
+            ChatListViewModel cl = new ChatListViewModel();
+            cl.ChatList.Clear();
             // Регестрирую команду для кнопки на LoginPage
             AuthorizationUserCommand = new Command(AuthorizationUserAsync);
-         
+            Nav = navigation;
         }
 
         /// <summary>
@@ -37,7 +39,8 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         async Task GoChatListPageAsync()
         {
-           //  ChatsListPage page = new ChatsListPage();
+            //  ChatsListPage page = new ChatsListPage();
+           // await Nav.PushAsync(new AuthorizationMainPage());
             await Shell.Current.GoToAsync("//chats_list", true);
           
         }

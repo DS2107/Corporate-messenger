@@ -60,7 +60,7 @@
 
                                 <Slider Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}"  WidthRequest="150"  IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
 
-                                    <Label  Text="{Binding Time_LstMessage,StringFormat='{}{0:h:mm }'}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
+                                    <Label  Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
                 TextColor="DimGray"/>
                         </StackLayout>
 

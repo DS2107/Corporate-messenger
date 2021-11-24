@@ -18,16 +18,21 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatsListPage : ContentPage
     {
-        
-      
-        
 
+
+
+        ChatListViewModel clvm;
         public ChatsListPage()
         {
             InitializeComponent();
-           
-            BindingContext = new ChatListViewModel();
-           
+
+            clvm = new ChatListViewModel();
+            BindingContext = clvm;
+            MessagingCenter.Subscribe<ChatsListPage>(
+                this, // кто подписывается на сообщения
+                "ListClear",   // название сообщения
+                (sender) => { clvm.ChatList.Clear(); });    // вызываемое действие
+
         }
 
         

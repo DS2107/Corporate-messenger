@@ -12,7 +12,7 @@
         </LinearGradientBrush>
     </ContentPage.Background>
     <Grid RowDefinitions="50,*,60,30">
-       
+
         <RelativeLayout VerticalOptions="FillAndExpand" 
                         HorizontalOptions="FillAndExpand"
                         BackgroundColor="#CCC"

@@ -21,7 +21,7 @@ namespace Corporate_messenger.Droid.AndroidService
        
         public AudioService()
         {
-
+            
         }
         MediaPlayer player;
        
@@ -113,7 +113,7 @@ namespace Corporate_messenger.Droid.AndroidService
             ClassMedia.SetOutputFormat(OutputFormat.AmrWb);
             ClassMedia.SetAudioEncoder(AudioEncoder.AmrWb);
             ClassMedia.SetOutputFile(FileService.CreateAudioFile());
-
+           
 
 
             ClassMedia.Prepare();

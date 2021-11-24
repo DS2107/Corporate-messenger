@@ -2,39 +2,38 @@
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.AuthorizationMainPage"
-        xmlns:local="clr-namespace:Corporate_messenger.Views"
-       >
-    <FlyoutItem   Route="chats_list" Title="Сообщения" 
+        xmlns:local="clr-namespace:Corporate_messenger.Views" xmlns:local1="clr-namespace:Corporate_messenger.Models">
+    <FlyoutItem    Title="Сообщения" 
                 Icon="messageTitle.png" >
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" Route="chats_list"/>
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Контакты"
+    <FlyoutItem  Title="Контакты"
                 Icon="createGroupTitle.png">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:FriendPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:FriendPage}" Route="contact_page" />
         </Tab>
     </FlyoutItem>
-    <FlyoutItem Title="Звонки"
+    <!--<FlyoutItem  Title="Звонки"
                 Icon="callTitle.png">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:ChatsListPage}" Route="call_page"/>
         </Tab>
-    </FlyoutItem>
-    <FlyoutItem Title="Настройки"
+    </FlyoutItem>-->
+    <FlyoutItem  Title="Настройки"
                 Icon="Settings.png">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:Settings}" />
+            <ShellContent ContentTemplate="{DataTemplate local:Settings}" Route="Setting_page"/>
         </Tab>
     </FlyoutItem>
     <FlyoutItem Title="Выход"
                 Icon="exit.png">
-        <Tab >
-            
-            <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" />
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"    Route="login"/>
         </Tab>
     </FlyoutItem>
+
 
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
@@ -55,11 +54,15 @@
                     </Image>
 
                 </StackLayout>
-                <Label FontFamily="mulish" Margin="20,0,0,0" HorizontalOptions="StartAndExpand"   Grid.Row="1" Grid.Column="0" x:Name="MyText" Text="{Binding UserName}"
+                <Label FontFamily="mulish" Margin="20,0,0,0" HorizontalOptions="StartAndExpand"   Grid.Row="1" Grid.Column="0" Text="{Binding Name}"
                            TextColor="Wheat" FontSize="Medium"
                            VerticalOptions="Center"
-                      
-                           />
+                     
+                    >
+                    <Label.BindingContext>
+                        <local1:SpecialDataModel/>
+                    </Label.BindingContext>
+                </Label>
                 <Label FontFamily="mulish"  Grid.Row="2" Grid.Column="0" Margin="20,0,0,0"   Text="Описание тебя"
                            TextColor="Wheat" FontSize="Small"
                            VerticalOptions="Center"

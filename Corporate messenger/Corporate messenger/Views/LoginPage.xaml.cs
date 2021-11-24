@@ -4,6 +4,7 @@ using Corporate_messenger.Models;
 using Corporate_messenger.ViewModels;
 using Corporate_messenger.Service;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Corporate_messenger.Views
 {
@@ -16,7 +17,10 @@ namespace Corporate_messenger.Views
         public LoginPage()
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel();
+            BindingContext = new LoginViewModel(Navigation);
+           // Shell.ItemsProperty.cl
+            // отправляем сообщение
+            MessagingCenter.Send<LoginPage>(this, "ListClear");
             DependencyService.Get<IFileService>().Delete();
             SpecialDataModel special = new SpecialDataModel();
             SizeChanged += LoginPage_SizeChanged;

@@ -49,9 +49,10 @@ namespace Corporate_messenger.Views
             mic_message.Background = Brush.Transparent;
             send_message.IsEnabled = true;
             MessageEditor.IsEnabled = true;
-            DependencyService.Get<IAudio>().StopSendMessageAudioCommandAsync();
-            byte[] bytes = File.ReadAllBytes(DependencyService.Get<IFileService>().GetAudioFile());
-            chat.SendMyMessage(bytes);
+         
+            /*  DependencyService.Get<IAudio>().StopSendMessageAudioCommandAsync();
+              byte[] bytes = File.ReadAllBytes(DependencyService.Get<IFileService>().GetAudioFile());
+              chat.SendMyMessage(bytes);*/
         }
 
 
@@ -61,10 +62,14 @@ namespace Corporate_messenger.Views
             send_message.IsEnabled = false;
             MessageEditor.IsEnabled = false;
             mic_message.Background = Brush.Red;
-            DependencyService.Get<IAudio>().SendMessageAudioCommand();
+            DependencyService.Get<IAudioSocket>().Init(chat.user.Id,chat.user.receiverId);
+            DependencyService.Get<IAudioSocket>().Start2(chat.ws);
+            // Start();
+            // DependencyService.Get<IAudio>().SendMessageAudioCommand();
 
         }
 
+     
         private void LeftPlay_Clicked(object sender, EventArgs e)
         {
             var s = sender as Button;

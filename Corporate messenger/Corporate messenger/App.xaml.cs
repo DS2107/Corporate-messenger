@@ -19,7 +19,7 @@ namespace Corporate_messenger
             {
                 if (database == null)
                 {
-                    
+
                     database = new ChatListRepository(
                         Path.Combine(
                             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DATABASE_NAME));
@@ -33,25 +33,25 @@ namespace Corporate_messenger
 
 
             var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
-           var data = token.Split('/');
-          
-            if (data[0] != "")
-            {
-                SpecialDataModel special = new SpecialDataModel();
-                special.Token = data[0];
-                special.Id = Int32.Parse(data[1]);
-                special.Name = data[2];
-                MainPage = new AuthorizationMainPage();
-            }
-            else
-            {
-                MainPage = new MainPage();
-            }
+            var data = token.Split('/');
+
+             if (data[0] != "")
+              {
+                  SpecialDataModel special = new SpecialDataModel();
+                  special.Token = data[0];
+                  special.Id = Int32.Parse(data[1]);
+                  special.Name = data[2];
+                  MainPage = new AuthorizationMainPage();
+              }
+              else
+              {
+                  MainPage = new MainPage();
+              }
+
+          // MainPage = new AuthorizationPage();
 
 
-           
-            
-          
+
         }
 
         protected override void OnStart()

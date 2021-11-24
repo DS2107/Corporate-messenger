@@ -6,6 +6,7 @@ using System.IO;
 
 
 [assembly: Xamarin.Forms.Dependency(typeof(FileService))]
+
 namespace Corporate_messenger.Droid
 {
     class FileService : IFileService
@@ -20,8 +21,10 @@ namespace Corporate_messenger.Droid
             string filename = Path.Combine(GetRootPath(), "config.txt");
             if (!File.Exists(filename))
             {
-               // File.Create(filename);
+                // File.Create(filename);
                 File.WriteAllText(filename, "http://192.168.0.105:8098");
+
+                //File.WriteAllText(filename, "http://185.114.136.198:8098");
             }
             string adress = File.ReadAllText(filename);
             return adress;

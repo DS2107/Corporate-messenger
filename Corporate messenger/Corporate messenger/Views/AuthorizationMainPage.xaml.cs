@@ -23,6 +23,6 @@ namespace Corporate_messenger.Views
       
      
         }
-        public ICommand ExecuteLogout => new Command(async () => await GoToAsync("login"));
+        public ICommand ExecuteLogout => new Command(async () => await GoToAsync("//login"));
     }
 }

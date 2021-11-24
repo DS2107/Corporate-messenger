@@ -8,6 +8,7 @@ namespace Corporate_messenger.Models.Chat
 {
     class ChatModel: INotifyPropertyChanged
     {
+       
         private  int sender_id { get; set; }
         private string message { get; set; }
         private int chat_room_id { get; set; }
@@ -16,7 +17,7 @@ namespace Corporate_messenger.Models.Chat
         private string type { get; set; }
         private int receiver_id { get; set; }
         private string sourceImage { get; set; }
-
+        private bool isEnableSlider { get; set; }
         private double valueSlider { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,7 +31,7 @@ namespace Corporate_messenger.Models.Chat
 
        
 
-        private bool isEnableSlider { get; set; }
+     
 
         public bool IsEnableSlider
         {

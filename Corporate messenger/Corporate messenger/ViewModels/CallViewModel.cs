@@ -12,7 +12,7 @@ using Corporate_messenger.Service;
 
 namespace Corporate_messenger.ViewModels
 {
-   
+
 
     public class CallViewModel
     {
@@ -20,23 +20,23 @@ namespace Corporate_messenger.ViewModels
         string PASSWORD = "1234";
         string DOMAIN = "192.168.0.105";
         int EXPIRY = 120;
-        
+
 
         SIPTransport sipTransport = new SIPTransport();
-     
+
         public CallViewModel()
         {
 
 
-        
-           // myCall();
+
+            // myCall();
         }
         RTPSession rtpSession;
 
 
-       
-       
-        public  async System.Threading.Tasks.Task myCall()
+
+
+        public async System.Threading.Tasks.Task myCall()
         {
             SIPRegistrationUserAgent regUserAgent = new SIPRegistrationUserAgent(sipTransport, USERNAME, PASSWORD, DOMAIN, EXPIRY);
             regUserAgent.RegistrationFailed += Failed;
@@ -44,18 +44,18 @@ namespace Corporate_messenger.ViewModels
             regUserAgent.RegistrationRemoved += RegRemove;
             regUserAgent.RegistrationSuccessful += Success;
             regUserAgent.Start();
-            
-           
-          string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
 
-          //string myIP = Dns.GetHostByName(hostName).AddressList[0].ToString();
-          System.Net.IPAddress ipaddress = System.Net.IPAddress.Parse("192.168.0.100");
-          var userAgent = new SIPUserAgent(sipTransport, null);
-              rtpSession = new RTPSession(false, true,false,null,0);
-            
-          
+
+            string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
+
+            //string myIP = Dns.GetHostByName(hostName).AddressList[0].ToString();
+            System.Net.IPAddress ipaddress = System.Net.IPAddress.Parse("192.168.0.100");
+            var userAgent = new SIPUserAgent(sipTransport, null);
+            rtpSession = new RTPSession(false, true, false, null, 0);
+            //VoIPMediaSession s = new VoIPMediaSession();
+
             SIPUserAgent ua = new SIPUserAgent();
-           
+
             bool callResult = await userAgent.Call("1002@192.168.0.105", "1001", "1234", rtpSession);
 
 
@@ -63,25 +63,25 @@ namespace Corporate_messenger.ViewModels
 
 
             SIPUDPChannel udpChannel = new SIPUDPChannel(new IPEndPoint(IPAddress.Any, 0));
-          sipTransport.AddSIPChannel(udpChannel);
-          SIPClientUserAgent uac = new SIPClientUserAgent(sipTransport);
-           
-           // _ = rtpSession.Start();
+            sipTransport.AddSIPChannel(udpChannel);
+            SIPClientUserAgent uac = new SIPClientUserAgent(sipTransport);
+
+            // _ = rtpSession.Start();
 
             SIPCallDescriptor callDescriptor = new SIPCallDescriptor("1001", "1234", "sip:1002@192.168.0.105", "<sip:1001@192.168.0.105>", null, null, null, null, SIPCallDirection.Out, "application/sdp", null, null);
-             //uac.Call(callDescriptor);
-           
+            //uac.Call(callDescriptor);
 
-          
-           
+
+
+
             uac.CallAnswered += Uac_CallAnswered;
-         
-           
+
+
         }
 
         private void Uac_CallAnswered(ISIPClientUserAgent uac, SIPResponse sipResponse)
         {
-          
+
             rtpSession.Start();
             MediaRecorder ClassMedia = new MediaRecorder();
 
@@ -93,7 +93,7 @@ namespace Corporate_messenger.ViewModels
             ClassMedia.Start();
         }
 
-      
+
 
         private void Success(SIPURI obj)
         {
