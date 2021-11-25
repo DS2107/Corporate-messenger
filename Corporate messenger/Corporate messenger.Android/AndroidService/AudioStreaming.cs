@@ -45,10 +45,11 @@ namespace Corporate_messenger.Droid.AndroidService
         public int receiverId { get; set; }
 
     }
+ 
     class AudioStreaming: IAudioSocket
     {
-        static string addressWS = "ws://192.168.0.105:6001";
-      
+        
+        private bool StartStopAudioStream_Flag { get; set; }
         private int freq = 22050;
         private AudioRecord audioRecord = null;
         private Thread Rthread = null;
@@ -126,14 +127,22 @@ namespace Corporate_messenger.Droid.AndroidService
             }
         }
 
+
+        public void StopAudio()
+        {
+            audioRecord.Stop();
+            audioTrack.Stop();
+            StartStopAudioStream_Flag = false;
+        }
+
         public void Start(WebSocketSharp.WebSocket ws)
         {
-           // audioTrack.SetPlaybackRate(freq);
-       
+            // audioTrack.SetPlaybackRate(freq);
+            StartStopAudioStream_Flag = true;
             byte[] buffer = new byte[bufferSize];
             audioRecord.StartRecording();
            
-            while (true)
+            while (StartStopAudioStream_Flag)
             {
                 try
                 {
@@ -149,25 +158,7 @@ namespace Corporate_messenger.Droid.AndroidService
                  
                 }
             }
-            /* ws.OnMessage += WsOnMEssage;
-             // ws.OnOpen += WsOnOpen;
-
-             int bufferSize = AudioRecord.GetMinBufferSize(8000,
-               (ChannelIn)ChannelConfiguration.Mono,
-               Android.Media.Encoding.Pcm16bit);
-             audiorecord.StartRecording();
-             byte[] buffer = new byte[bufferSize];
-             while (true)
-             {
-                 int number = audiorecord.Read(buffer, 0, bufferSize);
-                 for (int i = 0; i < number; i++)
-                 {
-                     var new_message = new MyAudio {type = "call", audio = buffer };
-                     var message = JsonConvert.SerializeObject(new_message);
-                     ws.Send(message);
-                   //  Thread.Sleep(5000);
-                 }
-             }*/
+        
         } 
     }    
 }

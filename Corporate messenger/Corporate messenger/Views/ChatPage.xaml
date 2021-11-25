@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
              x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#04283C" Shell.TitleColor="White" x:Name="set_pqage" >
     <ContentPage.ToolbarItems>
-    <ToolbarItem Icon="callTitle.png" Text="Search" x:Name="CallButton" Clicked="CallButton_Clicked"/>
+        <!--<ToolbarItem Icon="callTitle.png" Text="Search" x:Name="CallButton" Clicked="CallButton_Clicked"/>-->
+        <ToolbarItem  IconImageSource="audioSocket.png" x:Name="VoiceRecord" Clicked="VoiceRecord_Clicked"></ToolbarItem>
 </ContentPage.ToolbarItems>
 <Shell.BackButtonBehavior>
     <BackButtonBehavior Command="{Binding GoBack}"></BackButtonBehavior>
@@ -30,7 +31,7 @@
                                     <Label IsEnabled="True"   Text="{Binding Message}" HorizontalTextAlignment="Start"   
                 TextColor="Black"/>
                                     <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding .}"  Source="{Binding Path=SourceImage,Mode=TwoWay}"  x:Name="LeftPlay"     IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
-                                    <Slider x:Name="LeftSlider" ValueChanged="LeftSlider_ValueChanged" Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}" WidthRequest="150" IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
+                                    <Slider x:Name="LeftSlider"  Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}" WidthRequest="150" IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
                                 <Label   Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
                 TextColor="DimGray"/>
                             </StackLayout>

@@ -20,7 +20,8 @@ namespace Corporate_messenger.Views
 
             BindingContext = chat = new ChatViewModel(id, title);
             Title = title;
-            MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) => {
+            MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) =>
+            {
                 object d = 0;
                 foreach (var s in MyListView.ItemsSource)
                 {
@@ -49,39 +50,52 @@ namespace Corporate_messenger.Views
             mic_message.Background = Brush.Transparent;
             send_message.IsEnabled = true;
             MessageEditor.IsEnabled = true;
-         
-            /*  DependencyService.Get<IAudio>().StopSendMessageAudioCommandAsync();
-              byte[] bytes = File.ReadAllBytes(DependencyService.Get<IFileService>().GetAudioFile());
-              chat.SendMyMessage(bytes);*/
+            DependencyService.Get<IAudio>().StopSendMessageAudioCommandAsync();
+            byte[] bytes = File.ReadAllBytes(DependencyService.Get<IFileService>().GetAudioFile());
+            chat.SendMyMessage(bytes);
         }
 
 
 
         private void mic_message_Pressed(object sender, EventArgs e)
         {
+
             send_message.IsEnabled = false;
             MessageEditor.IsEnabled = false;
             mic_message.Background = Brush.Red;
-            DependencyService.Get<IAudioSocket>().Init(chat.user.Id,chat.user.receiverId);
-            DependencyService.Get<IAudioSocket>().Start2(chat.ws);
-            // Start();
-            // DependencyService.Get<IAudio>().SendMessageAudioCommand();
+            DependencyService.Get<IAudio>().SendMessageAudioCommand();
 
         }
+
 
      
-        private void LeftPlay_Clicked(object sender, EventArgs e)
+
+     
+        public bool BackColor_Flag = false;
+      
+
+        private void VoiceRecord_Clicked(object sender, EventArgs e)
         {
-            var s = sender as Button;
-           
+            if (!BackColor_Flag)
+            {
 
-        }
+                VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
+                DependencyService.Get<IAudioSocket>().Init(chat.user.Id, chat.user.receiverId);
+                DependencyService.Get<IAudioSocket>().Start2(chat.ws);
+                BackColor_Flag = true;
+            }
+            else
+            {
+                VoiceRecord.IconImageSource = ImageSource.FromFile("audioSocket.png");
+                DependencyService.Get<IAudioSocket>().StopAudio();
+                BackColor_Flag = false;
+               
 
-        private void LeftSlider_ValueChanged(object sender, ValueChangedEventArgs e)
-        {
+            }
 
+         
         }
     }
-   
-    
+
+
 }

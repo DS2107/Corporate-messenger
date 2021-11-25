@@ -18,7 +18,9 @@ namespace Corporate_messenger.Droid.AndroidService
 {
     public class AudioService:IAudio
     {
-       
+
+      
+
         public AudioService()
         {
             

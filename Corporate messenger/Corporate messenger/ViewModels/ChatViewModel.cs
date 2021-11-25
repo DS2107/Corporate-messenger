@@ -172,12 +172,15 @@ namespace Corporate_messenger.ViewModels
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {
            var message = JsonConvert.DeserializeObject(e.Data).ToString();
-           // message = message.Substring(13,4);
-           
+            message = message.Substring(13,4);
+           if(message == "call")
+            {
                 var myAudio = JsonConvert.DeserializeObject<MyAudio>(e.Data);
                 DependencyService.Get<IAudioSocket>().PlayVoiceChat(myAudio.audio);
 
-            /* else
+            }
+
+             else
              {
                  ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
                  if (new_message.Audio == null)
@@ -212,7 +215,8 @@ namespace Corporate_messenger.ViewModels
                  {
                      DependencyService.Get<IFileService>().SaveFile(new_message.Audio);
                  }
-                 MessagingCenter.Send<ChatViewModel>(this, "Scrol"); }*/
+                 MessagingCenter.Send<ChatViewModel>(this, "Scrol"); 
+            }
 
 
         }
@@ -259,6 +263,7 @@ namespace Corporate_messenger.ViewModels
         private async Task BaskShellPageAsync()
         {
             ws.CloseAsync();
+            DependencyService.Get<IAudioSocket>().StopAudio();
             await Shell.Current.GoToAsync("//chats_list", true);
             ChatListViewModel chatList = new ChatListViewModel();
         }
@@ -526,8 +531,9 @@ namespace Corporate_messenger.ViewModels
 
            ws.OnMessage += WsOnMEssage;
             ws.OnOpen += WsOnOpen;
-            DependencyService.Get<IAudioSocket>().Init(user.Id,user.receiverId);
             ws.Connect();
+            DependencyService.Get<IAudioSocket>().Init(user.Id,user.receiverId);
+          
            
 
 
