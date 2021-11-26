@@ -8,18 +8,22 @@ namespace Corporate_messenger.Models
 {
     class SpecialDataModel: INotifyPropertyChanged
     {
+        private static int input_chat { get; set; }
+        private static string token { get; set; }
         private static string name { get; set; }
         private static bool status { get; set; }
-
-        private static string  token { get; set; }
-
-        private static int input_chat { get; set; }
-
-        private static int id { get; set; }
-
         private int receiver_id { get; set; }
+        private static int id { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
 
-       
+        /// <summary>
+        /// Имя пользователя который авторизовался
+        /// </summary>
         public string Name
         {
             get { return name; }
@@ -103,7 +107,7 @@ namespace Corporate_messenger.Models
 
 
         /// <summary>
-        /// Токен пользователя
+        /// id usera
         /// </summary>
         [JsonProperty("id")]
         public int Id
@@ -119,11 +123,6 @@ namespace Corporate_messenger.Models
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
+        
     }
 }

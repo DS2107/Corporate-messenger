@@ -19,6 +19,9 @@ namespace Corporate_messenger.Models.Chat
         private string sourceImage { get; set; }
         private bool isEnableSlider { get; set; }
         private double valueSlider { get; set; }
+        private bool isMessageVisible { get; set; }
+        private bool isAuidoVisible { get; set; }
+        private double maximumSlider { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -28,11 +31,9 @@ namespace Corporate_messenger.Models.Chat
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-
-       
-
-     
-
+        /// <summary>
+        /// Состояние слайдера , при страте выключено
+        /// </summary>
         public bool IsEnableSlider
         {
             get { return isEnableSlider; }
@@ -46,8 +47,9 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
-        private bool isMessageVisible { get; set; }
-
+        /// <summary>
+        /// Видимость сообщения (True если сообщение, false если это аудио)
+        /// </summary>
         public bool IsMessageVisible
         {
             get { return isMessageVisible; }
@@ -61,8 +63,9 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
-        private bool isAuidoVisible { get; set; }
-
+        /// <summary>
+        /// Видимость айдио-сообщения (False если сообщение, True если это аудио)
+        /// </summary>
         public bool IsAuidoVisible
         {
             get { return isAuidoVisible; }
@@ -76,7 +79,9 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
-        private double maximumSlider { get; set; }
+        /// <summary>
+        /// Значение слайдера
+        /// </summary>
         public double ValueSlider
         {
             get { return valueSlider; }
@@ -91,6 +96,9 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
+        /// <summary>
+        /// Максимальное Значение слайдера
+        /// </summary>
         public double MaximumSlider
         {
             get { return maximumSlider; }
@@ -105,7 +113,9 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
-
+        /// <summary>
+        /// Картинка Play Stop
+        /// </summary>
         public string SourceImage
         {
             get { return sourceImage; }
@@ -137,7 +147,7 @@ namespace Corporate_messenger.Models.Chat
         }
 
         /// <summary>
-        /// Логин пользователя
+        /// ID отправляющего пользователя
         /// </summary>
         [JsonProperty("sender_id")]
         public int Sender_id
@@ -155,7 +165,7 @@ namespace Corporate_messenger.Models.Chat
 
 
         /// <summary>
-        /// Время ласт сообщения
+        /// Время отправленного сообщения
         /// </summary>
         [JsonProperty("created_at")]
         public string Time_LstMessage
@@ -176,7 +186,7 @@ namespace Corporate_messenger.Models.Chat
 
 
         /// <summary>
-        /// ID Отправителя
+        /// ID пользователя , которому поступает сообщение 
         /// </summary>
         [JsonProperty("receiverId")]
         public int Receiver_id
@@ -193,7 +203,7 @@ namespace Corporate_messenger.Models.Chat
         }
 
         /// <summary>
-        /// Логин пользователя
+        /// Тип сообщения
         /// </summary>
         [JsonProperty("type")]
         public string TypeMessage
@@ -210,7 +220,7 @@ namespace Corporate_messenger.Models.Chat
         }
 
         /// <summary>
-        /// Логин пользователя
+        /// Сообщение 
         /// </summary>
         [JsonProperty("message")]
         public string Message
@@ -228,7 +238,7 @@ namespace Corporate_messenger.Models.Chat
         }
 
         /// <summary>
-        /// Логин пользователя
+        /// ID комнаты
         /// </summary>
         [JsonProperty("chat_room_id")]
         public int Chat_room_id

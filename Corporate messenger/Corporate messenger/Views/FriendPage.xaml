@@ -1,73 +1,95 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Corporate_messenger.Views.FriendPage" Title="Контакты"  Shell.BackgroundColor="#04283C" Shell.TitleColor="White"  Background="#04283C">
+             x:Class="Corporate_messenger.Views.FriendPage" 
+             Title="Контакты"  
+             Shell.BackgroundColor="#04283C" 
+             Shell.TitleColor="White"  
+             Background="#04283C">
+    
     <!-- <ContentPage.ToolbarItems>
-
         <ToolbarItem  IconImageSource="group_icon.ico"/>
     </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
-        <StackLayout  >
-
-            <Editor  TextColor="white" 
-                     HeightRequest="60" 
-                     FontSize="15"
-                     PlaceholderColor="White"
-                     TextChanged="Editor_TextChanged"
-                     Placeholder="Посик людей" />
-
-            <ListView x:Name="MyListView" 
-                      ItemsSource="{Binding Friends}"
-                     Margin="0"
-                     RowHeight="80"
-                    BackgroundColor="Transparent"             
-                    SeparatorColor="Transparent"
-                      
-                    CachingStrategy="RecycleElement" >
-
+        <StackLayout>
+            <Editor  
+                TextColor="white" 
+                HeightRequest="60" 
+                FontSize="15"
+                PlaceholderColor="White"
+                TextChanged="Editor_TextChanged"
+                Placeholder="Посик людей" />
+            
+            <!--Список Друзей-->
+            <ListView
+                ItemsSource="{Binding Friends}"
+                x:Name="MyListView"                 
+                Margin="0"
+                RowHeight="80"
+                BackgroundColor="Transparent"             
+                SeparatorColor="Transparent"                      
+                CachingStrategy="RecycleElement" >
                 <ListView.ItemTemplate>
                     <DataTemplate >
-
                         <ViewCell >
-                            <Frame Background="Transparent" x:Name="Frame1"  Margin="0" Padding="25,0,0,0" HorizontalOptions="StartAndExpand" BorderColor="Transparent" >
-                                <StackLayout Orientation="Horizontal" BackgroundColor="Transparent">
-
-                                    <FlexLayout x:Name="RlB" HorizontalOptions="Center" VerticalOptions="Center"  >
-                                        <Image Source="kot.jpg"  Aspect="AspectFill" FlexLayout.AlignSelf="Center"
+                            <!--Блок списка-->
+                            <Frame 
+                                Background="Transparent" 
+                                x:Name="Frame1"  
+                                Margin="0" 
+                                Padding="25,0,0,0" 
+                                HorizontalOptions="StartAndExpand" 
+                                BorderColor="Transparent" >
+                                <StackLayout 
+                                    Orientation="Horizontal" 
+                                    BackgroundColor="Transparent">
+                                    <FlexLayout 
+                                        x:Name="RlB" 
+                                        HorizontalOptions="Center" 
+                                        VerticalOptions="Center"  >
+                                        <Image 
+                                           Source="kot.jpg" 
+                                           Aspect="AspectFill"
+                                           FlexLayout.AlignSelf="Center"
                                            WidthRequest="60"   
                                            HeightRequest="60"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center">
                                             <Image.Clip >
-                                                <EllipseGeometry
-                                            
-                                            Center="30,30"
-                                            RadiusX="30"
-                                            RadiusY="30"/>
+                                                <EllipseGeometry                                            
+                                                    Center="30,30"
+                                                    RadiusX="30"
+                                                    RadiusY="30"/>
                                             </Image.Clip>
                                         </Image>
                                     </FlexLayout>
-                                 
-                                        <StackLayout FlexLayout.AlignSelf="Center" Orientation="Horizontal">
-
-                                            <Label  x:Name="LabelAvtor" Margin="15,0,0,0" Text="{Binding Username}" TextColor="White" VerticalOptions="Center" FontAttributes="None" FontSize="24"/>
-                                            <Button Text="Написать"
-                                                   
-                                                    Command="{Binding Source={x:Reference MyListView},Path=BindingContext.NewChatButton}" CommandParameter="{Binding .}"
-                                                    VerticalOptions="Center"
-                                                    WidthRequest="100"
-                                                    HeightRequest="35"
-                                                Margin="30,0,10,0"
-                                                x:Name="B_login"
-                                                BackgroundColor="#0986CE"
-                                                TextColor="White"
-                                              CornerRadius="20"
-                                              
-                                                />
-                                        </StackLayout>
-                                   
+                                    <StackLayout 
+                                        FlexLayout.AlignSelf="Center" 
+                                        Orientation="Horizontal">
+                                        <!--Имя пользователя-->
+                                        <Label
+                                            Text="{Binding Username}" 
+                                            x:Name="LabelAvtor" 
+                                            Margin="15,0,0,0"                                           
+                                            TextColor="White" 
+                                            VerticalOptions="Center" 
+                                            FontAttributes="None" 
+                                            FontSize="24"/>
+                                         <!--Кнопка написать пользователю-->
+                                        <Button 
+                                            Command="{Binding Source={x:Reference MyListView},Path=BindingContext.NewChatButton}" 
+                                            CommandParameter="{Binding .}"
+                                            Text="Написать"                                                                                               
+                                            VerticalOptions="Center"
+                                            WidthRequest="100"
+                                            HeightRequest="35"
+                                            Margin="30,0,10,0"
+                                            x:Name="B_login"
+                                            BackgroundColor="#0986CE"
+                                            TextColor="White"
+                                            CornerRadius="20"/>
+                                    </StackLayout>
                                 </StackLayout>
-
                             </Frame>
                         </ViewCell>
                     </DataTemplate>

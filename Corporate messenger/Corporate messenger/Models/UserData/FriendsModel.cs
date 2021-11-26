@@ -8,6 +8,8 @@ namespace Corporate_messenger.Models.UserData
 {
     class FriendsModel: INotifyPropertyChanged
     {
+        private string last_login { get; set; }
+
         private string username { get; set; }
 
         private string email { get; set; }
@@ -16,7 +18,13 @@ namespace Corporate_messenger.Models.UserData
 
         private int id { get; set; }
 
-        private string last_login { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
 
 
         /// <summary>
@@ -104,11 +112,6 @@ namespace Corporate_messenger.Models.UserData
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
+        
     }
 }

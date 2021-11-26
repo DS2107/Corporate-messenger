@@ -40,7 +40,7 @@ namespace Corporate_messenger.Models
         /// Пароль пользователя
         /// </summary>
         [JsonProperty("password")]
-        public string Pass
+        public string Password
         {
             get { return password; }
             set
@@ -48,7 +48,7 @@ namespace Corporate_messenger.Models
                 if (password != value)
                 {
                     password = value;
-                    OnPropertyChanged("Pass");
+                    OnPropertyChanged("Password");
                 }
             }
         }

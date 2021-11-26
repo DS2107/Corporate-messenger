@@ -22,9 +22,9 @@ namespace Corporate_messenger.Droid
             if (!File.Exists(filename))
             {
                 // File.Create(filename);
-                File.WriteAllText(filename, "http://192.168.0.105:8098");
+                //File.WriteAllText(filename, "http://192.168.0.105:8098");
 
-                //File.WriteAllText(filename, "http://185.114.136.198:8098");
+                File.WriteAllText(filename, "http://185.114.136.198:8098");
             }
             string adress = File.ReadAllText(filename);
             return adress;
@@ -33,21 +33,16 @@ namespace Corporate_messenger.Droid
         public void CreateFile(string token,int userID,string name)
         {
             var filename = "token.txt";
-
             var destination = Path.Combine(GetRootPath(), filename);
-
             File.WriteAllText(destination, token + "/" + userID + "/" + name);
         }
         public string CreateAudioFile()
         {
             string filename = Path.Combine(GetRootPath(), "audio.amr");
-
             if(File.Exists(filename))
             {
                 File.Delete(filename);
-            }
-           
-
+            }       
             return  Path.Combine(GetRootPath(), filename);
 
         }

@@ -2,89 +2,177 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
              x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#04283C" Shell.TitleColor="White" x:Name="set_pqage" >
+
+    <!--Настройки toolBar-->
     <ContentPage.ToolbarItems>
-        <!--<ToolbarItem Icon="callTitle.png" Text="Search" x:Name="CallButton" Clicked="CallButton_Clicked"/>-->
-        <ToolbarItem  IconImageSource="audioSocket.png" x:Name="VoiceRecord" Clicked="VoiceRecord_Clicked"></ToolbarItem>
-</ContentPage.ToolbarItems>
-<Shell.BackButtonBehavior>
-    <BackButtonBehavior Command="{Binding GoBack}"></BackButtonBehavior>
-</Shell.BackButtonBehavior>
-<ContentPage.Resources>
-    
-    <ResourceDictionary>
+        <!--<ToolbarItem 
+        Icon="callTitle.png" 
+        Text="Search" 
+        x:Name="CallButton" 
+        Clicked="CallButton_Clicked"/>-->
         
-        <DataTemplate x:Key="FromTemplate">
-            <ViewCell x:Name="FromUserCell" IsEnabled="True"  >
+        <!--Кнопка оначать голсовой чат-->
+        <ToolbarItem  
+            IconImageSource="audioSocket.png" 
+            x:Name="VoiceRecord" 
+            Clicked="VoiceRecord_Clicked">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <!--Переназначенная кнопка назад и команда к ней из ChatPageViewModel-->
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior 
+            Command="{Binding GoBack}">
+        </BackButtonBehavior>
+    </Shell.BackButtonBehavior>
+
+    <!--Шаблоны для распределения сообщений в чате (С лева чужие, справа свои)-->
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+            <!--Левый блок сообщений-->
+            <DataTemplate 
+            x:Key="FromTemplate">
+                <ViewCell 
+                x:Name="FromUserCell" 
+                IsEnabled="True"  >
                     <ViewCell.View >
-                        <FlexLayout JustifyContent="Start"  >
-                    <Frame 
-                           
-                        BackgroundColor="#ECEDF1"
-                        CornerRadius="14"
-                           
-            Padding="5,10,10,10"
-            HasShadow="false"
-                
-            Margin="10,10,40,0"  >
-                        <StackLayout Orientation="Horizontal">
+                        <FlexLayout 
+                            JustifyContent="Start">
 
-                                    <Label IsEnabled="True"   Text="{Binding Message}" HorizontalTextAlignment="Start"   
-                TextColor="Black"/>
-                                    <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding .}"  Source="{Binding Path=SourceImage,Mode=TwoWay}"  x:Name="LeftPlay"     IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
-                                    <Slider x:Name="LeftSlider"  Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}" WidthRequest="150" IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
-                                <Label   Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
-                TextColor="DimGray"/>
-                            </StackLayout>
-                    </Frame>
-                </FlexLayout>
-               </ViewCell.View>      
-            </ViewCell>
-        </DataTemplate>
-        <DataTemplate x:Key="ToTemplate">
-            <ViewCell  x:Name="ToUserCell" IsEnabled="True">
-                <FlexLayout JustifyContent="End" >
-                    <Frame
-                       
-                    CornerRadius="14" 
-                    BackgroundColor="#CCE4FF"
-        Padding="5,10,10,10"
-                        Margin="50,10,20,0"
-        HasShadow="false"
-                            
-                        IsClippedToBounds="True"
-        >
-                        <StackLayout Orientation="Horizontal">
-
-                                <Label IsEnabled="True"  Text="{Binding Message}" IsVisible="{Binding IsMessageVisible, Mode=TwoWay}" HorizontalTextAlignment="Start"   
-                TextColor="Black"/>
-                                <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" CommandParameter="{Binding .}"  Source="{Binding Path=SourceImage,Mode=TwoWay}" x:Name="RightPlay" IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" WidthRequest="35" HeightRequest="35" CornerRadius="50" BackgroundColor="#0986CE"></ImageButton>
-
-                                <Slider Maximum="{Binding MaximumSlider}" Value="{Binding ValueSlider}" MaximumTrackColor="Gray" MinimumTrackColor="#41A9FE" IsEnabled="{Binding IsEnableSlider}"  WidthRequest="150"  IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"></Slider>
-
-                                    <Label  Text="{Binding Time_LstMessage}" FontSize="11" MinimumWidthRequest="30" VerticalTextAlignment="End" HorizontalTextAlignment="End"   
-                TextColor="DimGray"/>
-                        </StackLayout>
-
-
-                    </Frame>
-                </FlexLayout>
-                   
-
+                            <Frame 
+                            BackgroundColor="#ECEDF1"
+                            CornerRadius="14"                          
+                            Padding="5,10,10,10"
+                            HasShadow="false"               
+                            Margin="10,10,40,0">
+                                <StackLayout 
+                                    Orientation="Horizontal">
+                                    <Label 
+                                        Text="{Binding Message}" 
+                                        IsEnabled="True"                                      
+                                        HorizontalTextAlignment="Start"   
+                                        TextColor="Black"/>
+                                    <ImageButton 
+                                        x:Name="LeftPlay" 
+                                        Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" 
+                                        CommandParameter="{Binding .}"  
+                                        Source="{Binding Path=SourceImage,Mode=TwoWay}"                                         
+                                        IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}"       
+                                        WidthRequest="35" HeightRequest="35" 
+                                        CornerRadius="50" 
+                                        BackgroundColor="#0986CE">
+                                    </ImageButton>
+                                    <Slider 
+                                        x:Name="LeftSlider" 
+                                        IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"
+                                        Maximum="{Binding MaximumSlider}" 
+                                        Value="{Binding ValueSlider}"
+                                        IsEnabled="{Binding IsEnableSlider}" 
+                                        MaximumTrackColor="Gray" 
+                                        MinimumTrackColor="#41A9FE"                                         
+                                        WidthRequest="150">
+                                    </Slider>
+                                    <Label   
+                                        Text="{Binding Time_LstMessage}" 
+                                        FontSize="11" MinimumWidthRequest="30" 
+                                        VerticalTextAlignment="End" 
+                                        HorizontalTextAlignment="End"   
+                                        TextColor="DimGray"/>
+                                </StackLayout>
+                            </Frame>
+                        </FlexLayout>
+                    </ViewCell.View>
                 </ViewCell>
             </DataTemplate>
-            <local:ClassDataTemplateSelector x:Key="chatDataTemplateSelector" FromTemplate="{StaticResource FromTemplate}" ToTemplate="{StaticResource ToTemplate}"/>
+
+            <!--Правый блок сообщений-->
+            <DataTemplate 
+                x:Key="ToTemplate">
+                <ViewCell  
+                x:Name="ToUserCell" 
+                IsEnabled="True">
+                    <FlexLayout 
+                    JustifyContent="End" >
+                        <Frame                      
+                    CornerRadius="14" 
+                    BackgroundColor="#CCE4FF"
+                    Padding="5,10,10,10"
+                    Margin="50,10,20,0"
+                    HasShadow="false"      
+                    IsClippedToBounds="True">
+                            <StackLayout 
+                            Orientation="Horizontal">
+                                <Label    
+                                    Text="{Binding Message}" 
+                                    IsVisible="{Binding IsMessageVisible, Mode=TwoWay}"
+                                    IsEnabled="True" 
+                                    HorizontalTextAlignment="Start"   
+                                    TextColor="Black"/>
+                                <ImageButton
+                                    x:Name="RightPlay"
+                                    Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" 
+                                    CommandParameter="{Binding .}"  
+                                    Source="{Binding Path=SourceImage,Mode=TwoWay}" 
+                                    IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" 
+                                    WidthRequest="35" 
+                                    HeightRequest="35" 
+                                    CornerRadius="50" 
+                                    BackgroundColor="#0986CE">
+                                </ImageButton>
+
+                                <Slider 
+                                    Maximum="{Binding MaximumSlider}" 
+                                    Value="{Binding ValueSlider}"                                    
+                                    IsEnabled="{Binding IsEnableSlider}"                                    
+                                    IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"
+                                    WidthRequest="150"  
+                                    MaximumTrackColor="Gray" 
+                                    MinimumTrackColor="#41A9FE">
+                                </Slider>
+
+                                <Label  
+                                    Text="{Binding Time_LstMessage}" 
+                                    FontSize="11" 
+                                    MinimumWidthRequest="30" 
+                                    VerticalTextAlignment="End" 
+                                    HorizontalTextAlignment="End"   
+                                    TextColor="DimGray"/>
+                            </StackLayout>
+                        </Frame>
+                    </FlexLayout>
+                </ViewCell>
+            </DataTemplate>
+            <local:ClassDataTemplateSelector
+                x:Key="chatDataTemplateSelector" 
+                FromTemplate="{StaticResource FromTemplate}" 
+                ToTemplate="{StaticResource ToTemplate}"/>
         </ResourceDictionary>
     </ContentPage.Resources>
+
+    <!--Страница сообщений-->
     <ContentPage.Content>
         <StackLayout >
-
-            <ListView Background="#04283C" IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding UpdateList}" RefreshControlColor="Cyan"  Margin="0,0,0,0" SeparatorColor="Transparent"  x:Name="MyListView" HasUnevenRows="true" ItemTemplate="{StaticResource chatDataTemplateSelector}"  ItemsSource="{Binding LastMessage}" >
-               
+            <!--Список сообщений-->
+            <ListView
+                IsRefreshing="{Binding IsRefreshing}" 
+                RefreshCommand="{Binding UpdateList}"
+                ItemTemplate="{StaticResource chatDataTemplateSelector}"  
+                ItemsSource="{Binding LastMessage}"
+                Background="#04283C" 
+                IsPullToRefreshEnabled="True" 
+                RefreshControlColor="Cyan"  
+                Margin="0,0,0,0" 
+                SeparatorColor="Transparent"  
+                x:Name="MyListView" 
+                HasUnevenRows="true" 
+                >
             </ListView>
 
-            <Grid RowSpacing="0" 
-           ColumnSpacing="0">
-               
+            <Grid 
+                RowSpacing="0" 
+                ColumnSpacing="0">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -93,25 +181,45 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-
-                <Editor  Margin="5,0,0,0"  x:Name="MessageEditor"  Keyboard="Chat" TextColor="Black" Placeholder="Введите сообщение..." AutoSize="TextChanges" Text="{Binding Input_message}"  Grid.Row="0" 
-                 Grid.Column="0"></Editor>
-               
-                    
+                 <!--Атрибут для написания сообщения-->
+                <Editor
+                    Text="{Binding Input_message}"  
+                    Margin="5,0,0,0"  
+                    x:Name="MessageEditor"  
+                    Keyboard="Chat" 
+                    TextColor="Black" 
+                    Placeholder="Введите сообщение..." 
+                    AutoSize="TextChanges" 
+                    Grid.Row="0" 
+                    Grid.Column="0">
+                </Editor>
                 
-                <ImageButton  Grid.Row="0" 
-               Grid.Column="1" Source="send_msg.png" BackgroundColor="Transparent"  WidthRequest="32" HeightRequest="32" x:Name="send_message" 
-                   
+                <!--Кнопка отправить сообщение-->
+                <ImageButton
                     Command="{Binding SendMessage}"
-                    CommandParameter="{Binding}"/>
-                <ImageButton  Pressed="mic_message_Pressed" Released="mic_message_Released" Grid.Row="0" 
-               Grid.Column="2" Source="mic.png" Padding="0" BackgroundColor="Transparent"  WidthRequest="32" HeightRequest="32" x:Name="mic_message" 
-                    Margin="0,0,10,0"
-                  
-                    
-                    />
+                    CommandParameter="{Binding}"
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    Source="send_msg.png" 
+                    BackgroundColor="Transparent" 
+                    WidthRequest="32" HeightRequest="32" 
+                    x:Name="send_message"  
+                  />
+
+                <!--Кнопка отправить голсовое сообщение-->
+                <ImageButton  
+                    Pressed="mic_message_Pressed" 
+                    Released="mic_message_Released" 
+                    Grid.Row="0" 
+                    Grid.Column="2" 
+                    Source="mic.png" 
+                    Padding="0" 
+                    BackgroundColor="Transparent"  
+                    WidthRequest="32" 
+                    HeightRequest="32" 
+                    x:Name="mic_message" 
+                    Margin="0,0,10,0"/>
             </Grid>
-           
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

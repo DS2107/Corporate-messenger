@@ -10,15 +10,16 @@ namespace Corporate_messenger.Models
     [Table("ChatList")]
     public class ChatListModel: INotifyPropertyChanged
     {
+        private string last_message { get; set; }
+        private string title { get; set; }    
+        private  int id { get; set; }
+  
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-        private  int id { get; set; }
-        private string title { get; set; }
-        private string last_message { get; set; }
 
         /// <summary>
         /// ID пользователя 

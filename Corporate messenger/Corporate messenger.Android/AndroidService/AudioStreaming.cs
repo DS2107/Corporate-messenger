@@ -46,119 +46,91 @@ namespace Corporate_messenger.Droid.AndroidService
 
     }
  
-    class AudioStreaming: IAudioSocket
+    class AudioStreaming: IAudioWebSocketCall
     {
         
-        private bool StartStopAudioStream_Flag { get; set; }
-        private int freq = 22050;
-        private AudioRecord audioRecord = null;
-        private Thread Rthread = null;
-        private AudioManager audioManager = null;
-        private AudioTrack audioTrack = null;
-        int rec_id = 0;
-        int userid = 0;
-        int bufferSize = 0;
-        public void Init(int sender_id,int receiverId)
-        {
-
-            userid = sender_id;
-            rec_id = receiverId;
-          
-           // ws.OnOpen += WsOnOpen;
-           // ws.Connect();
-
-            bufferSize = AudioRecord.GetMinBufferSize(freq,
-                   ChannelIn.Mono,
-                   Android.Media.Encoding.Pcm16bit);
-
-
-            audioRecord = new AudioRecord(AudioSource.Mic, freq,
-                   ChannelIn.Mono,
-                      Android.Media.Encoding.Pcm16bit, bufferSize);
-
-            audioTrack = new AudioTrack(Android.Media.Stream.VoiceCall, freq,
-                     ChannelConfiguration.Mono,
-                     Android.Media.Encoding.Pcm16bit, bufferSize,
-                    AudioTrackMode.Stream);
-           
-
-           
-            
-        }
-
-        public async Task Start2(WebSocketSharp.WebSocket ws)
-        {
-            await Task.Run(() => Start(ws));
-           
-        }
-        
-       
-
-
-
-      
-       /* private void WsOnMEssage(object sender, MessageEventArgs e)
-        {
-            var myAudio = JsonConvert.DeserializeObject<MyAudio>(e.Data);
-            byte[] audio_message = myAudio.audio;
-            audioTrack.SetPlaybackRate(freq);
-            audioTrack.Play();
-            audioTrack.Write(audio_message, 0, audio_message.Length);
-        }*/
-        public void PlayVoiceChat(byte[] audio_message)
-        {
-           
-            audioTrack.SetPlaybackRate(freq);
-            audioTrack.Play();
-            audioTrack.Write(audio_message, 0, audio_message.Length);
-        }
+        private bool StartStopAudioStream_Flag { get; set; }      
+        private int Frequency_Audio { get; set; }
+        private int Receiver_id { get; set; }
+        private int User_id { get; set; }
+        private int Buffer_Size { get; set; }
+        private AudioRecord AudioRecord = null;
+        private AudioTrack AudioTrack = null;
         public AudioStreaming()
         {
-          
+
         }
-
-       public void FileCreate()
+        public void InitAudioWebSocketCall(int sender_id,int receiverId)
         {
-            string filename = Path.Combine(Application.Context.GetExternalFilesDir(null).ToString(), "recording.wav");
+            Frequency_Audio = 22050;
+            User_id = sender_id;
+            Receiver_id = receiverId;
 
-            if (File.Exists(filename))
-            {
-                File.Delete(filename);
-            }
-        }
+            Buffer_Size = AudioRecord.GetMinBufferSize
+                (
+                     Frequency_Audio,
+                     ChannelIn.Mono,
+                     Android.Media.Encoding.Pcm16bit
+                );
+            AudioRecord = new AudioRecord
+                (
+                    AudioSource.Mic, 
+                    Frequency_Audio,
+                    ChannelIn.Mono,
+                    Android.Media.Encoding.Pcm16bit,
+                    Buffer_Size
+                );
 
-
-        public void StopAudio()
+            AudioTrack = new AudioTrack
+                (
+                    Android.Media.Stream.VoiceCall, 
+                    Frequency_Audio,
+                    ChannelConfiguration.Mono,
+                    Android.Media.Encoding.Pcm16bit, 
+                    Buffer_Size,
+                    AudioTrackMode.Stream
+                );   
+        }    
+        public void ListenerWebSocketCall(byte[] audio_message)
         {
-            audioRecord.Stop();
-            audioTrack.Stop();
+           
+            AudioTrack.SetPlaybackRate(Frequency_Audio);
+            AudioTrack.Play();
+            AudioTrack.Write(audio_message, 0, audio_message.Length);
+        }    
+        public void StopAudioWebSocketCall()
+        {
+            AudioRecord.Stop();
+            AudioTrack.Stop();
             StartStopAudioStream_Flag = false;
         }
-
-        public void Start(WebSocketSharp.WebSocket ws)
+        public async Task StartAudioWebSocketCallAsync(WebSocketSharp.WebSocket ws)
         {
-            // audioTrack.SetPlaybackRate(freq);
+            await Task.Run(() => StartAudioWebSocketCall(ws));
+        } 
+
+        private void StartAudioWebSocketCall(WebSocket ws)
+        {
             StartStopAudioStream_Flag = true;
-            byte[] buffer = new byte[bufferSize];
-            audioRecord.StartRecording();
-           
+            byte[] buffer = new byte[Buffer_Size];
+            AudioRecord.StartRecording();
+
             while (StartStopAudioStream_Flag)
             {
                 try
                 {
-                    audioRecord.Read(buffer, 0, bufferSize);
-                    var new_message = new MyAudio { type = "call", audio = buffer,sendr_id=userid,receiverId=rec_id };
+                    AudioRecord.Read(buffer, 0, Buffer_Size);
+                    var new_message = new MyAudio { type = "call", audio = buffer, sendr_id = User_id, receiverId = Receiver_id };
                     var message = JsonConvert.SerializeObject(new_message);
                     ws.Send(message);
-                  
-                    
+
+
                 }
                 catch (Exception t)
                 {
-                 
+
                 }
             }
-        
-        } 
+        }
     }    
 }

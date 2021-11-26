@@ -8,22 +8,25 @@ namespace Corporate_messenger.Models
 {
     class UserDataModel: INotifyPropertyChanged
     {
-
+        private static string last_login { get; set; }
+        private static string created_at { get; set; }
+        private static string updated_at { get; set; }
+        private static string username { get; set; }
+        private static string avatar { get; set; }
+        private static string active { get; set; }
+        private static string email { get; set; }
         private static int id { get; set; }
 
-        private static string username { get; set; }
+      
 
-        private static string email { get; set; }
 
-        private static string avatar { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        private static string active { get; set; }
-
-        private static string last_login { get; set; }
-
-        private static string created_at { get; set; }
-
-        private static string updated_at { get; set; }
+        public void OnPropertyChanged(string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
 
         /// <summary>
         /// ID пользователя
@@ -161,12 +164,6 @@ namespace Corporate_messenger.Models
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged(string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
+        
     }
 }

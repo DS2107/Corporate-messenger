@@ -1,69 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Corporate_messenger.Views.ChatsListPage" Title="Чаты" IconImageSource="chat1.png" Shell.PresentationMode="ModalAnimated" Shell.BackgroundColor="#04283C" Shell.TitleColor="White"  Background="#04283C">
+             x:Class="Corporate_messenger.Views.ChatsListPage" 
+             Title="Чаты" 
+             IconImageSource="chat1.png" 
+             Shell.PresentationMode="ModalAnimated" 
+             Shell.BackgroundColor="#04283C" 
+             Shell.TitleColor="White"  
+             Background="#04283C">
+    
+    <!--Настройки ToolBar-->
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="Add_NewChat.png" Text="Search" x:Name="CallButton" Clicked="CallButton_Clicked"/>
+        <ToolbarItem 
+            Icon="Add_NewChat.png" 
+            Text="Search" 
+            x:Name="CallButton" 
+            Clicked="CallButton_Clicked"/>
     </ContentPage.ToolbarItems>
+
     <AbsoluteLayout >
-        <Label x:Name="LabelAvtor" Text="{Binding Title}" TextColor="White" FontAttributes="none" FontSize="24"/>
-        <ListView 
+        <!--Список чатов-->
+        <ListView
+                RefreshCommand="{Binding UpdateList}"
+                IsRefreshing="{Binding IsRefreshing}"
+                ItemsSource="{Binding ChatList,Mode=TwoWay}"
                 AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
                 IsPullToRefreshEnabled="True"
                 RefreshControlColor="DarkSeaGreen"
-                RefreshCommand="{Binding UpdateList}"
-                   IsRefreshing="{Binding IsRefreshing}"
-           
-                   x:Name="MyListView"
-                   Margin="0"
-                   RowHeight="80"
-                   SeparatorColor="Transparent"
-                   BackgroundColor="Transparent"
-                   ItemsSource="{Binding ChatList,Mode=TwoWay}"
-                   ItemTapped="Handle_ItemTapped"
-                   CachingStrategy="RecycleElement" >
-
+                x:Name="MyListView"
+                Margin="0"
+                RowHeight="80"
+                SeparatorColor="Transparent"
+                BackgroundColor="Transparent"               
+                ItemTapped="Handle_ItemTapped"
+                CachingStrategy="RecycleElement" >
             <ListView.ItemTemplate>
                 <DataTemplate >
-                    
                     <ViewCell >
-                        <Frame Background="Transparent" x:Name="Frame1"  Margin="0" Padding="25,0,0,0" HorizontalOptions="StartAndExpand" BorderColor="Transparent" >
-                            <StackLayout Orientation="Horizontal" BackgroundColor="Transparent">
-
-                                <FlexLayout x:Name="RlB" HorizontalOptions="Center" VerticalOptions="Center"  >
-                                    <Image Source="kot.jpg"  Aspect="AspectFill" FlexLayout.AlignSelf="Center"
+                        <!--Блок чата-->
+                        <Frame 
+                            Background="Transparent"
+                            x:Name="Frame1"  
+                            Margin="0"
+                            Padding="25,0,0,0" 
+                            HorizontalOptions="StartAndExpand" 
+                            BorderColor="Transparent" >
+                            <StackLayout 
+                                Orientation="Horizontal" 
+                                BackgroundColor="Transparent">
+                                <FlexLayout                                     
+                                    HorizontalOptions="Center" 
+                                    VerticalOptions="Center">
+                                    <Image Source="kot.jpg" 
+                                           Aspect="AspectFill" 
+                                           FlexLayout.AlignSelf="Center"
                                            WidthRequest="60"   
                                            HeightRequest="60"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center">
                                         <Image.Clip >
                                             <EllipseGeometry
-                                            
-                                            Center="30,30"
-                                            RadiusX="30"
-                                            RadiusY="30"/>
+                                                Center="30,30"
+                                                RadiusX="30"
+                                                RadiusY="30"/>
                                         </Image.Clip>
                                     </Image>
                                 </FlexLayout>
-                                <FlexLayout x:Name="FlexL">
-                                    <StackLayout FlexLayout.AlignSelf="Center" >
-                                        
-                                        <Label  x:Name="LabelAvtor" Text="{Binding Title}" TextColor="White" FontAttributes="none" FontSize="24"/>
-                                        <Label x:Name="LstMessage" Text="{Binding Last_message}" TextColor="#B0BBBF"/>
+                                <FlexLayout>
+                                    <StackLayout 
+                                        FlexLayout.AlignSelf="Center" >
+                                        <!--Название чата-->
+                                        <Label
+                                            Text="{Binding Title}"
+                                            x:Name="LabelAvtor"    
+                                            TextColor="White" 
+                                            FontAttributes="none" 
+                                            FontSize="24"/>
+                                        <!--Последнее сообщение в этом чате-->
+                                        <Label
+                                            Text="{Binding Last_message}" 
+                                            x:Name="LstMessage" 
+                                            TextColor="#B0BBBF"/>
                                     </StackLayout>
                                 </FlexLayout>
                             </StackLayout>
-
                         </Frame>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
         </ListView>
-        <ImageButton x:Name="New_message" Source="new_message2.png" 
+      <!--  <ImageButton 
+            x:Name="New_message"
+            Source="new_message2.png" 
             BackgroundColor="Transparent"
             AbsoluteLayout.LayoutFlags="PositionProportional"  
             AbsoluteLayout.LayoutBounds=".95,.97,60,60" 
             />
+       -->
     </AbsoluteLayout>
 </ContentPage>

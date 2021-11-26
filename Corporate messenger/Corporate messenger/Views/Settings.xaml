@@ -4,10 +4,17 @@
              x:Class="Corporate_messenger.Views.Settings">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Label 
+                Text="Welcome to Xamarin.Forms!"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
-            <Button HeightRequest="100" WidthRequest="100" Text="Добавить картинку" x:Name="UpdateImageFly" Clicked="UpdateImageFly_Clicked"></Button>
+            <Button 
+                HeightRequest="100" 
+                WidthRequest="100" 
+                Text="Добавить картинку"
+                x:Name="UpdateImageFly"
+                Clicked="UpdateImageFly_Clicked">
+            </Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

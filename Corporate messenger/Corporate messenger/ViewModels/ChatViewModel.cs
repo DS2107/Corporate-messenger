@@ -35,7 +35,7 @@ namespace Corporate_messenger.ViewModels
     }
     class ChatViewModel: INotifyPropertyChanged
     {
-        static string addressWS = "ws://192.168.0.105:6001";
+        static string addressWS = "ws://185.114.136.198:6001";
         /// <summary>
         /// Клиент для связи с сокетом
         /// </summary>
@@ -176,7 +176,7 @@ namespace Corporate_messenger.ViewModels
            if(message == "call")
             {
                 var myAudio = JsonConvert.DeserializeObject<MyAudio>(e.Data);
-                DependencyService.Get<IAudioSocket>().PlayVoiceChat(myAudio.audio);
+                DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall(myAudio.audio);
 
             }
 
@@ -263,7 +263,7 @@ namespace Corporate_messenger.ViewModels
         private async Task BaskShellPageAsync()
         {
             ws.CloseAsync();
-            DependencyService.Get<IAudioSocket>().StopAudio();
+            DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
             await Shell.Current.GoToAsync("//chats_list", true);
             ChatListViewModel chatList = new ChatListViewModel();
         }
@@ -346,7 +346,7 @@ namespace Corporate_messenger.ViewModels
             if (File.Exists(file))
             {
                 DependencyService.Get<IAudio>().PlayAudioFile(file);
-                item.MaximumSlider = DependencyService.Get<IAudio>().GetInfo();
+                item.MaximumSlider = DependencyService.Get<IAudio>().GetFullTimeAudio();
                 item.IsEnableSlider = true;
                 item.SourceImage = "stop.png";
 
@@ -358,8 +358,8 @@ namespace Corporate_messenger.ViewModels
 
                         if (item.MaximumSlider != item.ValueSlider)
                         {
-                            item.ValueSlider = DependencyService.Get<IAudio>().GetPosition();
-                            var s = DependencyService.Get<IAudio>().GetPosition();
+                            item.ValueSlider = DependencyService.Get<IAudio>().GetPositionAudio();
+                            var s = DependencyService.Get<IAudio>().GetPositionAudio();
                             return true; // runs again, or false to stop
                         }
                         else
@@ -532,7 +532,7 @@ namespace Corporate_messenger.ViewModels
            ws.OnMessage += WsOnMEssage;
             ws.OnOpen += WsOnOpen;
             ws.Connect();
-            DependencyService.Get<IAudioSocket>().Init(user.Id,user.receiverId);
+            DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(user.Id,user.receiverId);
           
            
 

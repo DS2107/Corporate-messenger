@@ -17,49 +17,41 @@ using Xamarin.Forms;
 namespace Corporate_messenger.Droid.AndroidService
 {
     public class AudioService:IAudio
-    {
-
-      
-
+    {     
         public AudioService()
         {
             
         }
+  
         MediaPlayer player;
-       
+        MediaRecorder ClassMedia;
+        FileService FileService = new FileService();
+
         public void PlayAudioFile(string fileName)
         {
-            if (player == null)
-            {
+            if (player == null)          
                 player = new MediaPlayer();
-            }
-            player.Reset();
-            
+           
+            player.Reset();          
             player.SetDataSource(fileName);
             player.Prepare();
             player.Start();
-            var s = player.CurrentPosition;
-             var time  = player.Duration/1000.0;
-            var doubletime = TimeSpan.FromSeconds(time);
-            var sd = GetInfo();
-            
-
+  
         }
 
-        public void Resume()
-        {
-           // player.SeekTo( GetPosition());
+        public void ResumeAudioFile()
+        {       
             player.Start();
         }
 
-        public double GetPosition()
+        public double GetPositionAudio()
         {
             if (player != null)
                 return player.CurrentPosition/1000.0;
             else
                 return 0;
         }
-        public double GetInfo()
+        public double GetFullTimeAudio()
         {
             double arr =0;
             if (player != null)
@@ -69,42 +61,27 @@ namespace Corporate_messenger.Droid.AndroidService
                 return arr;
             }
             else
-            {
                 return 0;
-            }
+            
         }
 
         public void StopAudioFile()
         {
-            if (player != null)
-            {
-             
-                player.Pause();
-            }
-
+            if (player != null)                       
+                player.Pause();         
         }
-
-        MediaRecorder ClassMedia;
-        public void StopSendMessageAudioCommandAsync()
+   
+        public void StopSendMessageAudio()
         {
-
             if (ClassMedia != null)
-            {
-             
+            {            
                 ClassMedia.Stop();
                 ClassMedia.Release();
                 ClassMedia = null;
             }
         }
 
-
-
-
-        FileService FileService = new FileService();
-
-       
-
-        public void SendMessageAudioCommand()
+        public void SendMessageAudio()
         {
             if (ClassMedia == null)
                 ClassMedia = new MediaRecorder();
@@ -115,9 +92,6 @@ namespace Corporate_messenger.Droid.AndroidService
             ClassMedia.SetOutputFormat(OutputFormat.AmrWb);
             ClassMedia.SetAudioEncoder(AudioEncoder.AmrWb);
             ClassMedia.SetOutputFile(FileService.CreateAudioFile());
-           
-
-
             ClassMedia.Prepare();
             ClassMedia.Start();
         }

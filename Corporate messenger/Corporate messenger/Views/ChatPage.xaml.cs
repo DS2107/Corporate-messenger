@@ -50,7 +50,7 @@ namespace Corporate_messenger.Views
             mic_message.Background = Brush.Transparent;
             send_message.IsEnabled = true;
             MessageEditor.IsEnabled = true;
-            DependencyService.Get<IAudio>().StopSendMessageAudioCommandAsync();
+            DependencyService.Get<IAudio>().StopSendMessageAudio();
             byte[] bytes = File.ReadAllBytes(DependencyService.Get<IFileService>().GetAudioFile());
             chat.SendMyMessage(bytes);
         }
@@ -59,38 +59,31 @@ namespace Corporate_messenger.Views
 
         private void mic_message_Pressed(object sender, EventArgs e)
         {
-
             send_message.IsEnabled = false;
             MessageEditor.IsEnabled = false;
             mic_message.Background = Brush.Red;
-            DependencyService.Get<IAudio>().SendMessageAudioCommand();
-
+            DependencyService.Get<IAudio>().SendMessageAudio();
         }
-
-
-     
-
-     
+   
         public bool BackColor_Flag = false;
       
 
-        private void VoiceRecord_Clicked(object sender, EventArgs e)
+        private  void VoiceRecord_Clicked(object sender, EventArgs e)
         {
             if (!BackColor_Flag)
             {
-
+                mic_message.IsVisible = false;
                 VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
-                DependencyService.Get<IAudioSocket>().Init(chat.user.Id, chat.user.receiverId);
-                DependencyService.Get<IAudioSocket>().Start2(chat.ws);
+               // DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
+                 DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
                 BackColor_Flag = true;
             }
             else
             {
+                mic_message.IsVisible = true;
                 VoiceRecord.IconImageSource = ImageSource.FromFile("audioSocket.png");
-                DependencyService.Get<IAudioSocket>().StopAudio();
+                 DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                 BackColor_Flag = false;
-               
-
             }
 
          
