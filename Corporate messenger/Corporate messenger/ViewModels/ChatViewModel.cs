@@ -35,7 +35,7 @@ namespace Corporate_messenger.ViewModels
     }
     class ChatViewModel: INotifyPropertyChanged
     {
-        static string addressWS = "ws://185.114.136.198:6001";
+        static string addressWS = "ws://192.168.0.105:6001";
         /// <summary>
         /// Клиент для связи с сокетом
         /// </summary>
@@ -163,7 +163,8 @@ namespace Corporate_messenger.ViewModels
             MessageList.CollectionChanged += MessageList_CollectionChanged;
            
            _ = SendToken_GetChatsAsync();
-            
+         
+         
 
         }
 
@@ -235,6 +236,10 @@ namespace Corporate_messenger.ViewModels
             {
                 byte[] audio = null;
                 SendMyMessage(audio);
+               
+             
+             
+               
             }
         }
 

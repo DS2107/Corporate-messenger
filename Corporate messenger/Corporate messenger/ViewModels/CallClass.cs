@@ -36,14 +36,11 @@ namespace Corporate_messenger.ViewModels
         {
             try
             {
-                if (!recorder.IsRecording)
-                {
-                    await recorder.StartRecording();
-                }
-                else
-                {
+                if (!recorder.IsRecording)                
+                    await recorder.StartRecording();                
+                else               
                     await recorder.StopRecording();
-                }
+                
             }
             catch (Exception ex)
             {

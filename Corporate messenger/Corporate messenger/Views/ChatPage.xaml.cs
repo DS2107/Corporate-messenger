@@ -31,7 +31,7 @@ namespace Corporate_messenger.Views
                 MyListView.ScrollTo(d, ScrollToPosition.End, true);
                 MessageEditor.Focus();
             });
-
+            //DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
         }
 
         private void CallButton_Clicked(object sender, EventArgs e)
@@ -74,15 +74,18 @@ namespace Corporate_messenger.Views
             {
                 mic_message.IsVisible = false;
                 VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
-               // DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
-                 DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
+                // DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
+                // DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
+                DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
+                DependencyService.Get<IAudioUDPSocketCall>().StartAudioUDPCallAsync();
                 BackColor_Flag = true;
             }
             else
             {
                 mic_message.IsVisible = true;
                 VoiceRecord.IconImageSource = ImageSource.FromFile("audioSocket.png");
-                 DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+               // DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                 BackColor_Flag = false;
             }
 
