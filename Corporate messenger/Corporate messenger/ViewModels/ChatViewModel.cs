@@ -163,8 +163,8 @@ namespace Corporate_messenger.ViewModels
             MessageList.CollectionChanged += MessageList_CollectionChanged;
            
            _ = SendToken_GetChatsAsync();
-         
-         
+           
+
 
         }
 
@@ -197,8 +197,8 @@ namespace Corporate_messenger.ViewModels
                      }
                      catch (Exception ex)
                      {
-
-                     }
+                        var s = ex;
+                    }
 
                  }
                  else
@@ -355,7 +355,7 @@ namespace Corporate_messenger.ViewModels
                 item.IsEnableSlider = true;
                 item.SourceImage = "stop.png";
 
-                int count = 0;
+               // int count = 0;
                 Device.StartTimer(new TimeSpan(0, 0, 0,1), () =>
                 {
                   
@@ -460,6 +460,7 @@ namespace Corporate_messenger.ViewModels
                     string recc = rec.ToString();
                     string[] words = recc.Split("\n\t% ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     user.receiverId = Int32.Parse(words[2]);
+                  
                 }
             }
             if (MessageList.Count > 20)
@@ -467,7 +468,13 @@ namespace Corporate_messenger.ViewModels
             else
                 LastMessage = MessageList;
 
+            //DependencyService.Get<IAudioUDPSocketCall>().InitUDP(user.Id, user.receiverId);
             ConnectToServerAsync();
+            Sockets.Plugin.UdpSocketClient Udpclient = new Sockets.Plugin.UdpSocketClient();
+            var message = JsonConvert.SerializeObject(new dataRoom { subs = "init_call", sendr_id = user.Id, reciever_id = user.receiverId });
+          //  var data_string = @"{""type"": ""init_call"", ""user_id"": "" + user.Id +  "", ""received_id"": " + user.receiverId+"}";
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+            _ = Udpclient.SendToAsync(data, "192.168.0.105", 1234);
             /* // Добавить в базу последние элементы
              foreach (var item in MessageList)
              {

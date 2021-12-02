@@ -3,18 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.Settings">
     <ContentPage.Content>
-        <StackLayout>
-            <Label 
-                Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <Button 
-                HeightRequest="100" 
-                WidthRequest="100" 
-                Text="Добавить картинку"
-                x:Name="UpdateImageFly"
-                Clicked="UpdateImageFly_Clicked">
-            </Button>
+        <StackLayout Margin="0,35,0,0"
+             x:Name="stackLayout">
+            <Label Text="Click the button below to create a local notification."
+           TextColor="Red"
+           HorizontalOptions="Center"
+           VerticalOptions="Start" />
+            <Button Text="Create Notification"
+            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            Clicked="Button_Clicked_1" />
+            <Label Text="Click the button below to schedule a local notification for in 10 seconds time."
+           TextColor="Red"
+           HorizontalOptions="Center"
+           VerticalOptions="Start" />
+            <Button Text="Create Notification"
+            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            Clicked="Button_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

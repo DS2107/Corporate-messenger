@@ -76,7 +76,7 @@ namespace Corporate_messenger.Views
                 VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
                 // DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
                 // DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
-                DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
+                DependencyService.Get<IAudioUDPSocketCall>().InitUDP(chat.user.Id,chat.user.receiverId);
                 DependencyService.Get<IAudioUDPSocketCall>().StartAudioUDPCallAsync();
                 BackColor_Flag = true;
             }

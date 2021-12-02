@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Corporate_messenger.Models.Chat
 {
-    class ChatModel: INotifyPropertyChanged
+    public class ChatModel: INotifyPropertyChanged
     {
        
         private  int sender_id { get; set; }

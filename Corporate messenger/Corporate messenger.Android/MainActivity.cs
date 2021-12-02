@@ -17,7 +17,7 @@ using Xamarin.Forms;
 using Java.Util;
 using Android.Content;
 using System.Linq;
-using Corporate_messenger.Droid.Service;
+
 
 namespace Corporate_messenger.Droid
 {

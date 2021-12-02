@@ -116,7 +116,7 @@ namespace Corporate_messenger.ViewModels
                         var contentJobjects = JObject.Parse(contenJSON);
                         MyModel my = JsonConvert.DeserializeObject<MyModel>(contenJSON);
                        
-                        nav.PushAsync(new ChatPage(my.chat_room_id,item.Username));
+                        _=nav.PushAsync(new ChatPage(my.chat_room_id,item.Username));
 /*                            iUser.Id;
                         item.Username;
                         item.Id;*/

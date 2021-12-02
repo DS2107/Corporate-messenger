@@ -36,12 +36,10 @@ namespace Corporate_messenger.Droid.AndroidService
             AudioTrack.Write(e.ByteData, 0, e.ByteData.Length);
         }
 
-        public void InitUDP()
+        public void InitUDP(int user_id,int rec_id)
         {
            
-            client.ConnectAsync(address, port);
-            byte[] data = System.Text.Encoding.ASCII.GetBytes("type: subscribe");
-            client.SendAsync(data);
+            client.ConnectAsync(address, port);          
             client.MessageReceived += Client_MessageReceived;
 
             Frequency_Audio = 22050;
@@ -90,13 +88,13 @@ namespace Corporate_messenger.Droid.AndroidService
                 }
                 catch (Exception t)
                 {
-
+                    var s = t;
                 }
             }
         }
         public async Task StartAudioUDPCallAsync()
         {
-            Task.Run(() => StartAudioUDPCall());
+            _ = Task.Run(() => StartAudioUDPCall());
         }
 
         public void StopAudioUDPCall()

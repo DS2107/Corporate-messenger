@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Corporate_messenger.Service.Notification;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,24 +13,45 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Settings : ContentPage
     {
+        INotificationManager notificationManager;
+        int notificationNumber = 0;
+
         public Settings()
         {
             InitializeComponent();
+            notificationManager = DependencyService.Get<INotificationManager>();
+            notificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+                ShowNotification(evtData.Title, evtData.Message);
+            };
         }
 
-        private void UpdateImageFly_Clicked(object sender, EventArgs e)
+        private void Button_Clicked(object sender, EventArgs e)
         {
-
-            _ = SetPhotoAsync();
+            notificationNumber++;
+            string title = "Chat1";
+            string message = "hi";
+            notificationManager.SendNotification(title, message, DateTime.Now.AddSeconds(10));
         }
 
-        public async Task SetPhotoAsync()
+        private void Button_Clicked_1(object sender, EventArgs e)
         {
-            // выбираем фото
-            var photo = await MediaPicker.PickPhotoAsync();
-            // загружаем в ImageView
-            Preferences.Set("ImageFly", photo.FullPath);
-              
+            notificationNumber++;
+            string title = "Chat1";
+            string message = "hi";
+            notificationManager.SendNotification(title, message);
+        }
+        void ShowNotification(string title, string message)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var msg = new Label()
+                {
+                    Text = $"Notification Received:\nTitle: {title}\nMessage: {message}"
+                };
+                stackLayout.Children.Add(msg);
+            });
         }
     }
 }

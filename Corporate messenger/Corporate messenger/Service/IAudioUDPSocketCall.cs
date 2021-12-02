@@ -7,7 +7,7 @@ namespace Corporate_messenger.Service
 {
     public interface IAudioUDPSocketCall
     {
-        void InitUDP();
+        void InitUDP(int usr_id, int rec_id);
         public Task StartAudioUDPCallAsync();
 
         public void StopAudioUDPCall();

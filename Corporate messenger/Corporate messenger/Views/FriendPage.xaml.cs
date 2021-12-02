@@ -26,7 +26,7 @@ namespace Corporate_messenger.Views
 
         private void Editor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            friendPage.SearchFriendAsync(e.NewTextValue);
+            _ = friendPage.SearchFriendAsync(e.NewTextValue);
         }
     }
 }

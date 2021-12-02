@@ -1,5 +1,6 @@
 ﻿using Corporate_messenger.Models;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -66,7 +67,7 @@ namespace Corporate_messenger.ViewModels
             _ = SendToken_GetChatsAsync();
             
             ChatList.CollectionChanged += ChatList_CollectionChanged;
-         
+            DependencyService.Get<IForegroundService>().StartService();
             //CallClass call = new CallClass();
             //call.LessPort();
         }
@@ -166,8 +167,8 @@ namespace Corporate_messenger.ViewModels
             }
             catch(Exception ex)
             {
-             
 
+                var s = ex;
             }
 
            

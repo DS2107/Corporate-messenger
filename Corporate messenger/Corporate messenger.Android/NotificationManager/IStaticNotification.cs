@@ -9,11 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Corporate_messenger.Droid.Notifi
+namespace Corporate_messenger.Droid.NotificationManager
 {
-    interface INotification
+    public interface IStaticNotification
     {
         Notification ReturnNotif();
-        // Receiver1 receiver { get; set; }
     }
 }

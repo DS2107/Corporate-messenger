@@ -58,7 +58,7 @@ namespace Corporate_messenger.Views
 
         private void CallButton_Clicked(object sender, EventArgs e)
         {
-            GoToPagaeFriend();
+            _ = GoToPagaeFriend();
         }
         async Task GoToPagaeFriend()
         {

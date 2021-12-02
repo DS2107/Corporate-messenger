@@ -128,7 +128,7 @@ namespace Corporate_messenger.Droid.AndroidService
                 }
                 catch (Exception t)
                 {
-
+                    var s = t;
                 }
             }
         }
