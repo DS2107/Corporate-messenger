@@ -3,6 +3,7 @@ using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Service;
 using Sockets.Plugin;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 [assembly: Xamarin.Forms.Dependency(typeof(UDP_AudioStreaming))]
@@ -39,7 +40,8 @@ namespace Corporate_messenger.Droid.AndroidService
         public void InitUDP(int user_id,int rec_id)
         {
            
-            client.ConnectAsync(address, port);          
+            client.ConnectAsync(address, port);
+          
             client.MessageReceived += Client_MessageReceived;
 
             Frequency_Audio = 22050;

@@ -1,5 +1,4 @@
-﻿using Corporate_messenger.Models.Chat;
-using Corporate_messenger.Service;
+﻿using Corporate_messenger.Service;
 using Corporate_messenger.ViewModels;
 using System;
 using System.IO;
@@ -74,18 +73,18 @@ namespace Corporate_messenger.Views
             {
                 mic_message.IsVisible = false;
                 VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
-                // DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
-                // DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
-                DependencyService.Get<IAudioUDPSocketCall>().InitUDP(chat.user.Id,chat.user.receiverId);
-                DependencyService.Get<IAudioUDPSocketCall>().StartAudioUDPCallAsync();
+                 DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
+                 DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
+               // DependencyService.Get<IAudioUDPSocketCall>().InitUDP(chat.user.Id,chat.user.receiverId);
+               // DependencyService.Get<IAudioUDPSocketCall>().StartAudioUDPCallAsync();
                 BackColor_Flag = true;
             }
             else
             {
                 mic_message.IsVisible = true;
                 VoiceRecord.IconImageSource = ImageSource.FromFile("audioSocket.png");
-                DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
-               // DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                //DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                 BackColor_Flag = false;
             }
 

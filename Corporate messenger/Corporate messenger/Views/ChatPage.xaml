@@ -55,7 +55,7 @@
                                         TextColor="Black"/>
                                     <ImageButton 
                                         x:Name="LeftPlay" 
-                                        Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" 
+                                        Command="{Binding Source={x:Reference MyListView},Path=BindingContext.PlayAudioMessage}" 
                                         CommandParameter="{Binding .}"  
                                         Source="{Binding Path=SourceImage,Mode=TwoWay}"                                         
                                         IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}"       
@@ -111,7 +111,7 @@
                                     TextColor="Black"/>
                                 <ImageButton
                                     x:Name="RightPlay"
-                                    Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Test}" 
+                                    Command="{Binding Source={x:Reference MyListView},Path=BindingContext.PlayAudioMessage}" 
                                     CommandParameter="{Binding .}"  
                                     Source="{Binding Path=SourceImage,Mode=TwoWay}" 
                                     IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" 

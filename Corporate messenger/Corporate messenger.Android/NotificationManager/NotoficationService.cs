@@ -45,7 +45,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         }
 
         public const int ServiceRunningNotifID = 9000;
-        WebSocketSharp.WebSocket ws;
+       // WebSocketSharp.WebSocket ws;
         INotificationManager notificationManager;
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
@@ -57,13 +57,13 @@ namespace Corporate_messenger.Droid.NotificationManager
             };
             Notification notif = DependencyService.Get<IStaticNotification>().ReturnNotif();
             StartForeground(ServiceRunningNotifID, notif);
-            if (ws == null)
+            /*if (ws == null)
             {
                 ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
-                ws.OnMessage += Ws_OnMessage;
-                ws.OnOpen += Ws_OnOpen;
-                ws.ConnectAsync();
-            }
+              //  ws.OnMessage += Ws_OnMessage;
+             //   ws.OnOpen += Ws_OnOpen;
+              //  ws.ConnectAsync();
+            }*/
            
            
 
@@ -79,17 +79,18 @@ namespace Corporate_messenger.Droid.NotificationManager
             public int reciever_id { get; set; }
         }
 
-       
+      /* 
         private void Ws_OnOpen(object sender, EventArgs e)
         {
 
             var message = JsonConvert.SerializeObject(new dataRoom { subs = "subscribe", sendr_id = 2, reciever_id = 1 });
             ws.Send(message);
-        }
+        }*/
 
-        private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
+      /*  private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
         {
-            var message = JsonConvert.DeserializeObject(e.Data).ToString();
+          *//*  var message = JsonConvert.DeserializeObject(e.Data).ToString();
+            
             message = message.Substring(13, 4);
             if (message == "call")
             {
@@ -123,9 +124,9 @@ namespace Corporate_messenger.Droid.NotificationManager
                 }
 
                
-            }
+            }*//*
          
-        }
+        }*/
 
         private void ShowNotification(string title, string message)
         {

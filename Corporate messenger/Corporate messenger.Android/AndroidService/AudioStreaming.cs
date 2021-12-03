@@ -25,28 +25,8 @@ using Application = Android.App.Application;
 [assembly: Dependency(typeof(AudioStreaming))]
 namespace Corporate_messenger.Droid.AndroidService
 {
-    class dataRoom
-    {
-        [JsonProperty("type")]
-        public string subs { get; set; }
-        [JsonProperty("sender_id")]
-        public int sendr_id { get; set; }
-    }
-    class MyAudio
-    {
-        [JsonProperty("voice_audio")]
-        public byte[] audio { get; set; }
-        [JsonProperty("type")]
-        public string type { get; set; }
-        [JsonProperty("sender_id")]
-        public int sendr_id { get; set; }
-      
-        [JsonProperty("receiverId")]
-        public int receiverId { get; set; }
 
-    }
- 
-    class AudioStreaming: IAudioWebSocketCall
+    public class AudioStreaming: IAudioWebSocketCall
     {
         
         private bool StartStopAudioStream_Flag { get; set; }      
@@ -91,15 +71,13 @@ namespace Corporate_messenger.Droid.AndroidService
                     AudioTrackMode.Stream
                 );   
         }    
-        public void ListenerWebSocketCall(byte[] audio_message)
-        {
+        public void ListenerWebSocketCall(byte[] audio_message){
            
             AudioTrack.SetPlaybackRate(Frequency_Audio);
             AudioTrack.Play();
             AudioTrack.Write(audio_message, 0, audio_message.Length);
         }    
-        public void StopAudioWebSocketCall()
-        {
+        public void StopAudioWebSocketCall(){
             AudioRecord.Stop();
             AudioTrack.Stop();
             StartStopAudioStream_Flag = false;
@@ -109,25 +87,17 @@ namespace Corporate_messenger.Droid.AndroidService
             await Task.Run(() => StartAudioWebSocketCall(ws));
         } 
 
-        private void StartAudioWebSocketCall(WebSocket ws)
-        {
+        private void StartAudioWebSocketCall(WebSocket ws){
             StartStopAudioStream_Flag = true;
             byte[] buffer = new byte[Buffer_Size];
             AudioRecord.StartRecording();
 
-            while (StartStopAudioStream_Flag)
-            {
-                try
-                {
-                    AudioRecord.Read(buffer, 0, Buffer_Size);
-                    var new_message = new MyAudio { type = "call", audio = buffer, sendr_id = User_id, receiverId = Receiver_id };
-                    var message = JsonConvert.SerializeObject(new_message);
-                    ws.Send(message);
-
-
+            while (StartStopAudioStream_Flag){
+                try{
+                    AudioRecord.Read(buffer, 0, Buffer_Size);    
+                    ws.Send(JsonConvert.SerializeObject(new { type = "call", voice_audio = buffer, sendr_id = User_id, receiverId = Receiver_id }));
                 }
-                catch (Exception t)
-                {
+                catch (Exception t){
                     var s = t;
                 }
             }
