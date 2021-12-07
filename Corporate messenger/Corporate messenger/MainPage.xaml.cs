@@ -21,9 +21,10 @@ namespace Corporate_messenger
             InitializeComponent();
           
             OnAppearing();
-            Corporate_messenger.ViewModels.AuthorizationMainPageViewModel z = new AuthorizationMainPageViewModel();
-             BindingContext =  z;
-
+           // Corporate_messenger.ViewModels.AuthorizationMainPageViewModel z = new AuthorizationMainPageViewModel();
+             BindingContext = new SpecialDataModel();
+           // SpecialDataModel special = new SpecialDataModel();
+           // var s = special.Name;
             // SetPhotoAsync();
 
 

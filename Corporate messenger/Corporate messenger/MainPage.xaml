@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:Corporate_messenger.Views" xmlns:local1="clr-namespace:Corporate_messenger.Models"
              x:Class="Corporate_messenger.MainPage"      
              FlyoutBackgroundImageAspect="AspectFill" >
+    <Shell.BindingContext>
+        <local1:SpecialDataModel x:Name="ViewModel" />
+    </Shell.BindingContext>
     <ShellItem  
         Route="login" 
         x:Name="LoginShell" 
@@ -94,7 +97,7 @@
 
                 <!--Имя пользователя который авторизовался-->
                 <Label 
-                    Text="{Binding Name}"
+                    Text="{Binding Path=Name,Mode=TwoWay}"
                     FontFamily="mulish" 
                     Margin="20,0,0,0"
                     HorizontalOptions="StartAndExpand"   
@@ -106,6 +109,7 @@
                         <local1:SpecialDataModel/>
                     </Label.BindingContext>
                 </Label>
+
 
                 <!--Описание пользователя который авторизовался-->
                 <Label 

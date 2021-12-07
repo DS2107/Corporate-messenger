@@ -43,10 +43,7 @@ namespace Corporate_messenger.Views
 
         }
 
-        private async Task CloseAsync()
-        {
-         
-        }
+      
 
         private void LoginPage_SizeChanged(object sender, System.EventArgs e)
         {
@@ -95,7 +92,10 @@ namespace Corporate_messenger.Views
                 LabelPassword.IsVisible = false;
             }
         }
-
+        protected override async void OnAppearing()
+        {
+            
+        }
        
     }
 }

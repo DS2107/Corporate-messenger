@@ -15,7 +15,7 @@ namespace Corporate_messenger.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         
-        public string userName { get; set; }
+        private static string userName { get; set; }
         public string UserName
         {
             get { return userName; }
@@ -32,7 +32,7 @@ namespace Corporate_messenger.ViewModels
         public AuthorizationMainPageViewModel()
         {
             
-            UserName = model.Name;
+            
         }
 
 

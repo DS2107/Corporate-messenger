@@ -1,26 +1,11 @@
-﻿using Android.App;
-using Android.Content;
-using Android.Media;
-using Android.Net;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Media;
 using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Service;
-using Java.Net;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
 using Xamarin.Forms;
-using Application = Android.App.Application;
 
 [assembly: Dependency(typeof(AudioStreaming))]
 namespace Corporate_messenger.Droid.AndroidService

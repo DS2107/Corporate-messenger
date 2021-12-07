@@ -25,11 +25,7 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public LoginViewModel(INavigation navigation)
         {
-            _ = Permission();
-            ChatListViewModel cl = new ChatListViewModel();
-            cl.ChatList.Clear();
-            // Регестрирую команду для кнопки на LoginPage
-            AuthorizationUserCommand = new Command(AuthorizationUserAsync);
+            _ = Permission();                  
             Nav = navigation;
         }
 
@@ -39,9 +35,10 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         async Task GoChatListPageAsync()
         {
-            //  ChatsListPage page = new ChatsListPage();
-           // await Nav.PushAsync(new AuthorizationMainPage());
-            await Shell.Current.GoToAsync("//chats_list", true);
+          
+            await Application.Current.MainPage.Navigation.PopAsync();
+            Application.Current.MainPage = new AuthorizationMainPage();
+          
           
         }
 
@@ -74,11 +71,17 @@ namespace Corporate_messenger.ViewModels
         /// <summary>
         /// Команда для кнопки авторизации
         /// </summary>
-        public ICommand AuthorizationUserCommand { get; set; }
-        private void AuthorizationUserAsync(object obj)
-        {
-            _ = AuthorizationUserAsync();
+        public ICommand AuthorizationUserCommand {
+
+            get
+            {
+                return new Command(async (object obj) =>
+                {
+                     AuthorizationUserAsync();
+                });
+            }
         }
+     
 
         /// <summary>
         /// Метод для отправки данных о авторизации пользователя
@@ -151,7 +154,6 @@ namespace Corporate_messenger.ViewModels
                         specialData.Token = JsonConvert.DeserializeObject<string>(ValueJobject);
                         DependencyService.Get<IFileService>().CreateFile(specialData.Token, specialData.Id, specialData.Name);
 
-
                     }
                     
                 }
@@ -165,7 +167,7 @@ namespace Corporate_messenger.ViewModels
 
             if (specialData.Status != false)
             {
-                _ = GoChatListPageAsync();
+                await  GoChatListPageAsync();
             }
             else
             {

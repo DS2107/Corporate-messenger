@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.AuthorizationMainPage"
         xmlns:local="clr-namespace:Corporate_messenger.Views" xmlns:local1="clr-namespace:Corporate_messenger.Models">
-
-    <!--Страница чатов польователя-->
+    <Shell.BindingContext>
+        <local1:SpecialDataModel x:Name="ViewModel" />
+    </Shell.BindingContext>
+        <!--Страница чатов польователя-->
     <FlyoutItem 
                 Route="chats_list"  
                 Title="Сообщения" 
@@ -84,7 +86,7 @@
                  
                 <!--Имя пользователя который авторизовался-->
                 <Label 
-                    Text="{Binding Name}"
+                    Text="{x:Binding Path=Name,Mode=TwoWay}"
                     FontFamily="mulish" 
                     Margin="20,0,0,0"
                     HorizontalOptions="StartAndExpand"   

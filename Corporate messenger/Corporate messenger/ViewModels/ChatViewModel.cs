@@ -138,12 +138,12 @@ namespace Corporate_messenger.ViewModels
         /// <summary>
         /// Отправить сообщение
         /// </summary>
-        public ICommand SendMessage{
+        public  ICommand  SendMessage{
             get{
                 return new Command(async (object obj) =>{
                     if (Input_message != null){
                         byte[] audio = null;
-                        SendMyMessage(audio);
+                       await Task.Run(()=> SendMyMessage(audio));
                     }
                 });
             }
@@ -161,7 +161,8 @@ namespace Corporate_messenger.ViewModels
                 {
                     IsRefreshing = true;
                     updateFlag = true;
-                    LastMessageAdd(LastElement);
+                    await Task.Run(() => LastMessageAdd(LastElement));
+                   
                     updateFlag = false;
                     IsRefreshing = false;
                 });
@@ -185,12 +186,12 @@ namespace Corporate_messenger.ViewModels
                         {
                             PLayItem.IsEnableSlider = false;
                             Stop(PLayItem);
-                            Play(item);
+                            await Task.Run(() => Play(item));
                         }
                         else
                         {
                             if (PlayStopStart)
-                                Play(item);
+                                await Task.Run(() => Play(item));
                             else
                                 Stop(item);
                         }
@@ -311,7 +312,7 @@ namespace Corporate_messenger.ViewModels
                 }
                 if (KeyJobject.Key == "receiver_id"){
                     var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                   var rec  = JsonConvert.DeserializeObject(ValueJobject);
+                    var rec  = JsonConvert.DeserializeObject(ValueJobject);
                     string recc = rec.ToString();
                     string[] words = recc.Split("\n\t% ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     user.receiverId = Int32.Parse(words[2]);

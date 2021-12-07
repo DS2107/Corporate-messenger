@@ -96,7 +96,7 @@ namespace Corporate_messenger.Droid.AndroidService
         }
         public async Task StartAudioUDPCallAsync()
         {
-            _ = Task.Run(() => StartAudioUDPCall());
+            await Task.Run(() => StartAudioUDPCall());
         }
 
         public void StopAudioUDPCall()

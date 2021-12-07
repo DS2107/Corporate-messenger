@@ -67,7 +67,9 @@ namespace Corporate_messenger.ViewModels
             _ = SendToken_GetChatsAsync();
             
             ChatList.CollectionChanged += ChatList_CollectionChanged;
-          //  DependencyService.Get<IForegroundService>().StartService();
+            AuthorizationMainPageViewModel authorizationMainPageViewModel = new AuthorizationMainPageViewModel();
+            var s =authorizationMainPageViewModel.UserName;
+            //  DependencyService.Get<IForegroundService>().StartService();
             //CallClass call = new CallClass();
             //call.LessPort();
         }

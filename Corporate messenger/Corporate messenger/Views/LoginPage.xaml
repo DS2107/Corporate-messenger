@@ -4,9 +4,11 @@
              Title="Login"
              BackgroundColor="#052243"
              Shell.PresentationMode="Animated"
-             x:Class="Corporate_messenger.Views.LoginPage" 
+             x:Class="Corporate_messenger.Views.LoginPage"
+             NavigationPage.HasNavigationBar="False"
              Shell.FlyoutBehavior="Disabled" 
              Shell.NavBarIsVisible="False">
+   
     <ContentPage.Content>
         <Frame>
             <Frame.Background>
