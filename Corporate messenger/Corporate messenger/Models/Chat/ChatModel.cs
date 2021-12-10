@@ -188,7 +188,7 @@ namespace Corporate_messenger.Models.Chat
         /// <summary>
         /// ID пользователя , которому поступает сообщение 
         /// </summary>
-        [JsonProperty("receiverId")]
+        [JsonProperty("receiver_id")]
         public int Receiver_id
         {
             get { return receiver_id; }

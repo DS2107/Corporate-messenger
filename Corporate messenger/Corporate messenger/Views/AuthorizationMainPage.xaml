@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.AuthorizationMainPage"
         xmlns:local="clr-namespace:Corporate_messenger.Views" xmlns:local1="clr-namespace:Corporate_messenger.Models">
-    <Shell.BindingContext>
-        <local1:SpecialDataModel x:Name="ViewModel" />
-    </Shell.BindingContext>
+    
         <!--Страница чатов польователя-->
     <FlyoutItem 
                 Route="chats_list"  

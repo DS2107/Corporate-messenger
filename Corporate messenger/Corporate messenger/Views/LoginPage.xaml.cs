@@ -5,6 +5,7 @@ using Corporate_messenger.ViewModels;
 using Corporate_messenger.Service;
 using System.Threading.Tasks;
 using System.Linq;
+using Corporate_messenger.Service.Notification;
 
 namespace Corporate_messenger.Views
 {
@@ -22,6 +23,7 @@ namespace Corporate_messenger.Views
             // отправляем сообщение
             MessagingCenter.Send<LoginPage>(this, "ListClear");
             DependencyService.Get<IFileService>().Delete();
+            DependencyService.Get<IForegroundService>().StopService(); 
             SpecialDataModel special = new SpecialDataModel();
             SizeChanged += LoginPage_SizeChanged;
         

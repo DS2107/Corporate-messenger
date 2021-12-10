@@ -17,12 +17,7 @@ namespace Corporate_messenger.Views
       
         public AuthorizationMainPage()
         {
-            InitializeComponent();
-            
-            //BindingContext = new SpecialDataModel();
-            SpecialDataModel special = new SpecialDataModel();
-            var s = special.Name;
-     
+            InitializeComponent();  
         }
         public ICommand ExecuteLogout => new Command(async () => await GoToAsync("//login"));
     }

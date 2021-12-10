@@ -62,39 +62,18 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public ChatListViewModel()
         {
-            // chatList = App.Database.GetItems();
-            ChatList.Clear();
+           
             _ = SendToken_GetChatsAsync();
-            
-            ChatList.CollectionChanged += ChatList_CollectionChanged;
-            AuthorizationMainPageViewModel authorizationMainPageViewModel = new AuthorizationMainPageViewModel();
-            var s =authorizationMainPageViewModel.UserName;
-            //  DependencyService.Get<IForegroundService>().StartService();
+
+            DependencyService.Get<IForegroundService>().StartService();
+
+
             //CallClass call = new CallClass();
             //call.LessPort();
         }
 
        
 
-        private void ChatList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs args)
-        {
-            switch (args.Action)
-            {
-                case NotifyCollectionChangedAction.Add: // если добавление
-                    ChatListModel newUser = args.NewItems[0] as ChatListModel;
-                    
-                    break;
-                case NotifyCollectionChangedAction.Remove: // если удаление
-                    ChatListModel oldUser = args.OldItems[0] as ChatListModel;
-                  
-                    break;
-                case NotifyCollectionChangedAction.Replace: // если замена
-                    ChatListModel replacedUser = args.OldItems[0] as ChatListModel;
-                    ChatListModel replacingUser = args.NewItems[0] as ChatListModel;
-                 
-                    break;
-            }
-        }
         public ICommand UpdateList {
 
             get
@@ -159,7 +138,7 @@ namespace Corporate_messenger.ViewModels
 
                     }
                 }
-
+                
 
                 /*// Добавить в базу последние элементы
                 foreach (var item in ChatList)

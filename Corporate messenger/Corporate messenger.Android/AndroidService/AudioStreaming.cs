@@ -80,7 +80,7 @@ namespace Corporate_messenger.Droid.AndroidService
             while (StartStopAudioStream_Flag){
                 try{
                     AudioRecord.Read(buffer, 0, Buffer_Size);    
-                    ws.Send(JsonConvert.SerializeObject(new { type = "call", voice_audio = buffer, sendr_id = User_id, receiverId = Receiver_id }));
+                    ws.Send(JsonConvert.SerializeObject(new { type = "call", voice_audio = buffer, sender_id = User_id, receiver_id = Receiver_id }));
                 }
                 catch (Exception t){
                     var s = t;

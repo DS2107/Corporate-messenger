@@ -17,6 +17,7 @@ using System.IO;
 using Android.Media;
 using Xamarin.Essentials;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 
 namespace Corporate_messenger.ViewModels
 {
@@ -115,6 +116,7 @@ namespace Corporate_messenger.ViewModels
         /// <param name="id"></param>
         /// <param name="title"></param>
         public ChatViewModel(int id, string title){
+            ws =  DependencyService.Get<ISocket>().MyWebSocket;
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
             chat.SourceImage = "play.png";         
@@ -127,8 +129,7 @@ namespace Corporate_messenger.ViewModels
         public ICommand GoBack {
             get
             {
-                return new Command(async (object obj) => {
-                    ws.CloseAsync();
+                return new Command(async (object obj) => {                
                     DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                     await Shell.Current.GoToAsync("//chats_list", true);
                     ChatListViewModel chatList = new ChatListViewModel();
@@ -170,6 +171,7 @@ namespace Corporate_messenger.ViewModels
             }
         }
         bool PlayStopStart = true;
+        
         ChatModel PLayItem;
 
         /// <summary>
@@ -257,10 +259,10 @@ namespace Corporate_messenger.ViewModels
         /// Подключение к сокетам
         /// </summary>
         void ConnectToServer(){
-            ws = new WebSocketSharp.WebSocket(addressWS);
+            //ws = new WebSocketSharp.WebSocket(addressWS);
             ws.OnMessage += WsOnMEssage;
-            ws.OnOpen += WsOnOpen;
-            ws.Connect();
+            //ws.OnOpen += WsOnOpen;
+            //ws.Connect();
             DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(user.Id, user.receiverId);
         }
         async Task SendToken_GetChatsAsync(){
@@ -311,11 +313,8 @@ namespace Corporate_messenger.ViewModels
                     }     
                 }
                 if (KeyJobject.Key == "receiver_id"){
-                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                    var rec  = JsonConvert.DeserializeObject(ValueJobject);
-                    string recc = rec.ToString();
-                    string[] words = recc.Split("\n\t% ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    user.receiverId = Int32.Parse(words[2]);
+                    dynamic dynamic_receiverID = KeyJobject.Value;    
+                    user.receiverId = (int)dynamic_receiverID.receiver_id;
                   
                 }
             }

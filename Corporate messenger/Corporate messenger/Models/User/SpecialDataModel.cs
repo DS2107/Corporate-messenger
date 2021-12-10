@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
-    class SpecialDataModel: INotifyPropertyChanged
+    public class SpecialDataModel: INotifyPropertyChanged
     {
         private static int input_chat { get; set; }
         private static string token { get; set; }

@@ -77,6 +77,7 @@ namespace Corporate_messenger.ViewModels
             {
                 return new Command(async (object obj) =>
                 {
+                    
                      AuthorizationUserAsync();
                 });
             }
@@ -161,8 +162,6 @@ namespace Corporate_messenger.ViewModels
                 {
                     break;
                 }
-
-
             }
 
             if (specialData.Status != false)

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
-             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#04283C" Shell.TitleColor="White" x:Name="set_pqage" >
+             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#04283C" Shell.TitleColor="White" x:Name="set_pqage" Shell.TabBarIsVisible="True"  >
 
     <!--Настройки toolBar-->
     <ContentPage.ToolbarItems>
@@ -152,7 +152,11 @@
 
     <!--Страница сообщений-->
     <ContentPage.Content>
-        <StackLayout >
+        <Grid RowSpacing="0" ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <!--Список сообщений-->
             <ListView
                 IsRefreshing="{Binding IsRefreshing}" 
@@ -171,7 +175,7 @@
 
             <Grid 
                 RowSpacing="0" 
-                ColumnSpacing="0">
+                ColumnSpacing="0" Grid.Row="1">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -183,13 +187,16 @@
                 </Grid.ColumnDefinitions>
                  <!--Атрибут для написания сообщения-->
                 <Editor
+                    InputTransparent="False"
                     Text="{Binding Input_message}"  
                     Margin="5,0,0,0"  
-                    x:Name="MessageEditor"  
+                    x:Name="MessageEditor" 
+                    Completed="MessageEditor_Completed"
+                    
                     Keyboard="Chat" 
                     TextColor="Black" 
                     Placeholder="Введите сообщение..." 
-                    AutoSize="TextChanges" 
+                    
                     Grid.Row="0" 
                     Grid.Column="0">
                 </Editor>
@@ -220,6 +227,6 @@
                     x:Name="mic_message" 
                     Margin="0,0,10,0"/>
             </Grid>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

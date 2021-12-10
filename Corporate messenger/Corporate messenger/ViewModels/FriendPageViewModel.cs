@@ -17,24 +17,7 @@ using Xamarin.Forms;
 
 namespace Corporate_messenger.ViewModels
 {
-     class ModelCreate
-    {
-        public int sender_id { get; set; }
-
-        public int receiver_id { get; set; }
-
-        public string title { get; set; }
-    }
-
-    class MyModel
-    {
-       
-
-        public int chat_room_id { get; set; }
-
-        public string status { get; set; }
-    }
-
+ 
     class FriendPageViewModel : INotifyPropertyChanged
     {
         
@@ -78,15 +61,9 @@ namespace Corporate_messenger.ViewModels
                 {
                     if (obj is FriendsModel item)
                     {
-                        // Модель авторизации
-                        ModelCreate log = new ModelCreate();
-                        log.sender_id = iUser.Id;
-                        log.receiver_id = item.Id;
-                        log.title = item.Username;
 
-                      
                         // Перед отправкой , превращаем все в json
-                        string jsonLog = JsonConvert.SerializeObject(log);
+                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = iUser.Id, receiver_id = item.Id, title = item.Username });
 
                         // Устанавливаем соеденение 
                         HttpClient client = new HttpClient();
@@ -112,13 +89,13 @@ namespace Corporate_messenger.ViewModels
                         // Ответ от сервера 
                         var contenJSON = await httpResponse.Content.ReadAsStringAsync();
 
-                        //****** РАСШИФРОВКА_ОТВЕТА ******
-                        var contentJobjects = JObject.Parse(contenJSON);
-                        MyModel my = JsonConvert.DeserializeObject<MyModel>(contenJSON);
+                        //****** РАСШИФРОВКА_ОТВЕТА ******//
+                        dynamic contentJobjects = JObject.Parse(contenJSON);
                        
-                        _=nav.PushAsync(new ChatPage(my.chat_room_id,item.Username));
-/*                            iUser.Id;
-                        item.Username;
+
+                      _ = nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Username));
+/*                            
+                       
                         item.Id;*/
                     }
 

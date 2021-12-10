@@ -28,7 +28,7 @@ namespace Corporate_messenger.Views
 
                 }
                 MyListView.ScrollTo(d, ScrollToPosition.End, true);
-                MessageEditor.Focus();
+               // MessageEditor.Focus();
             });
             //DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
         }
@@ -89,6 +89,11 @@ namespace Corporate_messenger.Views
             }
 
          
+        }
+
+        private void MessageEditor_Completed(object sender, EventArgs e)
+        {
+            MessageEditor.Focus();
         }
     }
 
