@@ -17,8 +17,8 @@ namespace Corporate_messenger.Droid.NotificationManager
         const string channelName = "Default";
         const string channelDescription = "The default channel for notifications.";
 
-        public const string TitleKey = "title";
-        public const string MessageKey = "message";
+        public static  string TitleKey = "title";
+        public  static string MessageKey = "message";
 
         bool channelInitialized = false;
         int messageId = 0;
@@ -75,17 +75,35 @@ namespace Corporate_messenger.Droid.NotificationManager
         public void Show(string title, string message)
         {
             Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
-            intent.PutExtra(TitleKey, title);
-            intent.PutExtra(MessageKey, message);
+            intent.AddFlags(ActivityFlags.ClearTop);
+
+            if (message == "Звонок")
+            {
+                TitleKey = "init_call";
+                intent.PutExtra(TitleKey, "init_call");
+            }
+
+            else
+            {
+                intent.PutExtra(TitleKey, "message");
+            }
+                
+            // intent.PutExtra(MessageKey, message);
+
 
             PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.UpdateCurrent);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
+                .SetAutoCancel(true)
+                
+                .SetPriority((int)NotificationPriority.High)
+                .SetVisibility((int)NotificationVisibility.Public)
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.kot))
                 .SetSmallIcon(Resource.Drawable.MyChat)
+                
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
 
             Notification notification = builder.Build();

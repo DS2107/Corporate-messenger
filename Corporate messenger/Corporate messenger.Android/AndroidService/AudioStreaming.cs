@@ -23,13 +23,14 @@ namespace Corporate_messenger.Droid.AndroidService
         private AudioTrack AudioTrack = null;
         public AudioStreaming()
         {
-
+           
         }
-        public void InitAudioWebSocketCall(int sender_id,int receiverId)
+        public void InitAudioWebSocketCall(int sender_id)
         {
             Frequency_Audio = 22050;
             User_id = sender_id;
-            Receiver_id = receiverId;
+            StartStopAudioStream_Flag = true;
+
 
             Buffer_Size = AudioRecord.GetMinBufferSize
                 (
@@ -65,6 +66,7 @@ namespace Corporate_messenger.Droid.AndroidService
         public void StopAudioWebSocketCall(){
             AudioRecord.Stop();
             AudioTrack.Stop();
+            
             StartStopAudioStream_Flag = false;
         }
         public async Task StartAudioWebSocketCallAsync(WebSocketSharp.WebSocket ws)
@@ -73,14 +75,22 @@ namespace Corporate_messenger.Droid.AndroidService
         } 
 
         private void StartAudioWebSocketCall(WebSocket ws){
-            StartStopAudioStream_Flag = true;
+           
             byte[] buffer = new byte[Buffer_Size];
-            AudioRecord.StartRecording();
+            try
+            {
+                AudioRecord.StartRecording();
+            }
+            catch(Exception ex)
+            {
 
+            }
+             
+            
             while (StartStopAudioStream_Flag){
                 try{
                     AudioRecord.Read(buffer, 0, Buffer_Size);    
-                    ws.Send(JsonConvert.SerializeObject(new { type = "call", voice_audio = buffer, sender_id = User_id, receiver_id = Receiver_id }));
+                    ws.Send(JsonConvert.SerializeObject(new { type = "init_call", voice_audio = buffer, sender_id = User_id,status="201"}));
                 }
                 catch (Exception t){
                     var s = t;

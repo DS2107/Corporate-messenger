@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Android.Media;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +8,12 @@ namespace Corporate_messenger.Service
    
     public interface IAudio
     {
+        /// <summary>
+        /// Воспроизводит файл
+        /// </summary>
+        /// <param name="fileName">файл</param>
+        void PlayAudioFile(string fileName, Stream voice);
+
         /// <summary>
         /// Воспроизводит файл
         /// </summary>

@@ -20,9 +20,10 @@ namespace Corporate_messenger.Droid.NotificationManager
 
     public class GetSocket:ISocket, INotifyPropertyChanged
     {
+        SpecialDataModel user = new SpecialDataModel();
         public GetSocket()
         {
-
+            
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
@@ -51,10 +52,11 @@ namespace Corporate_messenger.Droid.NotificationManager
 
     public class startServiceAndroid : IForegroundService
     {
-    
+       
         private static Context context = global::Android.App.Application.Context;
 
-       
+        public bool AudioCalls_Init { get; set; }
+
         public void StartService()
         {
              var intent = new Intent(context, typeof(NotoficationService));
@@ -119,7 +121,7 @@ namespace Corporate_messenger.Droid.NotificationManager
 
         private void Ws_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
-            throw new NotImplementedException();
+            var s = e;
         }
 
         private void Ws_OnClose(object sender, WebSocketSharp.CloseEventArgs e)
@@ -137,45 +139,63 @@ namespace Corporate_messenger.Droid.NotificationManager
 
         private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
         {
-            dynamic Json_obj = JObject.Parse(e.Data);
-            if((int)Json_obj.sender_id != user.Id)
+            dynamic Json_obj = JObject.Parse(e.Data);         
+            string type_status = (string)Json_obj.status != null? (string)Json_obj.status : (string)Json_obj.type;
+
+            switch (type_status) {
+
+                case "200":
+                    DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
+                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
+                    DependencyService.Get<IAudio>().StopAudioFile();
+                    break;
+                case "400":
+                    DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
+                    DependencyService.Get<IAudio>().StopAudioFile();
+                    break;
+                case "call":
+                    DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall((byte[])Json_obj.voice_audio);
+                    break;
+                case "init_call": // 100
+                    notificationManager.SendNotification("Звонок", "Звонок");
+                    DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
+                    break;
+                case "message":
+                    NotificationMessage(e);
+                    break;
+            }
+       
+        }
+
+        private void NotificationMessage(WebSocketSharp.MessageEventArgs args)
+        {
+            dynamic Json_obj = JObject.Parse(args.Data);
+            if ((int)Json_obj.sender_id != user.Id)
             {
-                if (Json_obj.type == "call")
+
+                ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(args.Data);
+                if (new_message.Audio == null)
                 {
-                    // var myAudio = JsonConvert.DeserializeObject<AndroidService.MyAudio>(e.Data);
-                    // DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall(myAudio.audio);
+                    new_message.MaximumSlider = 1;
+                    new_message.IsAuidoVisible = false;
+                    new_message.IsMessageVisible = true;
+                    new_message.SourceImage = "play.png";
+                    new_message.ValueSlider = 1;
 
+                    notificationManager.SendNotification((string)Json_obj.username, new_message.Message);
                 }
-
                 else
                 {
-                    ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
-                    if (new_message.Audio == null)
-                    {
-                        new_message.MaximumSlider = 1;
-                        new_message.IsAuidoVisible = false;
-                        new_message.IsMessageVisible = true;
-                        new_message.SourceImage = "play.png";
-                        new_message.ValueSlider = 1;
-
-                        notificationManager.SendNotification((string)Json_obj.username, new_message.Message);
-                    }
-                    else
-                    {
-                        new_message.ValueSlider = 1;
-                        new_message.SourceImage = "play.png";
-                        new_message.IsAuidoVisible = true;
-                        new_message.IsMessageVisible = false;
-                        new_message.MaximumSlider = 1;
-                        notificationManager.SendNotification("Вам сообщение", "Голосовое");
-
-                    }
-
+                    new_message.ValueSlider = 1;
+                    new_message.SourceImage = "play.png";
+                    new_message.IsAuidoVisible = true;
+                    new_message.IsMessageVisible = false;
+                    new_message.MaximumSlider = 1;
+                    notificationManager.SendNotification("Вам сообщение", "Голосовое");
 
                 }
             }
-           
-         
         }
 
         private void TimerStartService()

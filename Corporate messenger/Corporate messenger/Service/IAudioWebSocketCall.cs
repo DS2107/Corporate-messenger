@@ -12,7 +12,7 @@ namespace Corporate_messenger.Service
         /// </summary>
         /// <param name="receiverId">Кому</param>
         /// <param name="sender_id">От кого</param>
-        public void InitAudioWebSocketCall(int receiverId, int sender_id);   
+        public void InitAudioWebSocketCall(int sender_id);   
         /// <summary>
         /// Отсановка аудио вызова
         /// </summary>

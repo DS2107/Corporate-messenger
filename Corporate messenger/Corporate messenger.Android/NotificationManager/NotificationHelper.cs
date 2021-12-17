@@ -9,7 +9,7 @@ namespace Corporate_messenger.Droid.NotificationManager
 {
     class NotificationHelper : IStaticNotification
     {
-        private static string foregroundChannelId = "9002";
+        private static string foregroundChannelId = "9003";
         private static Context context = global::Android.App.Application.Context;
 
 
@@ -17,8 +17,8 @@ namespace Corporate_messenger.Droid.NotificationManager
         {
             // Building intent
             var intent = new Intent(context, typeof(MainActivity));
-            intent.AddFlags(ActivityFlags.SingleTop);
-            intent.PutExtra("Title", "Message");
+            intent.AddFlags(ActivityFlags.FromBackground);
+           // intent.PutExtra("Title", "Message");
 
             var pendingIntent = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent);
 

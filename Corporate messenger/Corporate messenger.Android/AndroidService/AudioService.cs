@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +28,40 @@ namespace Corporate_messenger.Droid.AndroidService
         MediaRecorder ClassMedia;
         FileService FileService = new FileService();
 
+        public void PlayAudioFile(string fileName,Stream voice)
+        {
+                   
+            player = new MediaPlayer();
+            var fd = global::Android.App.Application.Context.Assets.OpenFd(fileName);
+            player.SetAudioStreamType(voice);
+            player.Prepared += (s, e) =>
+            {
+                player.Start();
+            };
+            player.SetDataSource(fd.FileDescriptor, fd.StartOffset, fd.Length);
+            player.Prepare();
+            player.Completion += Player_Completion;
+
+        }
+
+        private void Player_Completion(object sender, EventArgs e)
+        {
+            if(DependencyService.Get<IForegroundService>().AudioCalls_Init)
+                player.Start();
+            
+        }
+
         public void PlayAudioFile(string fileName)
         {
-            if (player == null)          
+            if (player == null)
                 player = new MediaPlayer();
-           
-            player.Reset();          
+         
+            player.Reset();
             player.SetDataSource(fileName);
+         
             player.Prepare();
             player.Start();
-  
+
         }
 
         public void ResumeAudioFile()
@@ -68,7 +93,7 @@ namespace Corporate_messenger.Droid.AndroidService
         public void StopAudioFile()
         {
             if (player != null)                       
-                player.Pause();         
+                player.Stop();         
         }
    
         public void StopSendMessageAudio()

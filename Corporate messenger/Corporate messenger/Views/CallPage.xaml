@@ -1,104 +1,155 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Corporate_messenger.Views.CallPage" Title="Звонок" >
-    <ContentPage.Background>
-        <!-- StartPoint defaults to (0,0) -->
-        <LinearGradientBrush EndPoint="0,1">
-            <GradientStop Color="#8BC0F2"
-                          Offset="0.1" />
-            <GradientStop Color="white"
-                          Offset="1.0" />
-        </LinearGradientBrush>
-    </ContentPage.Background>
-    <Grid RowDefinitions="50,*,60,30">
+             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+             x:Class="Corporate_messenger.Views.CallPage" Title="Звонок"  BackgroundColor="White" Shell.BackgroundColor="#04283C" Shell.NavBarIsVisible="False">
+    
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="180" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+            <Image
+                Grid.Column="0"
+                Grid.Row="0"
+                Margin="0,0,0,0"
+                Source="kot.jpg" 
+                Aspect="AspectFill" 
+               
+                WidthRequest="100"   
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                VerticalOptions="End">
+                <Image.Clip >
+                    <EllipseGeometry
+                        Center="50,50"
+                        RadiusX="50"
+                        RadiusY="50"/>
+                </Image.Clip>
+            </Image>
+        <Label
+            Grid.Row="1"
+            FontSize="Title"
+            Grid.Column="0"
+            x:Name="User_Name_Label"
+            Text="User Name"
+            TextColor="Black"
+            FontAttributes="Bold"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="start"
+            >
+            
+        </Label>
+        <Label
+             FontSize="Subtitle"
+            Grid.Row="2"
+            Grid.Column="0"
+            x:Name="Time_Label"
+            Text="00:00:00"
+            TextColor="Black"
+            FontAttributes="None"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center"
+            >
 
-        <RelativeLayout VerticalOptions="FillAndExpand" 
-                        HorizontalOptions="FillAndExpand"
-                        BackgroundColor="#CCC"
-                        Grid.RowSpan="4"
-                        IsVisible="false"/>
-        <Frame Margin="0"
-               Padding="0"
-               IsVisible="false">
-            <Grid ColumnDefinitions="*, 50,50">
-                <Label VerticalOptions="Center"
-                   Text="Someone is calling..."
-                   Padding="0"
-                   Margin="10,0,0,0"/>
-                <Image Grid.Column="1"
-                       HeightRequest="25"
-                       VerticalOptions="Center"
-                       Source="outline_call.png"/>
-                <Image Grid.Column="2"
-                       HeightRequest="25"
-                       VerticalOptions="Center"
-                       Source="end_call.png"/>
-            </Grid>
-        </Frame>
-        <StackLayout Grid.Row="2"
-                     Margin="0,0,10,0"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     BackgroundColor="Transparent">
-            <Frame HasShadow="True"
-                   CornerRadius="50"
-                   HeightRequest="60"
-                   WidthRequest="60"
-                   Padding="1"
-                   BackgroundColor="Gray"
-                   BorderColor="LightGray"
-                   HorizontalOptions="Start"
-                   VerticalOptions="Center">
-                <ImageButton Source="mic_off.png"
-                             Margin="10"
-                             CornerRadius="50"
-                             HeightRequest="50"
-                             WidthRequest="50"
-                             HorizontalOptions="Center"
-                             BackgroundColor="Transparent"
-                            />
-            </Frame>
+        </Label>
+        <Grid  Grid.Row="3" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="End" HeightRequest="400">
+            <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <Frame HasShadow="True"
-                   CornerRadius="50"
-                   HeightRequest="60"
-                   WidthRequest="60"
-                   Padding="1"
-                   BackgroundColor="#CC0000"
-                   BorderColor="LightGray"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center">
-                <ImageButton Source="end_call.png"
-                             Margin="10"
-                             CornerRadius="50"
-                             HeightRequest="50"
-                             WidthRequest="50"
-                             HorizontalOptions="Center"
-                             BackgroundColor="Transparent"
-                            
-                             />
-            </Frame>
+            <ImageButton android:Button.UseDefaultShadow="True" Grid.Row="0"  Grid.Column="0"
+                Source="{Binding SourceMic}"
+                Command="{Binding MicSetting}"
+                 HorizontalOptions="Center" 
+                VerticalOptions="Center"
+                Padding="20,20,20,20"
+                BackgroundColor="#EDECFC"
+                WidthRequest="80"
+                HeightRequest="80"
+                CornerRadius="100"
+                    >
+                </ImageButton>
 
-            <Frame HasShadow="True"
-                   CornerRadius="50"
-                   HeightRequest="60"
-                   WidthRequest="60"
-                   Padding="1"
-                   BackgroundColor="Green"
-                   BorderColor="LightGray"
-                   HorizontalOptions="EndAndExpand"
-                   VerticalOptions="Center">
-                <ImageButton Source="enableCallWhite.png"
-                             Margin="10"
-                             CornerRadius="50"
-                             HeightRequest="50"
-                             WidthRequest="50"
-                             HorizontalOptions="Center"
-                             BackgroundColor="Transparent"
-                             />
-            </Frame>
-
-        </StackLayout>
+            <ImageButton android:Button.UseDefaultShadow="True" Grid.Row="0"  Grid.Column="1"
+               Source="{Binding SourceHold}"
+                Command="{Binding Hold}"
+                HorizontalOptions="Center" 
+                VerticalOptions="Center"
+                Padding="20,20,20,20"
+                BackgroundColor="#EDECFC"
+                WidthRequest="80"
+                HeightRequest="80"
+                CornerRadius="100"
+                    >
+            </ImageButton>
+           
+        </Grid>
+        <Grid  Grid.Row="4" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="End" HeightRequest="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+         
+            <ImageButton
+            x:Name="buttonEnd"
+                Grid.Row="0"  Grid.Column="0"
+                Command="{Binding LeftEndCall}"
+                IsVisible="{Binding VisibleButtonEnd}"
+                Source="end_call.png"
+                HorizontalOptions="Center" 
+                VerticalOptions="Center"
+                Padding="20,20,20,20"
+                BackgroundColor="Red"
+                WidthRequest="80"
+                HeightRequest="80"
+                CornerRadius="100"
+                    >
+        </ImageButton>
+            <ImageButton
+            x:Name="buttonEndTwo"
+                Grid.Row="0"  Grid.Column="1"
+                Command="{Binding EndCall}"               
+                IsVisible="{Binding VisibleButtonEndCenter}"
+                Source="end_call.png"
+                HorizontalOptions="Center" 
+                VerticalOptions="Center"
+                Padding="20,20,20,20"
+                BackgroundColor="Red"
+                WidthRequest="80"
+                HeightRequest="80"
+                CornerRadius="100"
+                    >
+            </ImageButton>
+            <ImageButton
+             x:Name="buttonStart"
+            Grid.Row="0"  Grid.Column="2"
+                Command="{Binding StartCall}"
+                IsVisible="{Binding VisibleButtonStart}"
+                Source="end_call.png"
+                HorizontalOptions="Center" 
+                VerticalOptions="Center"
+                Padding="20,20,20,20"
+                BackgroundColor="{Binding ColorBTN}"
+                WidthRequest="80"
+                HeightRequest="80"
+                CornerRadius="100"
+                    >
+        </ImageButton>
+       </Grid>
     </Grid>
 </ContentPage>

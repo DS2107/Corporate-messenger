@@ -13,7 +13,7 @@
         
         <!--Кнопка оначать голсовой чат-->
         <ToolbarItem  
-            IconImageSource="audioSocket.png" 
+            IconImageSource="enableCall.png" 
             x:Name="VoiceRecord" 
             Clicked="VoiceRecord_Clicked">
         </ToolbarItem>
@@ -183,7 +183,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="auto" />
+                   
                 </Grid.ColumnDefinitions>
                  <!--Атрибут для написания сообщения-->
                 <Editor
@@ -192,7 +192,7 @@
                     Margin="5,0,0,0"  
                     x:Name="MessageEditor" 
                     Completed="MessageEditor_Completed"
-                    
+                    TextChanged="MessageEditor_TextChanged"
                     Keyboard="Chat" 
                     TextColor="Black" 
                     Placeholder="Введите сообщение..." 
@@ -218,7 +218,7 @@
                     Pressed="mic_message_Pressed" 
                     Released="mic_message_Released" 
                     Grid.Row="0" 
-                    Grid.Column="2" 
+                    Grid.Column="1" 
                     Source="mic.png" 
                     Padding="0" 
                     BackgroundColor="Transparent"  

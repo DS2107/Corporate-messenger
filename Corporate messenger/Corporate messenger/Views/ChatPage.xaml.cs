@@ -1,5 +1,7 @@
 ﻿using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,6 +21,8 @@ namespace Corporate_messenger.Views
 
             BindingContext = chat = new ChatViewModel(id, title);
             Title = title;
+            send_message.IsVisible = false;
+            mic_message.IsVisible = true;
             MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) =>
             {
                 object d = 0;
@@ -40,7 +44,7 @@ namespace Corporate_messenger.Views
 
         async Task GoToPagaeCall()
         {
-            await Navigation.PushAsync(new CallPage());
+            await Navigation.PushAsync(new CallPage(true));
 
         }
 
@@ -69,31 +73,62 @@ namespace Corporate_messenger.Views
 
         private  void VoiceRecord_Clicked(object sender, EventArgs e)
         {
-            if (!BackColor_Flag)
+            //  DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
+            //  DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
+          
+            Navigation.PushAsync(new CallPage(true));
+            try
             {
-                mic_message.IsVisible = false;
-                VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
-                 DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
-                 DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
-               // DependencyService.Get<IAudioUDPSocketCall>().InitUDP(chat.user.Id,chat.user.receiverId);
-               // DependencyService.Get<IAudioUDPSocketCall>().StartAudioUDPCallAsync();
-                BackColor_Flag = true;
-            }
-            else
-            {
-                mic_message.IsVisible = true;
-                VoiceRecord.IconImageSource = ImageSource.FromFile("audioSocket.png");
-                //DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
-                DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
-                BackColor_Flag = false;
-            }
+                chat.ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "100", sender_id = chat.user.Id, receiver_id = chat.user.receiverId }));
+                DependencyService.Get<IAudio>().PlayAudioFile("gudok.mp3", Android.Media.Stream.VoiceCall);
+                DependencyService.Get<IForegroundService>().AudioCalls_Init = true;
+                    
 
-         
+            }
+            catch (Exception ex)
+            {
+
+            }
+            /* if (!BackColor_Flag)
+             {
+                 mic_message.IsVisible = false;
+                 VoiceRecord.IconImageSource = ImageSource.FromFile("rec.png");
+                  DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(chat.user.Id, chat.user.receiverId);
+                  DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(chat.ws);
+                // DependencyService.Get<IAudioUDPSocketCall>().InitUDP(chat.user.Id,chat.user.receiverId);
+                // DependencyService.Get<IAudioUDPSocketCall>().StartAudioUDPCallAsync();
+                 BackColor_Flag = true;
+             }
+             else
+             {
+                 mic_message.IsVisible = true;
+                 VoiceRecord.IconImageSource = ImageSource.FromFile("audioSocket.png");
+                 //DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                 DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                 BackColor_Flag = false;
+             }*/
+
+
         }
 
         private void MessageEditor_Completed(object sender, EventArgs e)
         {
             MessageEditor.Focus();
+        }
+
+        private void MessageEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MessageEditor.Text != "")
+            {
+                mic_message.IsVisible = false;
+                send_message.IsVisible = true;
+            }
+            else
+            {
+                send_message.IsVisible = false;
+                mic_message.IsVisible = true;
+               
+            }
         }
     }
 

@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="AndroidService\AudioService.cs" />
     <Compile Include="AndroidService\AudioStreaming.cs" />
+    <Compile Include="AndroidService\CloseApplication.cs" />
     <Compile Include="AndroidService\FileService.cs" />
     <Compile Include="AndroidService\UDP_AudioStreaming.cs" />
     <Compile Include="MainActivity.cs" />
@@ -268,6 +269,24 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\rec.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\MicOn24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\MicOff24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\PlayHold.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\HoldCall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Call_End.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\gudok.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

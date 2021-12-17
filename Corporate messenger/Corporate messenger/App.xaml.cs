@@ -27,27 +27,34 @@ namespace Corporate_messenger
                 return database;
             }
         }
-        public App()
+        public App(bool navigate)
         {
             InitializeComponent();
 
 
             var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
             var data = token.Split('/');
-
-             if (data[0] != "")
-              {
-                  SpecialDataModel special = new SpecialDataModel();
-                  special.Token = data[0];
-                  special.Id = Int32.Parse(data[1]);
-                  special.Name = data[2];
-                  MainPage = new AuthorizationMainPage();
-              }
-              else
-              {
-                MainPage = new NavigationPage(new LoginPage());
-                // MainPage = new NavigationPage(new AuthorizationMainPage());
+            if (!navigate)
+            {
+                if (data[0] != "")
+                {
+                    SpecialDataModel special = new SpecialDataModel();
+                    special.Token = data[0];
+                    special.Id = Int32.Parse(data[1]);
+                    special.Name = data[2];
+                    MainPage = new AuthorizationMainPage();
+                }
+                else
+                {
+                    MainPage = new NavigationPage(new LoginPage());
+                    // MainPage = new NavigationPage(new AuthorizationMainPage());
+                }
             }
+            else
+            {
+                MainPage = new CallPage(false);
+            }
+             
 
           // MainPage = new AuthorizationPage();
 

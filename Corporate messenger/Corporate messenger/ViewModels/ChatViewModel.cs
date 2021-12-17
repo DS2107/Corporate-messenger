@@ -130,9 +130,9 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) => {                
-                    DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                   
                     await Shell.Current.GoToAsync("//chats_list", true);
-                    ChatListViewModel chatList = new ChatListViewModel();
+                   
                 });
             }
         }     
@@ -263,7 +263,7 @@ namespace Corporate_messenger.ViewModels
             ws.OnMessage += WsOnMEssage;
             //ws.OnOpen += WsOnOpen;
             //ws.Connect();
-            DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(user.Id, user.receiverId);
+           
         }
         async Task SendToken_GetChatsAsync(){
             
@@ -325,15 +325,7 @@ namespace Corporate_messenger.ViewModels
 
             
             ConnectToServer();
-            Sockets.Plugin.UdpSocketClient Udpclient = new Sockets.Plugin.UdpSocketClient();
-            var message = JsonConvert.SerializeObject(new { 
-                type = "init_call", 
-                sender_id = user.Id, 
-                reciever_id = user.receiverId 
-            });      
-            
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
-            _ = Udpclient.SendToAsync(data, "192.168.0.105", 1234);           
+                      
         } 
         void LastMessageAdd(int count){
             BufferList = new ObservableCollection<ChatModel>();
@@ -386,29 +378,31 @@ namespace Corporate_messenger.ViewModels
             ws.Send(message);
            
         }
+        bool callback = false;
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {
             dynamic Json_obj = JObject.Parse(e.Data);
-
-            if (Json_obj.type == "call")             
-                DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall((byte[])Json_obj.voice_audio);      
-
-            else{
+            if ((string)Json_obj.type == "message")
+            {
                 ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
-                if (new_message.Audio == null){
+                if (new_message.Audio == null)
+                {
                     new_message.MaximumSlider = 0.01;
                     new_message.IsAuidoVisible = false;
                     new_message.IsMessageVisible = true;
                     new_message.SourceImage = "play.png";
                     new_message.ValueSlider = 1;
-                    try{
+                    try
+                    {
                         LastMessage.Add(new_message);
                     }
-                    catch (Exception ex){
+                    catch (Exception ex)
+                    {
                         var s = ex;
                     }
                 }
-                else{
+                else
+                {
                     new_message.ValueSlider = 1;
                     new_message.SourceImage = "play.png";
                     new_message.IsAuidoVisible = true;
@@ -422,6 +416,8 @@ namespace Corporate_messenger.ViewModels
 
                 MessagingCenter.Send<ChatViewModel>(this, "Scrol");
             }
+               
+            
 
 
         }

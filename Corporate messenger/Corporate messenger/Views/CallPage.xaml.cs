@@ -18,10 +18,10 @@ namespace Corporate_messenger.Views
     public partial class CallPage : ContentPage
     {
        
-        public CallPage()
+        public CallPage(bool init_call)
         {
             InitializeComponent();
-            BindingContext = new CallViewModel();
+            BindingContext = new CallViewModel(Navigation,init_call);
           //  CallClass call = new CallClass();
           //  call.LessPort();
 

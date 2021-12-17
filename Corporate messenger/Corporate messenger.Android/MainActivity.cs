@@ -31,7 +31,17 @@ namespace Corporate_messenger.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App());
+            bool flag = false;
+            int noteId = Intent.GetIntExtra("title", 0);
+            if (Intent.HasExtra("init_call"))
+            {
+                
+                flag = true;
+            }
+            LoadApplication(new App(flag));
+           
+            //Intent.RemoveExtra()
+            flag = false;
            /* TinyAccountManager.Droid.AccountManager.Initialize();
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
             {
