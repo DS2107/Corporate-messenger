@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Corporate_messenger.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Corporate_messenger.Service
         /// </summary>
         /// <param name="receiverId">Кому</param>
         /// <param name="sender_id">От кого</param>
-        public void InitAudioWebSocketCall(int sender_id);   
+        public void InitAudioWebSocketCall(int sender_id);
         /// <summary>
         /// Отсановка аудио вызова
         /// </summary>
@@ -27,5 +28,8 @@ namespace Corporate_messenger.Service
         /// </summary>
         /// <param name="audio_message">аудио</param>
         void ListenerWebSocketCall(byte[] audio_message);
+        public CallViewModel callView { get; set; }
+
+        public bool FlagRaised {get;set;}
     }
 }

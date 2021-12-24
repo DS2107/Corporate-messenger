@@ -110,12 +110,14 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
+        INavigation navigate;
         /// <summary>
         /// Конструктор 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="title"></param>
-        public ChatViewModel(int id, string title){
+        public ChatViewModel(int id, string title, INavigation nav){
+            navigate = nav;
             ws =  DependencyService.Get<ISocket>().MyWebSocket;
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
@@ -129,9 +131,9 @@ namespace Corporate_messenger.ViewModels
         public ICommand GoBack {
             get
             {
-                return new Command(async (object obj) => {                
-                   
-                    await Shell.Current.GoToAsync("//chats_list", true);
+                return new Command(async (object obj) => {
+                    navigate.PopAsync();
+                   // await Shell.Current.GoToAsync("//chats_list", true);
                    
                 });
             }

@@ -1,6 +1,7 @@
 ﻿using Android.Media;
 using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Service;
+using Corporate_messenger.ViewModels;
 using Sockets.Plugin;
 using System;
 using System.Net;
@@ -18,6 +19,8 @@ namespace Corporate_messenger.Droid.AndroidService
         private int Receiver_id { get; set; }
         private int User_id { get; set; }
         private int Buffer_Size { get; set; }
+        public CallViewModel callView { get; set; }
+
         private AudioRecord AudioRecord = null;
         private AudioTrack AudioTrack = null;
         int port = 1234;

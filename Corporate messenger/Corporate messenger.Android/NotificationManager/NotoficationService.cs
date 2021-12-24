@@ -6,10 +6,13 @@ using Corporate_messenger.Models;
 using Corporate_messenger.Models.Chat;
 using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
+using Corporate_messenger.ViewModels;
+using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel;
+using System.Timers;
 using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(startServiceAndroid))]
@@ -21,6 +24,7 @@ namespace Corporate_messenger.Droid.NotificationManager
     public class GetSocket:ISocket, INotifyPropertyChanged
     {
         SpecialDataModel user = new SpecialDataModel();
+       
         public GetSocket()
         {
             
@@ -79,17 +83,21 @@ namespace Corporate_messenger.Droid.NotificationManager
     [Service(Exported = true)]
     public class NotoficationService : Android.App.Service
     {
+        CallViewModel callView = new CallViewModel();
         public override IBinder OnBind(Intent intent)
         {
             return null;
         }
 
-        public const int ServiceRunningNotifID = 9000;
+        public const int ServiceRunningNotifID = 8999;
         WebSocketSharp.WebSocket ws;
         INotificationManager notificationManager;
 
-       
 
+        public override void OnTaskRemoved(Intent rootIntent)
+        {
+            base.OnTaskRemoved(rootIntent);
+        }
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             notificationManager = DependencyService.Get<INotificationManager>();
@@ -148,8 +156,18 @@ namespace Corporate_messenger.Droid.NotificationManager
                     DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();
+                    DependencyService.Get<IAudioWebSocketCall>().FlagRaised = true;
+                    DependencyService.Get<IAudioWebSocketCall>().callView.TStart();
                     break;
                 case "400":
+                    DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
+                    DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
+                    DependencyService.Get<IAudio>().StopAudioFile();      
+                    DependencyService.Get<IAudioWebSocketCall>().callView.TStop();
+                    break;
+                case "450":
+                    DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
                     DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();
@@ -167,7 +185,9 @@ namespace Corporate_messenger.Droid.NotificationManager
             }
        
         }
-
+        Timer timer;
+        CallViewModel CallView = new CallViewModel();
+        
         private void NotificationMessage(WebSocketSharp.MessageEventArgs args)
         {
             dynamic Json_obj = JObject.Parse(args.Data);

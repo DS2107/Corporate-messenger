@@ -19,7 +19,7 @@ namespace Corporate_messenger.Views
         {
             InitializeComponent();
 
-            BindingContext = chat = new ChatViewModel(id, title);
+            BindingContext = chat = new ChatViewModel(id, title,Navigation);
             Title = title;
             send_message.IsVisible = false;
             mic_message.IsVisible = true;

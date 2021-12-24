@@ -1,6 +1,7 @@
 ﻿using Android.Media;
 using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Service;
+using Corporate_messenger.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -13,12 +14,14 @@ namespace Corporate_messenger.Droid.AndroidService
 
     public class AudioStreaming: IAudioWebSocketCall
     {
-        
+        public CallViewModel callView { get; set; }
         private bool StartStopAudioStream_Flag { get; set; }      
         private int Frequency_Audio { get; set; }
         private int Receiver_id { get; set; }
         private int User_id { get; set; }
         private int Buffer_Size { get; set; }
+        public bool FlagRaised { get ; set; }
+
         private AudioRecord AudioRecord = null;
         private AudioTrack AudioTrack = null;
         public AudioStreaming()

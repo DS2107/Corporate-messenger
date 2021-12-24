@@ -1,12 +1,4 @@
-﻿
-using System.Net;
-using System;
-using SIPSorcery.SIP;
-using SIPSorcery.SIP.App;
-using SIPSorcery.Net;
-using SIPSorcery.Media;
-using Android.Media;
-using SIPSorceryMedia.Abstractions;
+﻿using SIPSorcery.SIP;
 using Corporate_messenger.Service;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -15,6 +7,9 @@ using Corporate_messenger.Service.Notification;
 using Newtonsoft.Json;
 using Corporate_messenger.Models;
 using Corporate_messenger.Views;
+using System.Timers;
+using System;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace Corporate_messenger.ViewModels
@@ -29,23 +24,43 @@ namespace Corporate_messenger.ViewModels
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-        string USERNAME = "1001";
-        string PASSWORD = "1234";
-        string DOMAIN = "192.168.0.105";
-        int EXPIRY = 120;
+   
 
 
-        SIPTransport sipTransport = new SIPTransport();
-        INavigation navigate;
-        public bool FlagInitCall { get; set; }
-        public CallViewModel(INavigation nav,bool init_call)
+       
+       
+        public CallViewModel()
         {
+            
+        }
+       
+        public async Task ClosePageAsync()
+        {
+            try
+            {
+               // await navigate.PopAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+          
+        }
+
+
+         public CallViewModel(INavigation nav,bool init_call)
+        {
+            
+            ws = DependencyService.Get<ISocket>().MyWebSocket;
+            TimeCall = "Инициализация звонка...";
+            DependencyService.Get<IAudioWebSocketCall>().callView = this;
             DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(user.Id);
             FlagInitCall = init_call;
             navigate = nav;
             SourceHold = "HoldCall.png";
             SourceMic = "MicOn24.png";
             ColorBTN = Color.FromHex("#5BD782");
+           
             if (FlagInitCall)
             {
                 VisibleButtonEndCenter = true;
@@ -60,11 +75,18 @@ namespace Corporate_messenger.ViewModels
                 VisibleButtonStart = true;
                 VisibleButtonEnd = true;
             }
-                
-
             // myCall();
         }
 
+       
+
+        public static  INavigation navigate;
+        public bool FlagInitCall { get; set; }
+        public int mins { get; set; }
+        public int secs { get; set; }
+        public int h { get; set; }
+        private static  string timeCall { get; set; }
+        Timer timer;
         private string sourceHold { get; set; }
         private string sourceMic { get; set; }
         private bool visibleButtonEnd { get; set; }
@@ -73,6 +95,24 @@ namespace Corporate_messenger.ViewModels
         public Color colorBTN { get; set; }
         public bool micflag { get; set; }
         public bool holdflag { get; set; }
+
+        /// <summary>
+        /// Время звонка
+        /// </summary>
+        public string TimeCall
+        {
+            get { return timeCall; }
+            set
+            {
+                if (timeCall != value)
+                {
+                    timeCall = value;
+                    OnPropertyChanged("TimeCall");
+                }
+            }
+        }
+  
+
         /// <summary>
         /// Видимость  кнопки вызов
         /// </summary>
@@ -206,6 +246,7 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
+        
         Application application = new Application();
         /// <summary>
         /// Завершить звонок
@@ -215,18 +256,27 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) => {
-                    ws = DependencyService.Get<ISocket>().MyWebSocket;
-                    ws.Send(JsonConvert.SerializeObject(new { type="init_call", status = "400"}));
                    
+                    if (DependencyService.Get<IAudioWebSocketCall>().FlagRaised)
+                    {
+                        ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",TimeCall }));
+                        DependencyService.Get<IAudioWebSocketCall>().FlagRaised = false;
+                       
+                    }
+                    else
+                    {
+                        TimeCall = "Вызов Завершен";
+                        ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "450" }));
+                    }
+                     
                     if (FlagInitCall)
                     {
-                        navigate.PopAsync();
-                      
+                      navigate.PopAsync();
                     }                                      
                     else
                     {
                         application.MainPage = new AuthorizationMainPage();
-                        await Shell.Current.GoToAsync("//chats_list", true);
+                       await Shell.Current.GoToAsync("//chats_list", true);
 
                     }
                        
@@ -279,92 +329,33 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
-
-
-
-
-        RTPSession rtpSession;
-
-
-
-
-        public async System.Threading.Tasks.Task myCall()
+        public void TStart()
         {
-            SIPRegistrationUserAgent regUserAgent = new SIPRegistrationUserAgent(sipTransport, USERNAME, PASSWORD, DOMAIN, EXPIRY);
-            regUserAgent.RegistrationFailed += Failed;
-            regUserAgent.RegistrationTemporaryFailure += Failure;
-            regUserAgent.RegistrationRemoved += RegRemove;
-            regUserAgent.RegistrationSuccessful += Success;
-            regUserAgent.Start();
-
-
-            string hostName = Dns.GetHostName(); // Retrive the Name of HOST  
-
-            //string myIP = Dns.GetHostByName(hostName).AddressList[0].ToString();
-            System.Net.IPAddress ipaddress = System.Net.IPAddress.Parse("192.168.0.100");
-            var userAgent = new SIPUserAgent(sipTransport, null);
-            rtpSession = new RTPSession(false, true, false, null, 0);
-            //VoIPMediaSession s = new VoIPMediaSession();
-
-            SIPUserAgent ua = new SIPUserAgent();
-
-            bool callResult = await userAgent.Call("1002@192.168.0.105", "1001", "1234", rtpSession);
-
-
-
-
-
-            SIPUDPChannel udpChannel = new SIPUDPChannel(new IPEndPoint(IPAddress.Any, 0));
-            sipTransport.AddSIPChannel(udpChannel);
-            SIPClientUserAgent uac = new SIPClientUserAgent(sipTransport);
-
-            // _ = rtpSession.Start();
-
-            SIPCallDescriptor callDescriptor = new SIPCallDescriptor("1001", "1234", "sip:1002@192.168.0.105", "<sip:1001@192.168.0.105>", null, null, null, null, SIPCallDirection.Out, "application/sdp", null, null);
-            //uac.Call(callDescriptor);
-
-
-
-
-            uac.CallAnswered += Uac_CallAnswered;
-
+            timer = new Timer();
+            timer.Interval = 1000; // 1 sec 
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
+        }
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            secs += 1;
+            if (secs == 60)
+            {
+                secs = 0;
+                mins += 1;
+            }
+            if (mins == 60)
+            {
+                mins = 0;
+                h += 1;
+            }
+            TimeCall = string.Format("{0}:{1}:{2}", h.ToString().PadLeft(2, '0'), mins.ToString().PadLeft(2, '0'), secs.ToString().PadLeft(2, '0'));
 
         }
-
-        private void Uac_CallAnswered(ISIPClientUserAgent uac, SIPResponse sipResponse)
+        public void TStop()
         {
-
-            rtpSession.Start();
-            MediaRecorder ClassMedia = new MediaRecorder();
-
-            ClassMedia.SetAudioSource(AudioSource.VoiceCall);
-            ClassMedia.SetOutputFormat(OutputFormat.AmrNb);
-            ClassMedia.SetAudioEncoder(Android.Media.AudioEncoder.AmrNb);
-
-            ClassMedia.Prepare();
-            ClassMedia.Start();
+            timer.Stop();
         }
 
-
-
-        private void Success(SIPURI obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void RegRemove(SIPURI obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Failure(SIPURI arg1, string arg2)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Failed(SIPURI arg1, string arg2)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

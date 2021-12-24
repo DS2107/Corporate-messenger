@@ -9,7 +9,7 @@ namespace Corporate_messenger.Droid.NotificationManager
 {
     class NotificationHelper : IStaticNotification
     {
-        private static string foregroundChannelId = "9003";
+        private static string foregroundChannelId = "8999";
         private static Context context = global::Android.App.Application.Context;
 
 
@@ -27,7 +27,10 @@ namespace Corporate_messenger.Droid.NotificationManager
                 .SetContentText("")
                 .SetSmallIcon(Resource.Drawable.MyChat)
                 .SetOngoing(true)
+                .SetColor(1234)
+             
                 .SetContentIntent(pendingIntent);
+
 
             // Building channel if API verion is 26 or above
             if (global::Android.OS.Build.VERSION.SdkInt >= BuildVersionCodes.O)
