@@ -60,6 +60,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         private static Context context = global::Android.App.Application.Context;
 
         public bool AudioCalls_Init { get; set; }
+        public int call_id { get; set; }
 
         public void StartService()
         {
@@ -175,7 +176,8 @@ namespace Corporate_messenger.Droid.NotificationManager
                 case "call":
                     DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall((byte[])Json_obj.voice_audio);
                     break;
-                case "init_call": // 100
+                case "100": // 100
+                    DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
                     notificationManager.SendNotification("Звонок", "Звонок");
                     DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
                     break;

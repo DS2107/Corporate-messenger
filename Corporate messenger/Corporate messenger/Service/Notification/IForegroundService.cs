@@ -9,6 +9,8 @@ namespace Corporate_messenger.Service.Notification
         public void StartService();
         public void StopService();
         public bool AudioCalls_Init { get; set; }
+        public int call_id { get; set; }
+
 
     }
 }

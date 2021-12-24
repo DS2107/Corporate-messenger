@@ -316,7 +316,7 @@ namespace Corporate_messenger.ViewModels
             {
                 return new Command(async (object obj) => {
                     ws = DependencyService.Get<ISocket>().MyWebSocket;
-                    ws.Send(JsonConvert.SerializeObject(new { type = "init_call", sender_id = user.Id,status ="200",receiver_id =1  }));
+                    ws.Send(JsonConvert.SerializeObject(new { type = "init_call", sender_id = user.Id,status ="200",receiver_id =1, DependencyService.Get<IForegroundService>().call_id}));
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();                   
                     DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
