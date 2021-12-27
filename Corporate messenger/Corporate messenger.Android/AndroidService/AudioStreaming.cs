@@ -76,9 +76,27 @@ namespace Corporate_messenger.Droid.AndroidService
         {
             await Task.Run(() => StartAudioWebSocketCall(ws));
         } 
+        public void StopAudioRecord()
+        {
+            if (AudioRecord != null)
+            {
+                AudioRecord.Stop();
+                StartStopAudioStream_Flag = false;
+            }
+               
+        }
 
+        public void StartAudioRecord()
+        {
+            if (AudioRecord != null)
+            {
+                StartStopAudioStream_Flag = true;
+                //AudioRecord.StartRecording();
+            }
+                
+        }
         private void StartAudioWebSocketCall(WebSocket ws){
-           
+            StartStopAudioStream_Flag = true;
             byte[] buffer = new byte[Buffer_Size];
             try
             {

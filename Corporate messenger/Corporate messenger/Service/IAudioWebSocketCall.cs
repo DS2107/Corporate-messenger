@@ -18,6 +18,18 @@ namespace Corporate_messenger.Service
         /// Отсановка аудио вызова
         /// </summary>
         public void StopAudioWebSocketCall();
+
+        /// <summary>
+        /// Выключить микрофон
+        /// </summary>
+        void StopAudioRecord();
+
+
+        /// <summary>
+        /// Включает микрофон
+        /// </summary>
+        void StartAudioRecord();
+
         /// <summary>
         /// Старт аудио вызова
         /// </summary>

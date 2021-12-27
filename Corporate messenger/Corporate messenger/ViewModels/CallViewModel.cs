@@ -24,11 +24,7 @@ namespace Corporate_messenger.ViewModels
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-   
-
-
-       
-       
+      
         public CallViewModel()
         {
             
@@ -237,11 +233,13 @@ namespace Corporate_messenger.ViewModels
                     {
                         SourceMic = "MicOff24.png";
                         micflag = true;
+                        DependencyService.Get<IAudioWebSocketCall>().StopAudioRecord();
                     }
                     else
                     {
                         SourceMic = "MicOn24.png";
                         micflag = false;
+                        DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
                     }
                 });
             }
@@ -307,7 +305,7 @@ namespace Corporate_messenger.ViewModels
         }
         SpecialDataModel user = new SpecialDataModel();
         WebSocketSharp.WebSocket ws;
-        
+      
         /// Ответиьт на звонок
         /// </summary>
         public ICommand StartCall
@@ -318,7 +316,8 @@ namespace Corporate_messenger.ViewModels
                     ws = DependencyService.Get<ISocket>().MyWebSocket;
                     ws.Send(JsonConvert.SerializeObject(new { type = "init_call", sender_id = user.Id,status ="200",receiver_id =1, DependencyService.Get<IForegroundService>().call_id}));
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
-                    DependencyService.Get<IAudio>().StopAudioFile();                   
+                   
+                     DependencyService.Get<IAudio>().StopAudioFile();                   
                     DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
                     //  ColorBTN = Color.Red;
                     VisibleButtonStart = false;

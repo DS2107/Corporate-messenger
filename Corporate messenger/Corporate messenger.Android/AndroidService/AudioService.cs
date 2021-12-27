@@ -46,7 +46,7 @@ namespace Corporate_messenger.Droid.AndroidService
 
         private void Player_Completion(object sender, EventArgs e)
         {
-            if(DependencyService.Get<IForegroundService>().AudioCalls_Init)
+            if (DependencyService.Get<IForegroundService>().AudioCalls_Init)
                 player.Start();
             
         }
@@ -92,6 +92,8 @@ namespace Corporate_messenger.Droid.AndroidService
 
         public void StopAudioFile()
         {
+
+            DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
             if (player != null)                       
                 player.Stop();         
         }
