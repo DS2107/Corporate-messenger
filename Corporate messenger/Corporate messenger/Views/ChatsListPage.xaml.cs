@@ -12,6 +12,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using WebSocketSharp;
 using System.Diagnostics;
+using Corporate_messenger.Service.Notification;
 
 namespace Corporate_messenger.Views
 {
@@ -35,7 +36,11 @@ namespace Corporate_messenger.Views
 
         }
 
-        
+        protected override void OnAppearing()
+        {
+            DependencyService.Get<IForegroundService>().chat_room_id = 0;
+        }
+
 
         // Нажатие по ячейке чата
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -50,11 +55,10 @@ namespace Corporate_messenger.Views
             var i = v.Id;
             //ChatPage s = new ChatPage(v.Id, v.Title);
             await Navigation.PushAsync(new ChatPage(v.Id, v.Title));
-          
-               
-           
 
         }
+
+
 
         private void CallButton_Clicked(object sender, EventArgs e)
         {

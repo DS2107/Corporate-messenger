@@ -1,4 +1,5 @@
 ﻿using Corporate_messenger.Models;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace Corporate_messenger.Views
       
         public AuthorizationMainPage()
         {
-            InitializeComponent();  
+            InitializeComponent();
+            
         }
         public ICommand ExecuteLogout => new Command(async () => await GoToAsync("//login"));
     }

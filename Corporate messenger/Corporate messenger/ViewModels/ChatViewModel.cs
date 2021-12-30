@@ -46,10 +46,9 @@ namespace Corporate_messenger.ViewModels
         public SpecialDataModel user = new SpecialDataModel();
 
         private ObservableCollection<ChatModel> messageList = new ObservableCollection<ChatModel>();
-        private ObservableCollection<ChatModel> BufferList;
-        private ObservableCollection<ChatModel> lastMessage = new ObservableCollection<ChatModel>();
+       
         /// <summary>
-        /// Список друзей общий
+        /// Список сообщений
         /// </summary>
         public ObservableCollection<ChatModel> MessageList
         {
@@ -64,21 +63,7 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
-        /// <summary>
-        /// Последние 20 сообщений
-        /// </summary>
-        public ObservableCollection<ChatModel> LastMessage
-        {
-            get { return lastMessage; }
-            set
-            {
-                if (lastMessage != value)
-                {
-                    lastMessage = value;
-                    OnPropertyChanged("LastMessage");
-                }
-            }
-        }
+        
     
         /// <summary>
         /// Сообщение пользователя
@@ -119,25 +104,14 @@ namespace Corporate_messenger.ViewModels
         public ChatViewModel(int id, string title, INavigation nav){
             navigate = nav;
             ws =  DependencyService.Get<ISocket>().MyWebSocket;
+            ws.OnMessage += WsOnMEssage;
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
             chat.SourceImage = "play.png";         
            _ = SendToken_GetChatsAsync();
         }
         
-        /// <summary>
-        /// Переназначение кнопки обратно
-        /// </summary>
-        public ICommand GoBack {
-            get
-            {
-                return new Command(async (object obj) => {
-                    navigate.PopAsync();
-                   // await Shell.Current.GoToAsync("//chats_list", true);
-                   
-                });
-            }
-        }     
+       
         /// <summary>
         /// Отправить сообщение
         /// </summary>
@@ -151,7 +125,7 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
-        bool updateFlag = false;
+      
         /// <summary>
         /// Обновление списка
         /// </summary>
@@ -163,10 +137,10 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async () =>
                 {
                     IsRefreshing = true;
-                    updateFlag = true;
-                    await Task.Run(() => LastMessageAdd(LastElement));
+                
+                  //  await Task.Run(() => LastMessageAdd(LastElement));
                    
-                    updateFlag = false;
+                   
                     IsRefreshing = false;
                 });
 
@@ -257,16 +231,7 @@ namespace Corporate_messenger.ViewModels
             PlayStopStart = true;
         }
 
-        /// <summary>
-        /// Подключение к сокетам
-        /// </summary>
-        void ConnectToServer(){
-            //ws = new WebSocketSharp.WebSocket(addressWS);
-            ws.OnMessage += WsOnMEssage;
-            //ws.OnOpen += WsOnOpen;
-            //ws.Connect();
-           
-        }
+      
         async Task SendToken_GetChatsAsync(){
             
             // Устанавливаем соеденение 
@@ -292,81 +257,51 @@ namespace Corporate_messenger.ViewModels
 
             //****** РАСШИФРОВКА_ОТВЕТА ******
             JObject contentJobjects = JObject.Parse(contenJSON);
-           
-            foreach (var KeyJobject in contentJobjects){
-                if (KeyJobject.Key == "dialog"){
-                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                    MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
-                  
-                        foreach (var item in MessageList){
-                            if (item.Audio != null){
+            try
+            {
+                foreach (var KeyJobject in contentJobjects)
+                {
+                    if (KeyJobject.Key == "dialog")
+                    {
+                        var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                        MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
+
+                        foreach (var item in MessageList)
+                        {
+                            if (item.Audio != null)
+                            {
                                 item.ValueSlider = 1;
                                 item.MaximumSlider = 1;
                                 item.IsMessageVisible = false;
                                 item.IsAuidoVisible = true;
                                 item.SourceImage = "play.png";
                             }
-                            else{
-                            item.ValueSlider = 1;
-                            item.MaximumSlider = 1;
-                            item.IsMessageVisible = true;
+                            else
+                            {
+                                item.ValueSlider = 1;
+                                item.MaximumSlider = 1;
+                                item.IsMessageVisible = true;
                                 item.IsAuidoVisible = false;
-                            }   
-                    }     
-                }
-                if (KeyJobject.Key == "receiver_id"){
-                    dynamic dynamic_receiverID = KeyJobject.Value;    
-                    user.receiverId = (int)dynamic_receiverID.receiver_id;
-                  
+                            }
+                        }
+                    }
+                    if (KeyJobject.Key == "receiver_id")
+                    {
+                        
+                        user.receiverId = (int)KeyJobject.Value;
+
+                    }
                 }
             }
-            if (MessageList.Count > 20)
-                LastMessageAdd(MessageList.Count - 1);
-            else
-                LastMessage = MessageList;
+            catch(Exception ex)
+            {
 
-            
-            ConnectToServer();
-                      
+            }
+           
+      
+         
         } 
-        void LastMessageAdd(int count){
-            BufferList = new ObservableCollection<ChatModel>();
-            var BufferCount = count;
-            int BufferIndex = 0;
-            int maxBufferIndex = 20;
-          
-            if(BufferCount < maxBufferIndex){
-                maxBufferIndex = BufferCount;
-            }
-            if (BufferCount != 0){
-                for (int i = BufferCount; i >= 0; i--)
-                {                  
-                    if (BufferIndex != maxBufferIndex){
-                        BufferList.Add(MessageList[i]);
-                        LastElement = i;
-                        BufferIndex++;
-
-                    }
-                    else{
-                        break;
-                    }
-
-                }
-                var count1 = BufferList.Count;
-                for (int i = count1-1; i >= 0; i--){
-                    if(updateFlag){
-                        LastMessage.Insert(0, BufferList[i]);
-                    }
-                    else{
-                        LastMessage.Add(BufferList[i]);
-                       
-                    }   
-                }
-                BufferList = null;
-                if (updateFlag != true)             
-                    MessagingCenter.Send<ChatViewModel>(this, "Scrol");
-            }
-        }
+        
 
    
 
@@ -380,7 +315,7 @@ namespace Corporate_messenger.ViewModels
             ws.Send(message);
            
         }
-        bool callback = false;
+       
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {
             dynamic Json_obj = JObject.Parse(e.Data);
@@ -396,7 +331,7 @@ namespace Corporate_messenger.ViewModels
                     new_message.ValueSlider = 1;
                     try
                     {
-                        LastMessage.Add(new_message);
+                        MessageList.Add(new_message);
                     }
                     catch (Exception ex)
                     {
@@ -410,7 +345,7 @@ namespace Corporate_messenger.ViewModels
                     new_message.IsAuidoVisible = true;
                     new_message.IsMessageVisible = false;
                     new_message.MaximumSlider = 1;
-                    LastMessage.Add(new_message);
+                    MessageList.Add(new_message);
                 }
 
                 if (new_message.Audio != null)

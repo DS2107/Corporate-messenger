@@ -94,10 +94,8 @@ namespace Corporate_messenger.Views
                 LabelPassword.IsVisible = false;
             }
         }
-        protected override async void OnAppearing()
-        {
-            
-        }
+       
+      
        
     }
 }

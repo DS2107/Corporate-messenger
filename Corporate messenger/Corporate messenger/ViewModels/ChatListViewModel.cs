@@ -65,14 +65,15 @@ namespace Corporate_messenger.ViewModels
            
             _ = SendToken_GetChatsAsync();
 
-            DependencyService.Get<IForegroundService>().StartService();
+         if (DependencyService.Get<IForegroundService>().SocketFlag == false)
+              DependencyService.Get<IForegroundService>().StartService();
 
 
-            //CallClass call = new CallClass();
-            //call.LessPort();
+                //CallClass call = new CallClass();
+                //call.LessPort();
         }
 
-       
+
 
         public ICommand UpdateList {
 

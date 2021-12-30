@@ -18,7 +18,7 @@ namespace Corporate_messenger.Views
         public ChatPage(int id, string title)
         {
             InitializeComponent();
-
+            DependencyService.Get<IForegroundService>().chat_room_id = id;
             BindingContext = chat = new ChatViewModel(id, title,Navigation);
             Title = title;
             send_message.IsVisible = false;
@@ -87,7 +87,7 @@ namespace Corporate_messenger.Views
             }
             catch (Exception ex)
             {
-
+                var b = ex;
             }
             /* if (!BackColor_Flag)
              {

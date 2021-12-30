@@ -46,7 +46,7 @@ namespace Corporate_messenger
                 }
                 else
                 {
-                    MainPage = new NavigationPage(new LoginPage());
+                    MainPage =  new LoginPage();
                     // MainPage = new NavigationPage(new AuthorizationMainPage());
                 }
             }

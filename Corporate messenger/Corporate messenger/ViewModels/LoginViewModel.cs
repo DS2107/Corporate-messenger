@@ -1,5 +1,6 @@
 ﻿using Corporate_messenger.Models;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -29,18 +30,7 @@ namespace Corporate_messenger.ViewModels
             Nav = navigation;
         }
 
-        /// <summary>
-        /// Переход в приложения 
-        /// </summary>
-        /// <returns></returns>
-        async Task GoChatListPageAsync()
-        {
-          
-            await Application.Current.MainPage.Navigation.PopAsync();
-            Application.Current.MainPage = new AuthorizationMainPage();
-          
-          
-        }
+        
 
 
         async Task Permission()
@@ -78,7 +68,7 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async (object obj) =>
                 {
                     
-                     AuthorizationUserAsync();
+                     await AuthorizationUserAsync();
                 });
             }
         }
@@ -166,7 +156,12 @@ namespace Corporate_messenger.ViewModels
 
             if (specialData.Status != false)
             {
-                await  GoChatListPageAsync();
+               // Nav.RemovePage(new LoginPage());
+                Application.Current.MainPage = new AuthorizationMainPage();
+                Nav = Application.Current.MainPage.Navigation;
+                // await Nav.PushModalAsync(new MainPage());
+                DependencyService.Get<IForegroundService>().StartService();
+                await Nav.PopToRootAsync();
             }
             else
             {

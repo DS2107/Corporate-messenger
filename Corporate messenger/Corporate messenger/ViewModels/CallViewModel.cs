@@ -38,7 +38,7 @@ namespace Corporate_messenger.ViewModels
             }
             catch (Exception ex)
             {
-
+                var b = ex;
             }
           
         }
@@ -254,8 +254,8 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) => {
-                   
-                    if (DependencyService.Get<IAudioWebSocketCall>().FlagRaised)
+                    var flag = DependencyService.Get<IAudioWebSocketCall>().FlagRaised;
+                    if (flag)
                     {
                         ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",TimeCall }));
                         DependencyService.Get<IAudioWebSocketCall>().FlagRaised = false;
@@ -269,12 +269,14 @@ namespace Corporate_messenger.ViewModels
                      
                     if (FlagInitCall)
                     {
-                      navigate.PopAsync();
+                      await navigate.PopAsync();
                     }                                      
                     else
                     {
-                        application.MainPage = new AuthorizationMainPage();
-                       await Shell.Current.GoToAsync("//chats_list", true);
+                        Application.Current.MainPage = new AuthorizationMainPage();
+                        navigate = Application.Current.MainPage.Navigation;
+                       
+                        await navigate.PopToRootAsync();
 
                     }
                        
@@ -317,7 +319,8 @@ namespace Corporate_messenger.ViewModels
                     ws.Send(JsonConvert.SerializeObject(new { type = "init_call", sender_id = user.Id,status ="200",receiver_id =1, DependencyService.Get<IForegroundService>().call_id}));
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                    
-                     DependencyService.Get<IAudio>().StopAudioFile();                   
+                     DependencyService.Get<IAudio>().StopAudioFile();
+                    DependencyService.Get<IAudioWebSocketCall>().FlagRaised = true;
                     DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
                     //  ColorBTN = Color.Red;
                     VisibleButtonStart = false;
@@ -351,8 +354,11 @@ namespace Corporate_messenger.ViewModels
             TimeCall = string.Format("{0}:{1}:{2}", h.ToString().PadLeft(2, '0'), mins.ToString().PadLeft(2, '0'), secs.ToString().PadLeft(2, '0'));
 
         }
-        public void TStop()
+        public async Task TStopAsync()
         {
+          
+            await navigate.PopAsync();
+            
             timer.Stop();
         }
 

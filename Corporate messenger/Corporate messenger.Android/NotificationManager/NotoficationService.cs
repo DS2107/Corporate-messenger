@@ -56,18 +56,21 @@ namespace Corporate_messenger.Droid.NotificationManager
 
     public class startServiceAndroid : IForegroundService
     {
-       
+
         private static Context context = global::Android.App.Application.Context;
 
         public bool AudioCalls_Init { get; set; }
+        public bool SocketFlag { get; set; }
         public int call_id { get; set; }
 
+        public int chat_room_id { get; set; }
         public void StartService()
         {
              var intent = new Intent(context, typeof(NotoficationService));
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
                 context.StartForegroundService(intent);
+                DependencyService.Get<IForegroundService>().SocketFlag = true;
             }
             else
             {
@@ -118,7 +121,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                 ws.OnClose += Ws_OnClose;
                 ws.OnError += Ws_OnError;            
                 socket.MyWebSocket = ws;
-                bool time;
+               
                 TimerStartService();
 
             }
@@ -165,7 +168,8 @@ namespace Corporate_messenger.Droid.NotificationManager
                     DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();      
-                    DependencyService.Get<IAudioWebSocketCall>().callView.TStop();
+                    DependencyService.Get<IAudioWebSocketCall>().callView.TStopAsync();
+                    
                     break;
                 case "450":
                     DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
@@ -182,12 +186,13 @@ namespace Corporate_messenger.Droid.NotificationManager
                     DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
                     break;
                 case "message":
-                    NotificationMessage(e);
+                    if (DependencyService.Get<IForegroundService>().chat_room_id != (int)Json_obj.chat_room_id)                  
+                        NotificationMessage(e);
                     break;
             }
        
         }
-        Timer timer;
+       
         CallViewModel CallView = new CallViewModel();
         
         private void NotificationMessage(WebSocketSharp.MessageEventArgs args)

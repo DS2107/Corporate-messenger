@@ -20,11 +20,11 @@
     </ContentPage.ToolbarItems>
 
     <!--Переназначенная кнопка назад и команда к ней из ChatPageViewModel-->
-    <Shell.BackButtonBehavior>
+    <!--<Shell.BackButtonBehavior>
         <BackButtonBehavior 
             Command="{Binding GoBack}">
         </BackButtonBehavior>
-    </Shell.BackButtonBehavior>
+    </Shell.BackButtonBehavior>-->
 
     <!--Шаблоны для распределения сообщений в чате (С лева чужие, справа свои)-->
     <ContentPage.Resources>
@@ -162,7 +162,7 @@
                 IsRefreshing="{Binding IsRefreshing}" 
                 RefreshCommand="{Binding UpdateList}"
                 ItemTemplate="{StaticResource chatDataTemplateSelector}"  
-                ItemsSource="{Binding LastMessage}"
+                ItemsSource="{Binding MessageList}"
                 Background="#04283C" 
                 IsPullToRefreshEnabled="True" 
                 RefreshControlColor="Cyan"  
