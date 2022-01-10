@@ -6,18 +6,18 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
-    class UserDataModel: INotifyPropertyChanged
+    class UserDataModel:UserAbstract, INotifyPropertyChanged
     {
         private static string last_login { get; set; }
         private static string created_at { get; set; }
         private static string updated_at { get; set; }
-        private static string username { get; set; }
+       
         private static string avatar { get; set; }
         private static string active { get; set; }
         private static string email { get; set; }
-        private static int id { get; set; }
+        private static int id;
+        private static string username;
 
-      
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -32,7 +32,7 @@ namespace Corporate_messenger.Models
         /// ID пользователя
         /// </summary>
         [JsonProperty("id")]
-        public int Id
+        public override int Id
         {
             get { return id; }
             set
@@ -49,7 +49,7 @@ namespace Corporate_messenger.Models
         /// Имя пользователя пользователя
         /// </summary>
         [JsonProperty("username")]
-        public string Username
+        public override string Name
         {
             get { return username; }
             set
@@ -61,6 +61,11 @@ namespace Corporate_messenger.Models
                 }
             }
         }
+       
+       
+      
+
+        
 
         /// <summary>
         /// Почта пользователя
@@ -164,6 +169,6 @@ namespace Corporate_messenger.Models
             }
         }
 
-        
+       
     }
 }

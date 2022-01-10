@@ -149,7 +149,6 @@ namespace Corporate_messenger.ViewModels
             }
             catch(Exception ex)
             {
-
                 var s = ex;
             }
 

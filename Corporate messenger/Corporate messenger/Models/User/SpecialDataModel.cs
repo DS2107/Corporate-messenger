@@ -6,14 +6,14 @@ using System.Text;
 
 namespace Corporate_messenger.Models
 {
-    public class SpecialDataModel: INotifyPropertyChanged
+    public class SpecialDataModel : UserAbstract, INotifyPropertyChanged
     {
         private static int input_chat { get; set; }
-        private static string token { get; set; }
-        private static string name { get; set; }
+        private static string token { get; set; }     
         private static bool status { get; set; }
         private int receiver_id { get; set; }
-        private static int id { get; set; }
+        private static int id;
+        private static string name;
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
@@ -21,10 +21,29 @@ namespace Corporate_messenger.Models
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
+        
+       
+        // <summary>
+        /// id usera
+        /// </summary>
+        [JsonProperty("id")]
+        public override int Id
+        {
+            get { return id; }
+            set
+            {
+                if (id != value)
+                {
+                    id = value;
+                    OnPropertyChanged("Id");
+                }
+            }
+        }
+
         /// <summary>
         /// Имя пользователя который авторизовался
         /// </summary>
-        public string Name
+        public override string Name
         {
             get { return name; }
             set
@@ -36,6 +55,8 @@ namespace Corporate_messenger.Models
                 }
             }
         }
+      
+      
 
         /// <summary>
         /// id пользователя
@@ -106,23 +127,8 @@ namespace Corporate_messenger.Models
         }
 
 
-        /// <summary>
-        /// id usera
-        /// </summary>
-        [JsonProperty("id")]
-        public int Id
-        {
-            get { return id; }
-            set
-            {
-                if (id != value)
-                {
-                    id = value;
-                    OnPropertyChanged("Id");
-                }
-            }
-        }
+       
 
-        
+       
     }
 }

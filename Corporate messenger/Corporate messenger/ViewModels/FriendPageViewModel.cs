@@ -63,7 +63,7 @@ namespace Corporate_messenger.ViewModels
                     {
 
                         // Перед отправкой , превращаем все в json
-                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = iUser.Id, receiver_id = item.Id, title = item.Username });
+                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = iUser.Id, receiver_id = item.Id, title = item.Name });
 
                         // Устанавливаем соеденение 
                         HttpClient client = new HttpClient();
@@ -93,7 +93,7 @@ namespace Corporate_messenger.ViewModels
                         dynamic contentJobjects = JObject.Parse(contenJSON);
                        
 
-                      _ = nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Username));
+                      _ = nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Name));
 /*                            
                        
                         item.Id;*/

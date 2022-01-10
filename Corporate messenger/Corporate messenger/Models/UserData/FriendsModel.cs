@@ -6,17 +6,17 @@ using System.Text;
 
 namespace Corporate_messenger.Models.UserData
 {
-    class FriendsModel: INotifyPropertyChanged
+    class FriendsModel : UserAbstract, INotifyPropertyChanged
     {
         private string last_login { get; set; }
 
-        private string username { get; set; }
+        private string username;
 
         private string email { get; set; }
 
         //private string avatar { get; set; }
 
-        private int id { get; set; }
+        private int id;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
@@ -26,12 +26,11 @@ namespace Corporate_messenger.Models.UserData
         }
 
 
-
         /// <summary>
         /// ID друга
         /// </summary>
         [JsonProperty("id")]
-        public int Id
+        public override int Id
         {
             get { return id; }
             set
@@ -48,7 +47,7 @@ namespace Corporate_messenger.Models.UserData
         /// Имя друга
         /// </summary>
         [JsonProperty("username")]
-        public string Username
+        public override string Name
         {
             get { return username; }
             set
@@ -60,6 +59,9 @@ namespace Corporate_messenger.Models.UserData
                 }
             }
         }
+
+
+
 
         /// <summary>
         /// Почта друга
@@ -112,6 +114,6 @@ namespace Corporate_messenger.Models.UserData
             }
         }
 
-        
+       
     }
 }

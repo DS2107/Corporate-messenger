@@ -5,23 +5,20 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Http;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using WebSocketSharp;
 using System.IO;
-using Android.Media;
-using Xamarin.Essentials;
 using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
+using System.Threading;
 
 namespace Corporate_messenger.ViewModels
 {
-   
+
     class ChatViewModel: INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,16 +27,18 @@ namespace Corporate_messenger.ViewModels
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-        public int LastElement { get; set; }
-        static string addressWS = "ws://192.168.0.105:6001";
-        private string input_message { get; set; }
 
+       
+      
+        private static string addressWS = "ws://192.168.0.105:6001";     
+        private string Next_page_url { get; set; }
+        private int CurrentPage { get; set; }
         /// <summary>
         /// Модель данных чат
         /// </summary>
         public ChatModel chat = new ChatModel();
 
-         //Сокет 
+        //Сокет 
         public  WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
 
         // Модель юзера
@@ -63,8 +62,8 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
-        
-    
+
+        private string input_message { get; set; }
         /// <summary>
         /// Сообщение пользователя
         /// </summary>
@@ -80,7 +79,7 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-
+        private bool firstupdate = false;
         private bool isRefreshing = false;
         public bool IsRefreshing
         {
@@ -107,8 +106,12 @@ namespace Corporate_messenger.ViewModels
             ws.OnMessage += WsOnMEssage;
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
-            chat.SourceImage = "play.png";         
-           _ = SendToken_GetChatsAsync();
+            chat.SourceImage = "play.png";
+            // создаем новый поток
+           // Thread myThread = new Thread(new ParameterizedThreadStart(SendToken_GetChatsAsync));
+            //myThread.Start("/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog"); // запускаем поток
+
+            _ = SendToken_GetChatsAsync("/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog");
         }
         
        
@@ -137,10 +140,12 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async () =>
                 {
                     IsRefreshing = true;
-                
-                  //  await Task.Run(() => LastMessageAdd(LastElement));
-                   
-                   
+                    if (Next_page_url != null)
+                    {
+                        Next_page_url = Next_page_url.Substring(25);
+                        await SendToken_GetChatsAsync(Next_page_url);
+                    }                
+                       
                     IsRefreshing = false;
                 });
 
@@ -204,7 +209,7 @@ namespace Corporate_messenger.ViewModels
                 item.SourceImage = "stop.png";
 
                // int count = 0;
-                Device.StartTimer(new TimeSpan(0, 0, 0,1), () =>{
+                Device.StartTimer(new TimeSpan(0, 0, 0, 0,1), () =>{
                         if (item.MaximumSlider != item.ValueSlider){
                             item.ValueSlider = DependencyService.Get<IAudio>().GetPositionAudio();
                             var s = DependencyService.Get<IAudio>().GetPositionAudio();
@@ -232,16 +237,103 @@ namespace Corporate_messenger.ViewModels
         }
 
       
-        async Task SendToken_GetChatsAsync(){
-            
+       private  async Task SendToken_GetChatsAsync(string url){
+
+            // получаем данные в виде Ключ-Значение 
+            JObject contentJobjects = await GetContent_Json(url);
+            try
+            {
+                // По ключам получаем значения
+                foreach (var KeyJobject in contentJobjects){
+                    switch(KeyJobject.Key){
+                        case "dialog":
+                            Dialog(KeyJobject.Value);
+                            break;
+                        case "receiver_id":
+                            user.receiverId = (int)KeyJobject.Value;
+                            break;
+                        case "pagination":
+                            Pagination(KeyJobject.Value);
+                            break;
+                    }          
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+        }
+       
+        private void Dialog(JToken value)
+        {
+            var ValueJobject = JsonConvert.SerializeObject(value);
+            var Json_obj = JArray.Parse(ValueJobject);
+            if (Next_page_url != null)
+            {
+                
+                    AddFirstElemToListMessage(Json_obj);  
+            }
+            if (firstupdate == false)
+            {
+                MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
+
+                foreach (var item in MessageList)
+                {
+                    SetStartParametr_Message(item);
+                }
+                firstupdate = true;
+            }
+              
+
+
+        }
+
+        private void Pagination(JToken value)
+        {
+            var ValueJobject = JsonConvert.SerializeObject(value);
+            dynamic Json_obj = JObject.Parse(ValueJobject);
+
+            Next_page_url = (string)Json_obj.next_page_url;
+            CurrentPage = (int)Json_obj.currentPage;
+        }
+        private void AddFirstElemToListMessage(JArray Json_obj)
+        {
+            foreach (var item_Jarray in Json_obj)
+            {
+                MessageList.Insert(0, SetStartParametr_Message(JsonConvert.DeserializeObject<ChatModel>(item_Jarray.ToString())));
+            }
+        }
+        private ChatModel SetStartParametr_Message(ChatModel item)
+        {
+            if (item.Audio != null)
+            {
+                item.ValueSlider = 0.0;
+                item.MaximumSlider = 1;
+                item.IsMessageVisible = false;
+                item.IsAuidoVisible = true;
+                item.SourceImage = "play.png";
+            }
+            else
+            {
+                item.ValueSlider = 0.0;
+                item.MaximumSlider = 1;
+                item.IsMessageVisible = true;
+                item.IsAuidoVisible = false;
+            }
+            return item;
+        }
+        private async Task<JObject> GetContent_Json(string url)
+        {
             // Устанавливаем соеденение 
             HttpClient client = new HttpClient();
 
             // Тип Запроса
             var httpMethod = HttpMethod.Get;
-            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog";
+            var address = DependencyService.Get<IFileService>().CreateFile() + url;
 
-            var request = new HttpRequestMessage(){
+            var request = new HttpRequestMessage()
+            {
                 RequestUri = new Uri(address),
                 Method = httpMethod,
             };
@@ -257,55 +349,10 @@ namespace Corporate_messenger.ViewModels
 
             //****** РАСШИФРОВКА_ОТВЕТА ******
             JObject contentJobjects = JObject.Parse(contenJSON);
-            try
-            {
-                foreach (var KeyJobject in contentJobjects)
-                {
-                    if (KeyJobject.Key == "dialog")
-                    {
-                        var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                        MessageList = JsonConvert.DeserializeObject<ObservableCollection<ChatModel>>(ValueJobject);
 
-                        foreach (var item in MessageList)
-                        {
-                            if (item.Audio != null)
-                            {
-                                item.ValueSlider = 1;
-                                item.MaximumSlider = 1;
-                                item.IsMessageVisible = false;
-                                item.IsAuidoVisible = true;
-                                item.SourceImage = "play.png";
-                            }
-                            else
-                            {
-                                item.ValueSlider = 1;
-                                item.MaximumSlider = 1;
-                                item.IsMessageVisible = true;
-                                item.IsAuidoVisible = false;
-                            }
-                        }
-                    }
-                    if (KeyJobject.Key == "receiver_id")
-                    {
-                        
-                        user.receiverId = (int)KeyJobject.Value;
-
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-
-            }
-           
-      
+            return contentJobjects;
+        }
          
-        } 
-        
-
-   
-
-      
         private void WsOnOpen(object sender, EventArgs e){         
             var message = JsonConvert.SerializeObject(new { 
                 type = "subscribe", 
@@ -322,41 +369,18 @@ namespace Corporate_messenger.ViewModels
             if ((string)Json_obj.type == "message")
             {
                 ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(e.Data);
-                if (new_message.Audio == null)
-                {
-                    new_message.MaximumSlider = 0.01;
-                    new_message.IsAuidoVisible = false;
-                    new_message.IsMessageVisible = true;
-                    new_message.SourceImage = "play.png";
-                    new_message.ValueSlider = 1;
-                    try
-                    {
-                        MessageList.Add(new_message);
-                    }
-                    catch (Exception ex)
-                    {
-                        var s = ex;
-                    }
-                }
+
+                if(new_message.Audio == null)
+                 MessageList.Add(SetStartParametr_Message(new_message));
                 else
                 {
-                    new_message.ValueSlider = 1;
-                    new_message.SourceImage = "play.png";
-                    new_message.IsAuidoVisible = true;
-                    new_message.IsMessageVisible = false;
-                    new_message.MaximumSlider = 1;
-                    MessageList.Add(new_message);
-                }
-
-                if (new_message.Audio != null)
+                    MessageList.Add(SetStartParametr_Message(new_message));
                     DependencyService.Get<IFileService>().SaveFile(new_message.Audio);
-
+                }
                 MessagingCenter.Send<ChatViewModel>(this, "Scrol");
             }
-               
-            
-
 
         }
+       
     }
 }

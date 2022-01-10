@@ -68,7 +68,7 @@
                                         Orientation="Horizontal">
                                         <!--Имя пользователя-->
                                         <Label
-                                            Text="{Binding Username}" 
+                                            Text="{Binding Name}" 
                                             x:Name="LabelAvtor" 
                                             Margin="15,0,0,0"                                           
                                             TextColor="White" 

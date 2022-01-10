@@ -137,7 +137,7 @@ namespace Corporate_messenger.ViewModels
                         var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                         userdata = JsonConvert.DeserializeObject<UserDataModel>(ValueJobject);
                         specialData.Id = userdata.Id;
-                        specialData.Name = userdata.Username;
+                        specialData.Name = userdata.Name;
                     }
                     if (KeyJobject.Key == "token")
                     {
