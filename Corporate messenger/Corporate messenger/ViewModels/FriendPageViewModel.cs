@@ -1,4 +1,5 @@
 ﻿using Corporate_messenger.Models;
+using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Models.UserData;
 using Corporate_messenger.Service;
 using Corporate_messenger.Views;
@@ -11,6 +12,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -18,10 +20,8 @@ using Xamarin.Forms;
 namespace Corporate_messenger.ViewModels
 {
  
-    class FriendPageViewModel : INotifyPropertyChanged
+    class FriendPageViewModel :ApiAbstract, INotifyPropertyChanged
     {
-        
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
@@ -29,13 +29,15 @@ namespace Corporate_messenger.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
-        // Специальные данные пользователя
-        SpecialDataModel user = new SpecialDataModel();
+        string ValueJobject = "";
 
-        private ObservableCollection<FriendsModel> friends = new ObservableCollection<FriendsModel>();
-      /// <summary>
-      /// Список друзей
-      /// </summary>
+        //Поток
+        Thread myThread = null;
+
+
+        /// <summary>
+        /// Список друзей
+        /// </summary>
         public ObservableCollection<FriendsModel> Friends
         {
             get { return friends; }
@@ -48,163 +50,86 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
+        private ObservableCollection<FriendsModel> friends = new ObservableCollection<FriendsModel>();
 
-      
+        /// <summary>
+        /// Навигация
+        /// </summary>
+        private INavigation nav { get; set; }
 
-        SpecialDataModel iUser =  new  SpecialDataModel();
-            public ICommand NewChatButton
+        public ICommand NewChatButton
         {
+            get{
+                return new Command(async (object obj) =>{
+                    // Ищем нужный элемент
+                    if (obj is FriendsModel item){
 
-            get
-            {
-                return new Command(async (object obj) =>
-                {
-                    if (obj is FriendsModel item)
-                    {
-
-                        // Перед отправкой , превращаем все в json
-                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = iUser.Id, receiver_id = item.Id, title = item.Name });
-
-                        // Устанавливаем соеденение 
-                        HttpClient client = new HttpClient();
-
-                        // Тип данных который мы принимаем от сервера 
-                        var contentType = "application/json";
-
-                        // Тип Запроса
-                        var httpMethod = HttpMethod.Post;
-                        var address  = DependencyService.Get<IFileService>().CreateFile() + "/api/chatroom";
-                        var request = new HttpRequestMessage()
-                        {
-                            RequestUri = new Uri(address),
-                            Method = httpMethod,
-                            Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
-                        };
-                        // Отправка заголовка
-                        request.Headers.Add("Accept", "application/json");
-                        request.Headers.Add("Authorization", "Bearer " + iUser.Token);
-                        // Отправка данных авторизации
-                        var httpResponse = await client.SendAsync(request);
-
-                        // Ответ от сервера 
-                        var contenJSON = await httpResponse.Content.ReadAsStringAsync();
+                        // Перед отправкой , превращаем все в json "/api/chatroom"
+                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = user.Id, receiver_id = item.Id, title = item.Name });
 
                         //****** РАСШИФРОВКА_ОТВЕТА ******//
-                        dynamic contentJobjects = JObject.Parse(contenJSON);
-                       
+                        dynamic contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/chatroom");
 
-                      _ = nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Name));
-/*                            
-                       
-                        item.Id;*/
+                        // Переход на следующую страницу
+                        await nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Name));
+            
                     }
-
-
                 });
-
             }
         }
+   
 
-        private INavigation nav { get; set; }
-        public INavigation Nav
-        {
-            get { return nav; }
-            set
-            {
-                if (nav != value)
-                {
-                    nav = value;
-                    OnPropertyChanged("Nav");
-                }
-            }
-        }
+       
+       
         public FriendPageViewModel(INavigation page) {
-            Nav = page;
+            nav = page;
            _ =  SendToken_GetFriendsAsync(); 
         }
-        
+      
         /// <summary>
         /// ОТправить токен и получить друзей
         /// </summary>
         /// <returns></returns>
         async Task SendToken_GetFriendsAsync()
         {
-            // Устанавливаем соеденение 
-            HttpClient client = new HttpClient();
-
-            // Тип Запроса
-            var httpMethod = HttpMethod.Get;
-            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/user/" +user.Id+ "/friends";
-
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-             
-            };
-            // Отправка заголовка
-            request.Headers.Add("Authorization", "Bearer " + user.Token);
-
-            // Отправка данных 
-            var httpResponse = await client.SendAsync(request);
-
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
-
             //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
-         
+            JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/friends");
             foreach (var KeyJobject in contentJobjects)
             {
-                if (KeyJobject.Key == "friends")
-                {
-                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                    Friends = JsonConvert.DeserializeObject<ObservableCollection<FriendsModel>>(ValueJobject);
-
-                }
+                switch (KeyJobject.Key){
+                    case "friends":
+                         ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                        myThread = new Thread(FillList);
+                        myThread.Start();
+                        //Friends = JsonConvert.DeserializeObject<ObservableCollection<FriendsModel>>(ValueJobject);
+                        break;
+                }              
             }
         }
-
+        public  void FillList()
+        {
+            Friends.Clear();
+            Friends = JsonConvert.DeserializeObject<ObservableCollection<FriendsModel>>(ValueJobject);
+            myThread.Abort();
+        }
+     
         public async Task SearchFriendAsync(string userParam)
         {
-            // Устанавливаем соеденение 
-            HttpClient client = new HttpClient();
-
-            // Тип Запроса
-            var httpMethod = HttpMethod.Get;
-            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/user/"+ user.Id+"/search/" + userParam;
-
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-
-            };
-            // Отправка заголовка
-            request.Headers.Add("Authorization", "Bearer " + user.Token);
-            request.Headers.Add("Accept", "application/json");
-            // Отправка данных 
-            var httpResponse = await client.SendAsync(request);
-
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
-
             //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
+            JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/search/" + userParam);
 
             foreach (var KeyJobject in contentJobjects)
             {
-                if (KeyJobject.Key == "user")
-                {
-                    var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                    Friends.Clear();
-                    Friends = JsonConvert.DeserializeObject<ObservableCollection<FriendsModel>>(ValueJobject);
-
-                }
-                if (KeyJobject.Key == "error")
-                {
-                    Friends.Clear();
-                }
+                switch (KeyJobject.Key) {
+                    case "user":
+                            ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                            myThread = new Thread(FillList);
+                            myThread.Start();
+                        break;
+                    case "error":
+                            Friends.Clear();
+                        break;
+                } 
             }
         }
 

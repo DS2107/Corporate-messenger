@@ -18,6 +18,8 @@ namespace Corporate_messenger.Views
         public LoginPage()
         {
             InitializeComponent();
+         
+            
             BindingContext = new LoginViewModel(Navigation);
            // Shell.ItemsProperty.cl
             // отправляем сообщение

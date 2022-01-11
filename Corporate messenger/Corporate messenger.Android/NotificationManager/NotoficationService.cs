@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Widget;
 using Corporate_messenger.Droid.NotificationManager;
 using Corporate_messenger.Models;
 using Corporate_messenger.Models.Chat;
@@ -62,8 +63,12 @@ namespace Corporate_messenger.Droid.NotificationManager
         public bool AudioCalls_Init { get; set; }
         public bool SocketFlag { get; set; }
         public int call_id { get; set; }
-
         public int chat_room_id { get; set; }
+
+        public void MyToast(string message)
+        {
+            Toast.MakeText(Android.App.Application.Context, message, ToastLength.Short).Show();
+        }
         public void StartService()
         {
              var intent = new Intent(context, typeof(NotoficationService));

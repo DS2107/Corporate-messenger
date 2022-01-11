@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Corporate_messenger.Models
+namespace Corporate_messenger.Models.Abstract
 {
     public abstract class UserAbstract
     {
@@ -10,7 +10,6 @@ namespace Corporate_messenger.Models
         /// ID пользователя
         /// </summary>
         public abstract int Id { get; set; }
-
 
         /// <summary>
         /// Имя пользователя

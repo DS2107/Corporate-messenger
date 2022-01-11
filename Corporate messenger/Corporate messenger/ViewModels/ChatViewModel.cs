@@ -15,11 +15,12 @@ using System.IO;
 using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
 using System.Threading;
+using Corporate_messenger.Models.Abstract;
 
 namespace Corporate_messenger.ViewModels
 {
 
-    class ChatViewModel: INotifyPropertyChanged
+    class ChatViewModel: ApiAbstract, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
@@ -28,23 +29,15 @@ namespace Corporate_messenger.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
 
+        bool PlayStopStart = true;
+        ChatModel PLayItem;
+        INavigation navigate;
        
-      
-        private static string addressWS = "ws://192.168.0.105:6001";     
+        private bool firstupdate = false;
         private string Next_page_url { get; set; }
         private int CurrentPage { get; set; }
-        /// <summary>
-        /// Модель данных чат
-        /// </summary>
-        public ChatModel chat = new ChatModel();
 
-        //Сокет 
-        public  WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
-
-        // Модель юзера
-        public SpecialDataModel user = new SpecialDataModel();
-
-        private ObservableCollection<ChatModel> messageList = new ObservableCollection<ChatModel>();
+       
        
         /// <summary>
         /// Список сообщений
@@ -61,9 +54,9 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
+        private ObservableCollection<ChatModel> messageList = new ObservableCollection<ChatModel>();
 
-
-        private string input_message { get; set; }
+       
         /// <summary>
         /// Сообщение пользователя
         /// </summary>
@@ -79,8 +72,12 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-        private bool firstupdate = false;
-        private bool isRefreshing = false;
+        private string input_message { get; set; }
+
+
+        /// <summary>
+        /// Флаг обновления списка
+        /// </summary>
         public bool IsRefreshing
         {
             get { return isRefreshing; }
@@ -93,10 +90,10 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
+        private bool isRefreshing = false;
 
-        INavigation navigate;
         /// <summary>
-        /// Конструктор 
+        /// Конструктор с параметрами 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="title"></param>
@@ -107,13 +104,11 @@ namespace Corporate_messenger.ViewModels
             chat.Chat_room_id = id;
             chat.Sender_id = user.Id;
             chat.SourceImage = "play.png";
-            // создаем новый поток
-            // Thread myThread = new Thread(new ParameterizedThreadStart(SendToken_GetChatsAsync));
-            //myThread.Start("/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog"); // запускаем поток
+            user.Input_chat = chat.Chat_room_id;
             Next_page_url = "/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog";
             ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
             ThreadMessage.Start();
-           // Next_page_url = null;
+           
         }
         
        
@@ -136,10 +131,9 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public ICommand UpdateList
         {
-
             get
             {
-                return new Command(async () =>
+                return new Command( () =>
                 {
                     IsRefreshing = true;
                     if (Next_page_url != null)
@@ -156,16 +150,12 @@ namespace Corporate_messenger.ViewModels
         }
 
         private async void ThreadFunc_GetMessage()
-        {
-            
-               
-               await  SendToken_GetChatsAsync(Next_page_url);
+        {     
+          await  SendToken_GetChatsAsync(Next_page_url);
             
         }
 
-        bool PlayStopStart = true;
         
-        ChatModel PLayItem;
 
         /// <summary>
         /// Воспроизведение аудио сообщения
@@ -250,11 +240,11 @@ namespace Corporate_messenger.ViewModels
 
       
        private  async Task SendToken_GetChatsAsync(string url){
-
-            // получаем данные в виде Ключ-Значение 
-            JObject contentJobjects = await GetContent_Json(url);
             try
             {
+                // получаем данные в виде Ключ-Значение 
+                JObject contentJobjects = await GetInfo_HttpMethod_Get_Async(url);
+         
                 // По ключам получаем значения
                 foreach (var KeyJobject in contentJobjects){
                     switch(KeyJobject.Key){
@@ -273,7 +263,7 @@ namespace Corporate_messenger.ViewModels
             }
             catch(Exception ex)
             {
-
+                DependencyService.Get<IForegroundService>().MyToast(ex.Message);
             }
 
         }
@@ -297,9 +287,6 @@ namespace Corporate_messenger.ViewModels
                 }
                 firstupdate = true;
             }
-              
-
-
         }
 
         private void Pagination(JToken value)
@@ -336,35 +323,7 @@ namespace Corporate_messenger.ViewModels
             }
             return item;
         }
-        private async Task<JObject> GetContent_Json(string url)
-        {
-            // Устанавливаем соеденение 
-            HttpClient client = new HttpClient();
-
-            // Тип Запроса
-            var httpMethod = HttpMethod.Get;
-            var address = DependencyService.Get<IFileService>().CreateFile() + url;
-
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-            };
-            user.Input_chat = chat.Chat_room_id;
-            // Отправка заголовка
-            request.Headers.Add("Authorization", "Bearer " + user.Token);
-
-            // Отправка данных 
-            var httpResponse = await client.SendAsync(request);
-
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
-
-            //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
-
-            return contentJobjects;
-        }
+       
          
         private void WsOnOpen(object sender, EventArgs e){         
             var message = JsonConvert.SerializeObject(new { 

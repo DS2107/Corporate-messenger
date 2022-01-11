@@ -1,4 +1,5 @@
 ﻿using Corporate_messenger.Models;
+using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Views;
@@ -17,7 +18,7 @@ using Xamarin.Forms;
 
 namespace Corporate_messenger.ViewModels
 {
-    public class LoginViewModel
+    public class LoginViewModel: ApiAbstract
     {
 
         private INavigation Nav { get; set; }
@@ -28,11 +29,15 @@ namespace Corporate_messenger.ViewModels
         {
             _ = Permission();                  
             Nav = navigation;
+           // Application.Current.MainPage = new LoginPage();
         }
 
         
 
-
+        /// <summary>
+        /// Разрешения
+        /// </summary>
+        /// <returns></returns>
         async Task Permission()
         {
             // Даю разрешения для микрофона и (зписи/чтения файлов)
@@ -66,8 +71,7 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) =>
-                {
-                    
+                {                    
                      await AuthorizationUserAsync();
                 });
             }
@@ -95,30 +99,10 @@ namespace Corporate_messenger.ViewModels
             // Перед отправкой , превращаем все в json
             string jsonLog = JsonConvert.SerializeObject(log);
             
-            // Устанавливаем соеденение 
-            HttpClient client = new HttpClient();
-
-            // Тип данных который мы принимаем от сервера 
-            var contentType = "application/json"; 
-
-            // Тип Запроса
-            var httpMethod = HttpMethod.Post;
-            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/login";
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-                Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
-            };
-            // Отправка данных авторизации
-            var httpResponse = await client.SendAsync(request);
-
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
-
             //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
-    
+            JObject contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/login");
+
+
             foreach (var KeyJobject in contentJobjects)
             {
                 if (KeyJobject.Key == "status")

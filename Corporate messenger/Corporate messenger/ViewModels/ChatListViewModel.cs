@@ -1,16 +1,10 @@
 ﻿using Corporate_messenger.Models;
-using Corporate_messenger.Service;
+using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Service.Notification;
-using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,7 +12,7 @@ using Xamarin.Forms;
 
 namespace Corporate_messenger.ViewModels
 {
-    class ChatListViewModel : INotifyPropertyChanged
+    class ChatListViewModel : ApiAbstract, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
@@ -26,8 +20,12 @@ namespace Corporate_messenger.ViewModels
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
-        private bool isRefreshing = false;
+        public INavigation Navigation { get; set; }
+        Thread ThreadChats;
+      
+        /// <summary>
+        /// Флаг Обновление списка
+        /// </summary>
         public bool IsRefreshing
         {
             get { return isRefreshing; }
@@ -40,7 +38,7 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-        public ObservableCollection<ChatListModel> chatList = new ObservableCollection<ChatListModel>();
+        private bool isRefreshing = false;
         /// <summary>
         /// Список друзей
         /// </summary>
@@ -56,8 +54,7 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-        SpecialDataModel user = new SpecialDataModel();
-
+        public ObservableCollection<ChatListModel> chatList = new ObservableCollection<ChatListModel>();
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -69,14 +66,11 @@ namespace Corporate_messenger.ViewModels
 
             if (DependencyService.Get<IForegroundService>().SocketFlag == false)
               DependencyService.Get<IForegroundService>().StartService();
-
-
-                //CallClass call = new CallClass();
-                //call.LessPort();
+        
         }
 
 
-        Thread ThreadChats;
+     
         public ICommand UpdateList {
 
             get
@@ -96,71 +90,30 @@ namespace Corporate_messenger.ViewModels
         private async void ThreadFunc_GetMessage()
         {
             await SendToken_GetChatsAsync();
-        }
-        public INavigation Navigation { get; set; }
-        
-     
-
+        }        
 
         /// <summary>
         /// ОТправить токен и получить Чаты
         /// </summary>
         /// <returns></returns>
-        async Task SendToken_GetChatsAsync()
+        private async Task SendToken_GetChatsAsync()
         {
-           
-            // Устанавливаем соеденение 
-            HttpClient client = new HttpClient();
-
-
-            // Тип Запроса
-            var httpMethod = HttpMethod.Get;
-            var address = DependencyService.Get<IFileService>().CreateFile() + "/api/user/" + user.Id + "/chatroom";
-
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-
-            };
-            // Отправка заголовка
-            request.Headers.Add("Authorization", "Bearer " + user.Token);
-
-            try
-            {
-                // Отправка данных 
-                var httpResponse = await client.SendAsync(request);
-                // Ответ от сервера 
-                var contenJSON = await httpResponse.Content.ReadAsStringAsync();
-
                 //****** РАСШИФРОВКА_ОТВЕТА ******
-                JObject contentJobjects = JObject.Parse(contenJSON);
+                JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
 
                 foreach (var KeyJobject in contentJobjects)
                 {
-                    if (KeyJobject.Key == "chats")
+                    switch (KeyJobject.Key)
                     {
-                        var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                        chatList = null;
-                        ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
-
-                    }
+                        case "chats":
+                            var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
+                            chatList = null;
+                            ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
+                            break;
+                    }                 
                 }
                 ThreadChats.Abort();
-
-                /*// Добавить в базу последние элементы
-                foreach (var item in ChatList)
-                {
-                    App.Database.SaveItem(item);
-                }*/
-            }
-            catch(Exception ex)
-            {
-                var s = ex;
-            }
-
-           
-           
-        }
+         
+         }     
     }
 }
