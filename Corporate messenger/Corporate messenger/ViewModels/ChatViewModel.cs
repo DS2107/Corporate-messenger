@@ -108,10 +108,12 @@ namespace Corporate_messenger.ViewModels
             chat.Sender_id = user.Id;
             chat.SourceImage = "play.png";
             // создаем новый поток
-           // Thread myThread = new Thread(new ParameterizedThreadStart(SendToken_GetChatsAsync));
+            // Thread myThread = new Thread(new ParameterizedThreadStart(SendToken_GetChatsAsync));
             //myThread.Start("/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog"); // запускаем поток
-
-            _ = SendToken_GetChatsAsync("/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog");
+            Next_page_url = "/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog";
+            ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
+            ThreadMessage.Start();
+           // Next_page_url = null;
         }
         
        
@@ -128,7 +130,7 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
-      
+        Thread ThreadMessage;
         /// <summary>
         /// Обновление списка
         /// </summary>
@@ -143,7 +145,8 @@ namespace Corporate_messenger.ViewModels
                     if (Next_page_url != null)
                     {
                         Next_page_url = Next_page_url.Substring(25);
-                        await SendToken_GetChatsAsync(Next_page_url);
+                        ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
+                        ThreadMessage.Start(); 
                     }                
                        
                     IsRefreshing = false;
@@ -151,6 +154,15 @@ namespace Corporate_messenger.ViewModels
 
             }
         }
+
+        private async void ThreadFunc_GetMessage()
+        {
+            
+               
+               await  SendToken_GetChatsAsync(Next_page_url);
+            
+        }
+
         bool PlayStopStart = true;
         
         ChatModel PLayItem;
@@ -257,6 +269,7 @@ namespace Corporate_messenger.ViewModels
                             break;
                     }          
                 }
+                ThreadMessage.Abort();
             }
             catch(Exception ex)
             {

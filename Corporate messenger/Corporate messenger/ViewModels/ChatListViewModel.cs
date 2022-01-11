@@ -11,6 +11,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -62,10 +63,11 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public ChatListViewModel()
         {
-           
-            _ = SendToken_GetChatsAsync();
 
-         if (DependencyService.Get<IForegroundService>().SocketFlag == false)
+            ThreadChats = new Thread(new ThreadStart(ThreadFunc_GetMessage));
+            ThreadChats.Start();
+
+            if (DependencyService.Get<IForegroundService>().SocketFlag == false)
               DependencyService.Get<IForegroundService>().StartService();
 
 
@@ -74,21 +76,26 @@ namespace Corporate_messenger.ViewModels
         }
 
 
-
+        Thread ThreadChats;
         public ICommand UpdateList {
 
             get
             {
-                return new Command(async () =>
+                return new Command( () =>
                 {
                     IsRefreshing = true;
 
-                    await SendToken_GetChatsAsync();
-
+                   
+                    ThreadChats = new Thread(new ThreadStart(ThreadFunc_GetMessage));
+                    ThreadChats.Start();
                     IsRefreshing = false;
                 });
 
             }
+        }
+        private async void ThreadFunc_GetMessage()
+        {
+            await SendToken_GetChatsAsync();
         }
         public INavigation Navigation { get; set; }
         
@@ -139,7 +146,7 @@ namespace Corporate_messenger.ViewModels
 
                     }
                 }
-                
+                ThreadChats.Abort();
 
                 /*// Добавить в базу последние элементы
                 foreach (var item in ChatList)
