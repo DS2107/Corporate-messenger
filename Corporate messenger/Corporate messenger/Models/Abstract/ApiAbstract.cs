@@ -12,7 +12,7 @@ namespace Corporate_messenger.Models.Abstract
 {
     public abstract class ApiAbstract
     {
-        public SpecialDataModel user = new SpecialDataModel();
+        public SpecialDataModel SpecDataUser = new SpecialDataModel();
         public static string addressWS = "ws://192.168.0.105:6001";   
         public WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
         // Устанавливаем соеденение 
@@ -36,7 +36,7 @@ namespace Corporate_messenger.Models.Abstract
             };
 
             // Отправка заголовка
-            request.Headers.Add("Authorization", "Bearer " + user.Token);
+            request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
 
             // Отправка данных 
             var httpResponse = await client.SendAsync(request);
@@ -66,7 +66,7 @@ namespace Corporate_messenger.Models.Abstract
             };
             // Отправка заголовка
             request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Authorization", "Bearer " + user.Token);
+            request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
             // Отправка данных авторизации
             var httpResponse = await client.SendAsync(request);
             // Ответ от сервера 

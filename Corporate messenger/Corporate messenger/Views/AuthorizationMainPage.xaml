@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.AuthorizationMainPage"
         xmlns:local="clr-namespace:Corporate_messenger.Views" xmlns:local1="clr-namespace:Corporate_messenger.Models">
-    
-        <!--Страница чатов польователя-->
+    <ShellItem Route="LoginPage" FlyoutItemIsVisible="False">
+        <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"/>
+    </ShellItem>
+    <!--Страница чатов польователя-->
     <FlyoutItem 
                 Route="chats_list"  
                 Title="Сообщения" 
@@ -41,7 +43,9 @@
     <!--Страница входа-->
     <FlyoutItem 
                 Title="Выход"
-                Icon="exit.png">
+                Icon="exit.png"
+                Route="LoginPage1"
+                >
         <Tab>
             <ShellContent 
                 ContentTemplate="{DataTemplate local:LoginPage}"    

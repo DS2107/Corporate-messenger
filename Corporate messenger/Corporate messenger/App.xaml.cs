@@ -32,23 +32,14 @@ namespace Corporate_messenger
             InitializeComponent();
 
 
-            var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
-            var data = token.Split('/');
+          
             if (!navigate)
             {
-                if (data[0] != "")
-                {
-                    SpecialDataModel special = new SpecialDataModel();
-                    special.Token = data[0];
-                    special.Id = Int32.Parse(data[1]);
-                    special.Name = data[2];
-                    MainPage = new AuthorizationMainPage();
-                }
-                else
-                {
-                    MainPage =  new LoginPage();
+               
+                    MainPage =  new AuthorizationMainPage();
+                DependencyService.Get<IFileService>().MyProperty = MainPage;
                     // MainPage = new NavigationPage(new AuthorizationMainPage());
-                }
+
             }
             else
             {

@@ -11,6 +11,9 @@ namespace Corporate_messenger.Droid
 {
     class FileService : IFileService
     {
+        public bool flag { get ; set; }
+        public Xamarin.Forms.Page MyProperty { get ; set ; }
+
         public string GetRootPath()
         {
             return Application.Context.GetExternalFilesDir(null).ToString();

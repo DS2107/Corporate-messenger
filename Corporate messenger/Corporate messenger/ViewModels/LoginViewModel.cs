@@ -1,16 +1,9 @@
 ﻿using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Service;
-using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -32,7 +25,11 @@ namespace Corporate_messenger.ViewModels
            // Application.Current.MainPage = new LoginPage();
         }
 
-        
+        private  void Autorize()
+        {
+            Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
+
+        }
 
         /// <summary>
         /// Разрешения
@@ -73,6 +70,7 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async (object obj) =>
                 {                    
                      await AuthorizationUserAsync();
+                    await  Shell.Current.GoToAsync($"//chats_list");
                 });
             }
         }
@@ -84,7 +82,9 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         private async Task AuthorizationUserAsync( )
         {
-            
+
+          
+           
             // Модель авторизации
             LoginModel log = new LoginModel();
 
@@ -140,12 +140,13 @@ namespace Corporate_messenger.ViewModels
 
             if (specialData.Status != false)
             {
-               // Nav.RemovePage(new LoginPage());
-                Application.Current.MainPage = new AuthorizationMainPage();
-                Nav = Application.Current.MainPage.Navigation;
+                Autorize();
+                // Nav.RemovePage(new LoginPage());
+                // Application.Current.MainPage = new AuthorizationMainPage();
+                //  Nav = Application.Current.MainPage.Navigation;
                 // await Nav.PushModalAsync(new MainPage());
-                DependencyService.Get<IForegroundService>().StartService();
-                await Nav.PopToRootAsync();
+                // DependencyService.Get<IForegroundService>().StartService();
+                // await Nav.PopToRootAsync();
             }
             else
             {

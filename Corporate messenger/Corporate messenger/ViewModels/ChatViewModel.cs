@@ -102,10 +102,10 @@ namespace Corporate_messenger.ViewModels
             ws =  DependencyService.Get<ISocket>().MyWebSocket;
             ws.OnMessage += WsOnMEssage;
             chat.Chat_room_id = id;
-            chat.Sender_id = user.Id;
+            chat.Sender_id = SpecDataUser.Id;
             chat.SourceImage = "play.png";
-            user.Input_chat = chat.Chat_room_id;
-            Next_page_url = "/api/chat/" + chat.Chat_room_id + "/" + user.Id + "/dialog";
+            SpecDataUser.Input_chat = chat.Chat_room_id;
+            Next_page_url = "/api/chat/" + chat.Chat_room_id + "/" + SpecDataUser.Id + "/dialog";
             ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
             ThreadMessage.Start();
            
@@ -192,7 +192,7 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         public void SendMyMessage(byte[] audio)
         {      
-            var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = user.receiverId, TypeMessage = "message",Audio=audio };
+            var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = SpecDataUser.receiverId, TypeMessage = "message",Audio=audio };
             var message = JsonConvert.SerializeObject(new_message);
             ws.Send(message);
             Input_message = "";
@@ -252,7 +252,7 @@ namespace Corporate_messenger.ViewModels
                             Dialog(KeyJobject.Value);
                             break;
                         case "receiver_id":
-                            user.receiverId = (int)KeyJobject.Value;
+                            SpecDataUser.receiverId = (int)KeyJobject.Value;
                             break;
                         case "pagination":
                             Pagination(KeyJobject.Value);
@@ -329,7 +329,7 @@ namespace Corporate_messenger.ViewModels
             var message = JsonConvert.SerializeObject(new { 
                 type = "subscribe", 
                 sender_id = chat.Sender_id, 
-                reciever_id = user.receiverId 
+                reciever_id = SpecDataUser.receiverId 
             });
             ws.Send(message);
            

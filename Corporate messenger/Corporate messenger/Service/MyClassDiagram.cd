@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Corporate_messenger.Properties.Resources" Collapsed="true">
+    <Position X="18.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.DB.Repository.ChatListRepository" Collapsed="true">
+    <Position X="18.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAEBAAQAAAAQAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>DB\Repository\ChatListRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Models.Abstract.ApiAbstract" Collapsed="true">
+    <Position X="11" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAIAAAAAAAAAAAAAAAAAAAQAQAIBAAAAQA=</HashCode>
+      <FileName>Models\Abstract\ApiAbstract.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Models.Abstract.UserAbstract" Collapsed="true">
+    <Position X="11.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Abstract\UserAbstract.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Models.Chat.ChatModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAgIJAAIACJAEAQAQBkMABgBAAAIAKIEAACiA=</HashCode>
+      <FileName>Models\Chat\ChatModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Corporate_messenger.Models.LoginModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="20.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgIAAAAAAAgAAAAAACAAAQAgAAAAA=</HashCode>
+      <FileName>Models\User\LoginModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Corporate_messenger.Models.SpecialDataModel" Collapsed="true">
+    <Position X="9" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUCAAAEAAAAAAACIAAAAAQAgIAEAACAAAAAAAABAgQ=</HashCode>
+      <FileName>Models\User\SpecialDataModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Corporate_messenger.Models.UserDataModel" Collapsed="true">
+    <Position X="11.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAACAAAAAgIAQAAAUEgCAAAIAgAACAIAABAgA=</HashCode>
+      <FileName>Models\User\UserDataModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Corporate_messenger.Models.ChatListModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAQAAAAEAAIAAAAAAAgAAAAAAAAAAAAAAAAhA=</HashCode>
+      <FileName>Models\UserData\ChatListModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Corporate_messenger.Models.UserData.FriendsModel" Collapsed="true">
+    <Position X="13.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAACAAAAAgIAAAAAUAgAAAAAAAAAAAAAABAgA=</HashCode>
+      <FileName>Models\UserData\FriendsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Corporate_messenger.Service.Notification.NotificationEventArgs" Collapsed="true">
+    <Position X="17" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Service\Notification\NotificationEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Service.ClassDataTemplateSelector" Collapsed="true">
+    <Position X="17" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAgAAAAAIAAAAAAAAg=</HashCode>
+      <FileName>Service\ClassDataTemplateSelector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.ViewModels.CallClass" Collapsed="true">
+    <Position X="20.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAIAAAA=</HashCode>
+      <FileName>ViewModels\CallClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.ViewModels.CallViewModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="24" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEwAkIBCgACAwICIIAIAQEACgghACBCAUQFAkAAAAQA=</HashCode>
+      <FileName>ViewModels\CallViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Corporate_messenger.ViewModels.ChatListViewModel" Collapsed="true">
+    <Position X="12.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAABAAAIAYAACAAAAgAAAAEAAAABAAAAAQAA=</HashCode>
+      <FileName>ViewModels\ChatListViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Corporate_messenger.ViewModels.ChatViewModel" Collapsed="true">
+    <Position X="14.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wEAAAAAEAABAEIIAYCACAAAA4AAAAFAAsQYAAABCEAI=</HashCode>
+      <FileName>ViewModels\ChatViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Corporate_messenger.ViewModels.FriendPageViewModel" Collapsed="true">
+    <Position X="7.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAEgAAQDAAAAAAAIAAAAAAAiAAAAAAAAQAAAAAEAAA=</HashCode>
+      <FileName>ViewModels\FriendPageViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Corporate_messenger.ViewModels.LoginViewModel" Collapsed="true">
+    <Position X="10" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAQEAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\LoginViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.AuthorizationMainPage" Collapsed="true">
+    <Position X="18.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\AuthorizationMainPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.CallPage" Collapsed="true">
+    <Position X="22.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\CallPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.ChatPage" Collapsed="true">
+    <Position X="22.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAEAAAAAAACAAACAAAgAAAAAAAQQAAAAAAMAAAAAAA=</HashCode>
+      <FileName>Views\ChatPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.ChatsListPage" Collapsed="true">
+    <Position X="24" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAEAgAAAAAAIAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Views\ChatsListPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.FriendPage" Collapsed="true">
+    <Position X="18.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\FriendPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.LoginPage" Collapsed="true">
+    <Position X="22.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAABAAAAAAAAAAAQAAIAACAAAAEAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Views\LoginPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.Views.Settings" Collapsed="true">
+    <Position X="20.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAGAAABAQAAAAAAAAAA=</HashCode>
+      <FileName>Views\Settings.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.App" Collapsed="true">
+    <Position X="17" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAFAAAAhAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Corporate_messenger.MainPage" Collapsed="true">
+    <Position X="24" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Corporate_messenger.Service.Notification.IForegroundService" Collapsed="true">
+    <Position X="17" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQABAAAAAAAAAAAAAAAAAEBAAAAgAEAAAIAA=</HashCode>
+      <FileName>Service\Notification\IForegroundService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.Notification.INotificationManager" Collapsed="true">
+    <Position X="18.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAABAAAAAEAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Service\Notification\INotificationManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.Notification.ISocket" Collapsed="true">
+    <Position X="20.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\Notification\ISocket.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.IAudio" Collapsed="true">
+    <Position X="17" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAABAAIAAAAAAAhIAAAAAAAAAgAAA=</HashCode>
+      <FileName>Service\IAudio.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.IAudioUDPSocketCall" Collapsed="true">
+    <Position X="18.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAARAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\IAudioUDPSocketCall.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.IAudioWebSocketCall" Collapsed="true">
+    <Position X="20.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAQgAAAgAAAAAAIAAACAIAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Service\IAudioWebSocketCall.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.ICloseApplication" Collapsed="true">
+    <Position X="22.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Service\ICloseApplication.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Corporate_messenger.Service.IFileService" Collapsed="true">
+    <Position X="24" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAQAAAAAAgEAAAAADIAAEAAAAAA=</HashCode>
+      <FileName>Service\IFileService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

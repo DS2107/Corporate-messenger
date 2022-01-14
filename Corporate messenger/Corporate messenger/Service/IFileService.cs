@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Corporate_messenger.Service
 {
     public interface IFileService
     {
+        public Page MyProperty { get; set; }
+        
+        public bool flag { get; set; }
         /// <summary>
         /// Получить корневую папку проекта
         /// </summary>

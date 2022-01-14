@@ -13,6 +13,7 @@ using Xamarin.Forms.Xaml;
 using WebSocketSharp;
 using System.Diagnostics;
 using Corporate_messenger.Service.Notification;
+using Corporate_messenger.Service;
 
 namespace Corporate_messenger.Views
 {
@@ -26,7 +27,7 @@ namespace Corporate_messenger.Views
         public ChatsListPage()
         {
             InitializeComponent();
-
+            DependencyService.Get<IFileService>().flag = true;
             clvm = new ChatListViewModel();
             BindingContext = clvm;
             MessagingCenter.Subscribe<ChatsListPage>(
@@ -39,6 +40,8 @@ namespace Corporate_messenger.Views
         protected override void OnAppearing()
         {
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
+            clvm.ThreadChats = new Thread(new ThreadStart(clvm.ThreadFunc_GetMessage));
+            clvm.ThreadChats.Start();
         }
 
 

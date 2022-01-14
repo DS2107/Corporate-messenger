@@ -6,6 +6,7 @@ using Corporate_messenger.Service;
 using System.Threading.Tasks;
 using System.Linq;
 using Corporate_messenger.Service.Notification;
+using System;
 
 namespace Corporate_messenger.Views
 {
@@ -24,7 +25,7 @@ namespace Corporate_messenger.Views
            // Shell.ItemsProperty.cl
             // отправляем сообщение
             MessagingCenter.Send<LoginPage>(this, "ListClear");
-            DependencyService.Get<IFileService>().Delete();
+          //  DependencyService.Get<IFileService>().Delete();
             DependencyService.Get<IForegroundService>().StopService(); 
             SpecialDataModel special = new SpecialDataModel();
             SizeChanged += LoginPage_SizeChanged;
@@ -47,7 +48,34 @@ namespace Corporate_messenger.Views
 
         }
 
-      
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            if (!DependencyService.Get<IFileService>().flag)
+            {
+                var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
+                var data = token.Split('/');
+
+                if (data[0] != "")
+                {
+                    SpecialDataModel special = new SpecialDataModel();
+                    special.Token = data[0];
+                    special.Id = Int32.Parse(data[1]);
+                    special.Name = data[2];
+                    await Shell.Current.GoToAsync($"//chats_list");
+                }
+               
+              
+            }
+            else
+            {
+               
+            }
+           
+            
+        }
+
+
 
         private void LoginPage_SizeChanged(object sender, System.EventArgs e)
         {

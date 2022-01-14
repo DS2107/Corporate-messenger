@@ -21,7 +21,7 @@ namespace Corporate_messenger.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         public INavigation Navigation { get; set; }
-        Thread ThreadChats;
+       public Thread ThreadChats;
       
         /// <summary>
         /// Флаг Обновление списка
@@ -61,8 +61,7 @@ namespace Corporate_messenger.ViewModels
         public ChatListViewModel()
         {
 
-            ThreadChats = new Thread(new ThreadStart(ThreadFunc_GetMessage));
-            ThreadChats.Start();
+           
 
             if (DependencyService.Get<IForegroundService>().SocketFlag == false)
               DependencyService.Get<IForegroundService>().StartService();
@@ -87,7 +86,7 @@ namespace Corporate_messenger.ViewModels
 
             }
         }
-        private async void ThreadFunc_GetMessage()
+        public async void ThreadFunc_GetMessage()
         {
             await SendToken_GetChatsAsync();
         }        
@@ -99,7 +98,7 @@ namespace Corporate_messenger.ViewModels
         private async Task SendToken_GetChatsAsync()
         {
                 //****** РАСШИФРОВКА_ОТВЕТА ******
-                JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
+                JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + SpecDataUser.Id + "/chatroom");
 
                 foreach (var KeyJobject in contentJobjects)
                 {

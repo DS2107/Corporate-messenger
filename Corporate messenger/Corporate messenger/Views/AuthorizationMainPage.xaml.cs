@@ -1,12 +1,4 @@
-﻿using Corporate_messenger.Models;
-using Corporate_messenger.Service.Notification;
-using Corporate_messenger.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,8 +11,19 @@ namespace Corporate_messenger.Views
         public AuthorizationMainPage()
         {
             InitializeComponent();
-            
+            Routing.RegisterRoute(nameof(LoginPage),
+               typeof(LoginPage));
+
+            Routing.RegisterRoute(nameof(ChatsListPage),
+                typeof(ChatsListPage));
+
+            Routing.RegisterRoute(nameof(ChatPage),
+                typeof(ChatPage));
         }
         public ICommand ExecuteLogout => new Command(async () => await GoToAsync("//login"));
+        public async void GoChat()
+        {
+            await Shell.Current.GoToAsync($"//chats_list");
+        }
     }
 }

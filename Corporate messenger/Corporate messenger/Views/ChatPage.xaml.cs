@@ -79,7 +79,7 @@ namespace Corporate_messenger.Views
             Navigation.PushAsync(new CallPage(true));
             try
             {
-                chat.ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "100", sender_id = chat.user.Id, receiver_id = chat.user.receiverId }));
+                chat.ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "100", sender_id = chat.SpecDataUser.Id, receiver_id = chat.SpecDataUser.receiverId }));
                 DependencyService.Get<IAudio>().PlayAudioFile("gudok.mp3", Android.Media.Stream.VoiceCall);
                 DependencyService.Get<IForegroundService>().AudioCalls_Init = true;
                     
