@@ -14,5 +14,7 @@ namespace Corporate_messenger.Service.Notification
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
         public bool SocketFlag { get; set; }
+
+        public bool LoginPosition { get; set; }
     }
 }

@@ -25,8 +25,14 @@ namespace Corporate_messenger.Views
            // Shell.ItemsProperty.cl
             // отправляем сообщение
             MessagingCenter.Send<LoginPage>(this, "ListClear");
-          //  DependencyService.Get<IFileService>().Delete();
-            DependencyService.Get<IForegroundService>().StopService(); 
+            DependencyService.Get<IForegroundService>().LoginPosition = true;
+            DependencyService.Get<IForegroundService>().StopService();
+            DependencyService.Get<IForegroundService>().SocketFlag = false;
+            if (DependencyService.Get<ISocket>().MyWebSocket != null)
+            {
+                DependencyService.Get<ISocket>().MyWebSocket.CloseAsync();
+            }
+           
             SpecialDataModel special = new SpecialDataModel();
             SizeChanged += LoginPage_SizeChanged;
         
@@ -51,8 +57,8 @@ namespace Corporate_messenger.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            if (!DependencyService.Get<IFileService>().flag)
-            {
+           
+        
                 var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
                 var data = token.Split('/');
 
@@ -62,15 +68,16 @@ namespace Corporate_messenger.Views
                     special.Token = data[0];
                     special.Id = Int32.Parse(data[1]);
                     special.Name = data[2];
-                    await Shell.Current.GoToAsync($"//chats_list");
+
+                    if(Shell.Current!=null)
+                        await Shell.Current.GoToAsync($"//chats_list");
+
+                    DependencyService.Get<IFileService>().Delete();
+
                 }
-               
-              
-            }
-            else
-            {
-               
-            }
+
+
+            
            
             
         }

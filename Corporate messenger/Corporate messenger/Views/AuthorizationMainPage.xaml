@@ -96,9 +96,7 @@
                     Grid.Column="0"  
                     TextColor="Wheat" FontSize="Medium"
                     VerticalOptions="Center">
-                    <Label.BindingContext>
-                        <local1:SpecialDataModel/>
-                    </Label.BindingContext>
+                   
                 </Label>
 
                 <!--Описание пользователя который авторизовался-->

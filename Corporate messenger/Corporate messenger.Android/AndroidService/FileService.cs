@@ -19,6 +19,12 @@ namespace Corporate_messenger.Droid
             return Application.Context.GetExternalFilesDir(null).ToString();
         }
 
+
+        public string GetPath(string name)
+        {
+          string  filename = Path.Combine(GetRootPath(), name);
+            return filename ;
+        }
         public string CreateFile()
         {
             string filename = Path.Combine(GetRootPath(), "config.txt");

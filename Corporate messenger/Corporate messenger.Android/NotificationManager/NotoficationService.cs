@@ -64,6 +64,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         public bool SocketFlag { get; set; }
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
+        public bool LoginPosition { get; set ; }
 
         public void MyToast(string message)
         {
@@ -232,25 +233,23 @@ namespace Corporate_messenger.Droid.NotificationManager
 
         private void TimerStartService()
         {
-            Device.StartTimer(TimeSpan.FromSeconds(5), () =>
+            Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             {
-                if (ws.Ping() == true)
+                bool flag = ws.Ping();
+                if (!flag== true)
                 {
-                    if(ws.ReadyState == WebSocketSharp.WebSocketState.Closed)
+                    if (!DependencyService.Get<IForegroundService>().LoginPosition)
                     {
                         ws.ConnectAsync();
                     }
-                    return true;
+                 
+                  
                 }
-                   
-                
-                else
-                {
-                    ws.Close();
-                    ws.ConnectAsync();
-                    return true;
-                }
-                    
+
+
+                return true;
+
+
             });
         }
 

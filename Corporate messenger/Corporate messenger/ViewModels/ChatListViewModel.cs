@@ -63,8 +63,7 @@ namespace Corporate_messenger.ViewModels
 
            
 
-            if (DependencyService.Get<IForegroundService>().SocketFlag == false)
-              DependencyService.Get<IForegroundService>().StartService();
+           
         
         }
 

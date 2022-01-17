@@ -1,19 +1,13 @@
 ﻿using Corporate_messenger.Models;
 using Corporate_messenger.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using WebSocketSharp;
-using System.Diagnostics;
 using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Service;
+using System.IO;
 
 namespace Corporate_messenger.Views
 {
@@ -39,7 +33,25 @@ namespace Corporate_messenger.Views
 
         protected override void OnAppearing()
         {
+           
+          
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
+            bool flag = File.Exists(DependencyService.Get<IFileService>().GetPath("token.txt"));
+            AuthorizationMainPage mainPage = new AuthorizationMainPage();
+            if (!flag){
+                DependencyService.Get<IFileService>().CreateFile(clvm.SpecDataUser.Token, clvm.SpecDataUser.Id, clvm.SpecDataUser.Name);
+            }
+              
+
+           
+            if (DependencyService.Get<IForegroundService>().SocketFlag == false)
+            {
+                DependencyService.Get<IForegroundService>().StartService();
+              
+                DependencyService.Get<IForegroundService>().LoginPosition = false;
+            }
+               
+
             clvm.ThreadChats = new Thread(new ThreadStart(clvm.ThreadFunc_GetMessage));
             clvm.ThreadChats.Start();
         }
