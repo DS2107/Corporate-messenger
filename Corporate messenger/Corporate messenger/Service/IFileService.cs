@@ -68,7 +68,7 @@ namespace Corporate_messenger.Service
         /// <summary>
         /// Вызвать оповещание
         /// </summary>
-        void MyToast();
+        void MyToast(string text);
 
        
 

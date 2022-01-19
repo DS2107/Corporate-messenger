@@ -1,12 +1,14 @@
 ﻿using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
-using Corporate_messenger.Service.Notification;
+using Corporate_messenger.Service;
+using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -22,7 +24,24 @@ namespace Corporate_messenger.ViewModels
         }
         public INavigation Navigation { get; set; }
        public Thread ThreadChats;
-      
+        INavigation navigation;
+
+
+        public string Name
+        {
+            get {
+
+                
+                return SpecDataUser.Name; }
+            set
+            {
+                
+                    SpecDataUser.Name = value;
+                    OnPropertyChanged("Name");
+                
+            }
+
+        }
         /// <summary>
         /// Флаг Обновление списка
         /// </summary>
@@ -58,46 +77,59 @@ namespace Corporate_messenger.ViewModels
         /// <summary>
         /// Конструктор
         /// </summary>
-        public ChatListViewModel()
+        public ChatListViewModel(INavigation nav)
         {
-
-           
-
-           
-        
+            navigation = nav;
+ 
         }
 
+        public ICommand GoFriends { 
+            get
+            {
+                return new Command(async () =>
+                await navigation.PushAsync(new FriendPage())
+                );
+            }
+                
+          }
 
-     
+
         public ICommand UpdateList {
 
             get
             {
-                return new Command( () =>
+                return new Command(async () =>
                 {
                     IsRefreshing = true;
 
-                   
-                    ThreadChats = new Thread(new ThreadStart(ThreadFunc_GetMessage));
-                    ThreadChats.Start();
+                    //****** РАСШИФРОВКА_ОТВЕТА ******
+                    contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + SpecDataUser.Id + "/chatroom");
+
+                    if (contentJobjects == null)
+                    {
+
+                        DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                        IsRefreshing = false;
+                    }
+                    else
+                    {
+                        ThreadChats = new Thread(new ThreadStart(SendToken_GetChats));
+                        ThreadChats.Start();
+                    }
+                  
                     IsRefreshing = false;
                 });
 
             }
         }
-        public async void ThreadFunc_GetMessage()
-        {
-            await SendToken_GetChatsAsync();
-        }        
-
+     
+        public JObject contentJobjects;
         /// <summary>
         /// ОТправить токен и получить Чаты
         /// </summary>
         /// <returns></returns>
-        private async Task SendToken_GetChatsAsync()
+        public void  SendToken_GetChats()
         {
-                //****** РАСШИФРОВКА_ОТВЕТА ******
-                JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + SpecDataUser.Id + "/chatroom");
 
                 foreach (var KeyJobject in contentJobjects)
                 {
@@ -107,11 +139,12 @@ namespace Corporate_messenger.ViewModels
                             var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
                             chatList = null;
                             ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
-                            break;
-                    }                 
+                            IsRefreshing = false;
+                        break;
+                    }
                 }
                 ThreadChats.Abort();
-         
+           
          }     
     }
 }

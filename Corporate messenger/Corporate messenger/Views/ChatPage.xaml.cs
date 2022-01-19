@@ -4,6 +4,7 @@ using Corporate_messenger.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -15,9 +16,11 @@ namespace Corporate_messenger.Views
     {
 
         ChatViewModel chat;
+        private int id_room ;
         public ChatPage(int id, string title)
         {
             InitializeComponent();
+            id_room = id;
             DependencyService.Get<IForegroundService>().chat_room_id = id;
             BindingContext = chat = new ChatViewModel(id, title,Navigation);
             Title = title;
@@ -35,6 +38,27 @@ namespace Corporate_messenger.Views
                // MessageEditor.Focus();
             });
             //DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
+        }
+
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            if(chat.Next_page_url == null)
+            {
+                chat.contentJobjects = await chat.GetInfo_HttpMethod_Get_Async("/api/chat/" + id_room + "/" + chat.SpecDataUser.Id + "/dialog");
+                if (chat.contentJobjects != null)
+                {
+                    chat.ThreadMessage = new Thread(new ThreadStart(chat.SendToken_GetChats));
+                    chat.ThreadMessage.Start();
+                }
+                else
+                {
+                    DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                }
+            }
+           
+
         }
 
         private void CallButton_Clicked(object sender, EventArgs e)

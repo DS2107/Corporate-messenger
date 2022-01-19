@@ -3,7 +3,7 @@ using Android.Widget;
 using Corporate_messenger.Droid;
 using Corporate_messenger.Service;
 using System.IO;
-
+using System.Threading;
 
 [assembly: Xamarin.Forms.Dependency(typeof(FileService))]
 
@@ -94,9 +94,10 @@ namespace Corporate_messenger.Droid
         }
 
 
-        public void MyToast()
+        public void MyToast(string text)
         {
-            Toast.MakeText(Application.Context, "Неправильный пароль или логин", ToastLength.Short).Show();
+           
+            Toast.MakeText(Application.Context, text, ToastLength.Short).Show();
         }
 
         

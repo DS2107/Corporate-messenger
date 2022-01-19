@@ -5,21 +5,52 @@
              Title="Чаты" 
              IconImageSource="chat1.png" 
              Shell.PresentationMode="ModalAnimated" 
-             Shell.BackgroundColor="#04283C" 
+             Shell.BackgroundColor="#084C71" 
              Shell.TitleColor="White"  
              Background="#04283C">
-    
-    <!--Настройки ToolBar-->
-    <ContentPage.ToolbarItems>
-        <ToolbarItem 
-            Icon="Add_NewChat.png" 
-            Text="Search" 
-            x:Name="CallButton" 
-            Clicked="CallButton_Clicked"/>
-    </ContentPage.ToolbarItems>
+
+    <Shell.TitleView>
+    <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+               
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+              
+                <ColumnDefinition Width="*"  />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Text="Мои сообщения" FontSize="Subtitle" TextColor="White" VerticalOptions="Center" />
+
+            <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="0,0,15,0">
+                <FlexLayout 
+                   
+                    HorizontalOptions="EndAndExpand" 
+                    VerticalOptions="Center"                
+                        >
+                    <Image Source="logan.jpg" 
+                    Aspect="AspectFill" 
+                    FlexLayout.AlignSelf="Center"
+                    WidthRequest="40"   
+                    HeightRequest="40"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                        <Image.Clip >
+                            <EllipseGeometry
+                            Center="20,20"
+                            RadiusX="20"
+                            RadiusY="20"/>
+                        </Image.Clip>
+                    </Image>
+                </FlexLayout>
+                <Label  FontSize="Small" TextColor="White" Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            
+        </Grid>
+    </Shell.TitleView>
 
     <AbsoluteLayout >
-        <!--Список чатов-->
+       
         <ListView
                 RefreshCommand="{Binding UpdateList}"
                 IsRefreshing="{Binding IsRefreshing}"
@@ -89,13 +120,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-      <!--  <ImageButton 
+      <ImageButton 
             x:Name="New_message"
-            Source="new_message2.png" 
+           Pressed="New_message_Pressed"
+          Released="New_message_Released"
             BackgroundColor="Transparent"
             AbsoluteLayout.LayoutFlags="PositionProportional"  
-            AbsoluteLayout.LayoutBounds=".95,.97,60,60" 
+            AbsoluteLayout.LayoutBounds=".95,.97,60,60"
+          Command="{Binding GoFriends}"
             />
-       -->
+       
     </AbsoluteLayout>
 </ContentPage>

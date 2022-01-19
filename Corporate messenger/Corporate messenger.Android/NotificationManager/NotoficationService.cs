@@ -235,20 +235,29 @@ namespace Corporate_messenger.Droid.NotificationManager
         {
             Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             {
-                bool flag = ws.Ping();
-                if (!flag== true)
-                {
-                    if (!DependencyService.Get<IForegroundService>().LoginPosition)
+               
+                    bool flag = ws.Ping();
+                    if (!flag == true)
                     {
-                        ws.ConnectAsync();
+                        if (!DependencyService.Get<IForegroundService>().LoginPosition)
+                        {
+                            try
+                            {
+                                ws.ConnectAsync();
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+
+                        }
+
+
                     }
-                 
-                  
-                }
-
-
-                return true;
-
+                
+              
+                    return true;
+                
 
             });
         }

@@ -16,66 +16,85 @@ namespace Corporate_messenger.Models.Abstract
         public static string addressWS = "ws://192.168.0.105:6001";   
         public WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
         // Устанавливаем соеденение 
-        HttpClient client = new HttpClient();
+        HttpClient client;
+        
         /// <summary>
         /// Модель данных чат
         /// </summary>
         public ChatModel chat = new ChatModel();
         public async Task<JObject> GetInfo_HttpMethod_Get_Async(string url)
         {
-            
-
-            // Тип Запроса
-            var httpMethod = HttpMethod.Get;
-            var address = DependencyService.Get<IFileService>().CreateFile() + url;
-
-            var request = new HttpRequestMessage()
+            client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(20);
+            try
             {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-            };
+                // Тип Запроса
+                var httpMethod = HttpMethod.Get;
+                var address = DependencyService.Get<IFileService>().CreateFile() + url;
 
-            // Отправка заголовка
-            request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(address),
+                    Method = httpMethod,
+                };
 
-            // Отправка данных 
-            var httpResponse = await client.SendAsync(request);
+                // Отправка заголовка
+                request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
 
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
+                // Отправка данных 
+                var httpResponse = await client.SendAsync(request);
 
-            //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
+                // Ответ от сервера 
+                var contenJSON = await httpResponse.Content.ReadAsStringAsync();
 
-            return contentJobjects;
+                //****** РАСШИФРОВКА_ОТВЕТА ******
+                JObject contentJobjects = JObject.Parse(contenJSON);
+
+                return contentJobjects;
+            }
+            catch (Exception ex)
+            {
+                var ext = ex;
+                return null;
+            }
+            
         }
         public async Task<JObject> GetInfo_HttpMethod_Post_Async(string jsonLog,string url)
         {
-
-            // Тип данных который мы принимаем от сервера 
-            var contentType = "application/json";
-            // Тип Запроса
-            var httpMethod = HttpMethod.Post;
-            var address = DependencyService.Get<IFileService>().CreateFile() + url;
-           // StringContent? conten = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType);
-            var request = new HttpRequestMessage()
+            client = new HttpClient();
+            try
             {
-                RequestUri = new Uri(address),
-                Method = httpMethod,
-                Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
-            };
-            // Отправка заголовка
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
-            // Отправка данных авторизации
-            var httpResponse = await client.SendAsync(request);
-            // Ответ от сервера 
-            var contenJSON = await httpResponse.Content.ReadAsStringAsync();
+                // Тип данных который мы принимаем от сервера 
+                var contentType = "application/json";
+                // Тип Запроса
+                var httpMethod = HttpMethod.Post;
+                var address = DependencyService.Get<IFileService>().CreateFile() + url;
+                // StringContent? conten = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType);
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(address),
+                    Method = httpMethod,
+                    Content = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType)
+                };
+                // Отправка заголовка
+                request.Headers.Add("Accept", "application/json");
+                request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
+                // Отправка данных авторизации
+                var httpResponse = await client.SendAsync(request);
+                // Ответ от сервера 
+                var contenJSON = await httpResponse.Content.ReadAsStringAsync();
 
-            //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = JObject.Parse(contenJSON);
-            // Ответ от сервера 
-            return contentJobjects;
+                //****** РАСШИФРОВКА_ОТВЕТА ******
+                JObject contentJobjects = JObject.Parse(contenJSON);
+                // Ответ от сервера 
+                return contentJobjects;
+            }
+            catch(Exception ex)
+            {
+                var ext = ex;
+                return null;
+            }
+           
         }
     }
 }

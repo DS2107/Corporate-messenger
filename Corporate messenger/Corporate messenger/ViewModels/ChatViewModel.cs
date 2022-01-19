@@ -34,7 +34,7 @@ namespace Corporate_messenger.ViewModels
         INavigation navigate;
        
         private bool firstupdate = false;
-        private string Next_page_url { get; set; }
+        public string Next_page_url { get; set; }
         private int CurrentPage { get; set; }
 
        
@@ -98,6 +98,7 @@ namespace Corporate_messenger.ViewModels
         /// <param name="id"></param>
         /// <param name="title"></param>
         public ChatViewModel(int id, string title, INavigation nav){
+
             navigate = nav;
             ws =  DependencyService.Get<ISocket>().MyWebSocket;
             ws.OnMessage += WsOnMEssage;
@@ -105,9 +106,8 @@ namespace Corporate_messenger.ViewModels
             chat.Sender_id = SpecDataUser.Id;
             chat.SourceImage = "play.png";
             SpecDataUser.Input_chat = chat.Chat_room_id;
-            Next_page_url = "/api/chat/" + chat.Chat_room_id + "/" + SpecDataUser.Id + "/dialog";
-            ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
-            ThreadMessage.Start();
+          
+           
            
         }
         
@@ -125,7 +125,7 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
-        Thread ThreadMessage;
+        public Thread ThreadMessage;
         /// <summary>
         /// Обновление списка
         /// </summary>
@@ -133,14 +133,27 @@ namespace Corporate_messenger.ViewModels
         {
             get
             {
-                return new Command( () =>
+                return new Command(async () =>
                 {
                     IsRefreshing = true;
+                    string NextPageNoSubstr = "";
                     if (Next_page_url != null)
                     {
+                       NextPageNoSubstr = Next_page_url ;
                         Next_page_url = Next_page_url.Substring(25);
-                        ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
-                        ThreadMessage.Start(); 
+                        // получаем данные в виде Ключ-Значение 
+                        contentJobjects = await GetInfo_HttpMethod_Get_Async(Next_page_url);
+                        if (contentJobjects != null)
+                        {
+                            ThreadMessage = new Thread(new ThreadStart(SendToken_GetChats));
+                            ThreadMessage.Start();
+                        }
+                        else
+                        {
+                            Next_page_url = NextPageNoSubstr;
+                            DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                        }
+                       
                     }                
                        
                     IsRefreshing = false;
@@ -149,11 +162,7 @@ namespace Corporate_messenger.ViewModels
             }
         }
 
-        private async void ThreadFunc_GetMessage()
-        {     
-          await  SendToken_GetChatsAsync(Next_page_url);
-            
-        }
+       
 
         
 
@@ -191,11 +200,21 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         /// <returns></returns>
         public void SendMyMessage(byte[] audio)
-        {      
-            var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = SpecDataUser.receiverId, TypeMessage = "message",Audio=audio };
-            var message = JsonConvert.SerializeObject(new_message);
-            ws.Send(message);
-            Input_message = "";
+        {
+            try
+            {
+                var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = SpecDataUser.receiverId, TypeMessage = "message", Audio = audio };
+                var message = JsonConvert.SerializeObject(new_message);
+                ws.Send(message);
+                Input_message = "";
+            }
+            catch(Exception ex)
+            {
+                var except = ex;
+                DependencyService.Get<IFileService>().MyToast("Не удалось отправить сообщение");
+            }
+           
+            
         }
        
         /// <summary>
@@ -238,32 +257,42 @@ namespace Corporate_messenger.ViewModels
             PlayStopStart = true;
         }
 
-      
-       private  async Task SendToken_GetChatsAsync(string url){
+        public JObject contentJobjects;
+       public  void SendToken_GetChats(){
             try
             {
-                // получаем данные в виде Ключ-Значение 
-                JObject contentJobjects = await GetInfo_HttpMethod_Get_Async(url);
-         
-                // По ключам получаем значения
-                foreach (var KeyJobject in contentJobjects){
-                    switch(KeyJobject.Key){
-                        case "dialog":
-                            Dialog(KeyJobject.Value);
-                            break;
-                        case "receiver_id":
-                            SpecDataUser.receiverId = (int)KeyJobject.Value;
-                            break;
-                        case "pagination":
-                            Pagination(KeyJobject.Value);
-                            break;
-                    }          
+               
+                if(contentJobjects == null)
+                {
+                    DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
                 }
-                ThreadMessage.Abort();
+                else
+                {
+                    // По ключам получаем значения
+                    foreach (var KeyJobject in contentJobjects)
+                    {
+                        switch (KeyJobject.Key)
+                        {
+                            case "dialog":
+                                Dialog(KeyJobject.Value);
+                                break;
+                            case "receiver_id":
+                                SpecDataUser.receiverId = (int)KeyJobject.Value;
+                                break;
+                            case "pagination":
+                                Pagination(KeyJobject.Value);
+                                break;
+                        }
+                    }
+                }
+             
             }
             catch(Exception ex)
             {
                 DependencyService.Get<IForegroundService>().MyToast(ex.Message);
+            }
+            finally{
+                ThreadMessage.Abort();
             }
 
         }

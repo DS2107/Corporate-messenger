@@ -22,38 +22,51 @@ namespace Corporate_messenger.Views
         {
             InitializeComponent();
             DependencyService.Get<IFileService>().flag = true;
-            clvm = new ChatListViewModel();
+            clvm = new ChatListViewModel(Navigation);
             BindingContext = clvm;
-            MessagingCenter.Subscribe<ChatsListPage>(
-                this, // кто подписывается на сообщения
-                "ListClear",   // название сообщения
-                (sender) => { clvm.ChatList.Clear(); });    // вызываемое действие
+          
+
+            New_message.Source = "AddStart.png";
 
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
-           
+            clvm.IsRefreshing = true;
           
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
             bool flag = File.Exists(DependencyService.Get<IFileService>().GetPath("token.txt"));
-            AuthorizationMainPage mainPage = new AuthorizationMainPage();
-            if (!flag){
+            //   AuthorizationMainPage mainPage = new AuthorizationMainPage();
+            if (!flag)
+            {
                 DependencyService.Get<IFileService>().CreateFile(clvm.SpecDataUser.Token, clvm.SpecDataUser.Id, clvm.SpecDataUser.Name);
             }
-              
+            clvm.Name = clvm.SpecDataUser.Name;
 
-           
+
+
             if (DependencyService.Get<IForegroundService>().SocketFlag == false)
             {
                 DependencyService.Get<IForegroundService>().StartService();
               
                 DependencyService.Get<IForegroundService>().LoginPosition = false;
             }
-               
 
-            clvm.ThreadChats = new Thread(new ThreadStart(clvm.ThreadFunc_GetMessage));
-            clvm.ThreadChats.Start();
+            //****** РАСШИФРОВКА_ОТВЕТА ******
+            clvm.contentJobjects = await clvm.GetInfo_HttpMethod_Get_Async("/api/user/" + clvm.SpecDataUser.Id + "/chatroom");
+
+            if (clvm.contentJobjects == null)
+            {
+
+                DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                clvm.IsRefreshing = false;
+            }
+            else
+            {
+                clvm.ThreadChats = new Thread(new ThreadStart(clvm.SendToken_GetChats));
+                clvm.ThreadChats.Start();
+            }
+
         }
 
 
@@ -73,16 +86,16 @@ namespace Corporate_messenger.Views
 
         }
 
+       
 
-
-        private void CallButton_Clicked(object sender, EventArgs e)
+        private void New_message_Released(object sender, EventArgs e)
         {
-            _ = GoToPagaeFriend();
+            New_message.Source = "AddStart.png";
         }
-        async Task GoToPagaeFriend()
-        {
-            await Navigation.PushAsync(new FriendPage());
 
+        private void New_message_Pressed(object sender, EventArgs e)
+        {
+            New_message.Source = "AddEnd.png";
         }
     }
 }

@@ -1,17 +1,11 @@
-﻿using Corporate_messenger.Models;
-using Corporate_messenger.Models.Abstract;
+﻿using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Models.UserData;
 using Corporate_messenger.Service;
 using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,7 +13,7 @@ using Xamarin.Forms;
 
 namespace Corporate_messenger.ViewModels
 {
- 
+
     class FriendPageViewModel :ApiAbstract, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -70,8 +64,11 @@ namespace Corporate_messenger.ViewModels
                         //****** РАСШИФРОВКА_ОТВЕТА ******//
                         dynamic contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/chatroom");
 
-                        // Переход на следующую страницу
-                        await nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Name));
+                        if (contentJobjects == null)
+                            DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                        else
+                            // Переход на следующую страницу
+                            await nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Name));
             
                     }
                 });

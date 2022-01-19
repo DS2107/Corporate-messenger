@@ -48,16 +48,14 @@
                         TextColor="#B5C2CD"/>
                     <!--Воод имени-->
                     <Entry
-                        Text="{Binding Path=Login}"
+                        Text="{Binding Path=email}"
                         TextColor="White"
                         PlaceholderColor="#B5C2CD"
                         x:Name="UsernameTxt"
                         Placeholder="Логин" 
                         Focused="UsernameTxt_Focused"
                         Unfocused="UsernameTxt_Unfocused">
-                        <Entry.BindingContext>
-                            <local:LoginModel/>
-                        </Entry.BindingContext>
+                        
                     </Entry>
                 </StackLayout>
 
@@ -69,7 +67,7 @@
                         TextColor="#B5C2CD"/>
                     <!--Воод пароля-->
                     <Entry
-                        Text="{Binding Path=Password}"
+                        Text="{Binding Path=password}"
                         IsPassword="True"
                         PlaceholderColor="#B5C2CD"
                         TextColor="White"
@@ -77,9 +75,7 @@
                         Placeholder="Пароль" 
                         Focused="PasswordTxt_Focused"
                         Unfocused="PasswordTxt_Unfocused">
-                        <Entry.BindingContext>
-                            <local:LoginModel/>
-                        </Entry.BindingContext>
+                        
                     </Entry>
                 </StackLayout>
                 <!--Кнопка входа-->

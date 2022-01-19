@@ -54,7 +54,7 @@
     </FlyoutItem>
 
     <!--Краткая информация пользователя-->
-    <Shell.FlyoutHeaderTemplate>
+   <!--<Shell.FlyoutHeaderTemplate>
         <DataTemplate>
             <Grid 
                 BackgroundColor="black"
@@ -76,7 +76,7 @@
                     Grid.Column="0" Grid.Row="0"  
                     Padding="20">
 
-                    <!--Автар пользователя который авторизовался-->
+                
                     <Image 
                         VerticalOptions="Start" 
                         HorizontalOptions="Start" 
@@ -86,7 +86,7 @@
                         HeightRequest="70"/>
                 </StackLayout>
                  
-                <!--Имя пользователя который авторизовался-->
+                
                 <Label 
                     Text="{x:Binding Path=Name,Mode=TwoWay}"
                     FontFamily="mulish" 
@@ -99,7 +99,7 @@
                    
                 </Label>
 
-                <!--Описание пользователя который авторизовался-->
+               
                 <Label 
                     FontFamily="mulish"  
                     Grid.Row="2" Grid.Column="0" 
@@ -110,5 +110,5 @@
                     HorizontalOptions="StartAndExpand"/>
             </Grid>
         </DataTemplate>
-    </Shell.FlyoutHeaderTemplate>
+    </Shell.FlyoutHeaderTemplate> -->
 </Shell>
