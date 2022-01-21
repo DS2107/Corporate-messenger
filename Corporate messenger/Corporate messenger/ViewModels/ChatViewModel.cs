@@ -91,14 +91,14 @@ namespace Corporate_messenger.ViewModels
             }
         }
         private bool isRefreshing = false;
-
+        UserDataModel user;
         /// <summary>
         /// Конструктор с параметрами 
         /// </summary>
         /// <param name="id"></param>
         /// <param name="title"></param>
         public ChatViewModel(int id, string title, INavigation nav){
-
+            
             navigate = nav;
             ws =  DependencyService.Get<ISocket>().MyWebSocket;
             ws.OnMessage += WsOnMEssage;
@@ -117,10 +117,10 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public  ICommand  SendMessage{
             get{
-                return new Command(async (object obj) =>{
+                return new Command( (object obj) =>{
                     if (Input_message != null){
                         byte[] audio = null;
-                       await Task.Run(()=> SendMyMessage(audio));
+                        SendMyMessage(audio);
                     }
                 });
             }

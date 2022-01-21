@@ -2,11 +2,30 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.FriendPage" 
-             Title="Контакты"  
+             
              Shell.BackgroundColor="#04283C" 
              Shell.TitleColor="White"  
              Background="#04283C">
-    
+    <Shell.TitleView>
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+
+                <ColumnDefinition Width="*"  />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Text="Друзья" FontSize="Title" TextColor="White" VerticalOptions="Center" />
+
+
+
+            <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="Center" >
+               
+            </StackLayout>
+        </Grid>
+    </Shell.TitleView>
     <!-- <ContentPage.ToolbarItems>
         <ToolbarItem  IconImageSource="group_icon.ico"/>
     </ContentPage.ToolbarItems>-->

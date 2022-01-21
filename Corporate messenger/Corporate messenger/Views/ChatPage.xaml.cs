@@ -44,7 +44,8 @@ namespace Corporate_messenger.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            if(chat.Next_page_url == null)
+            Shell.SetTabBarIsVisible(this, false);
+            if (chat.Next_page_url == null)
             {
                 chat.contentJobjects = await chat.GetInfo_HttpMethod_Get_Async("/api/chat/" + id_room + "/" + chat.SpecDataUser.Id + "/dialog");
                 if (chat.contentJobjects != null)

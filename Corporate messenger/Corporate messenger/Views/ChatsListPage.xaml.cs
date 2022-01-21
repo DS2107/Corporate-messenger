@@ -8,6 +8,7 @@ using Xamarin.Forms.Xaml;
 using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Service;
 using System.IO;
+using Corporate_messenger.DB;
 
 namespace Corporate_messenger.Views
 {
@@ -35,13 +36,7 @@ namespace Corporate_messenger.Views
             clvm.IsRefreshing = true;
           
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
-            bool flag = File.Exists(DependencyService.Get<IFileService>().GetPath("token.txt"));
-            //   AuthorizationMainPage mainPage = new AuthorizationMainPage();
-            if (!flag)
-            {
-                DependencyService.Get<IFileService>().CreateFile(clvm.SpecDataUser.Token, clvm.SpecDataUser.Id, clvm.SpecDataUser.Name);
-            }
-            clvm.Name = clvm.SpecDataUser.Name;
+            UserDataModel user = await UserDbService.GetUser();
 
 
 
@@ -53,7 +48,7 @@ namespace Corporate_messenger.Views
             }
 
             //****** РАСШИФРОВКА_ОТВЕТА ******
-            clvm.contentJobjects = await clvm.GetInfo_HttpMethod_Get_Async("/api/user/" + clvm.SpecDataUser.Id + "/chatroom");
+            clvm.contentJobjects = await clvm.GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
 
             if (clvm.contentJobjects == null)
             {
@@ -96,6 +91,11 @@ namespace Corporate_messenger.Views
         private void New_message_Pressed(object sender, EventArgs e)
         {
             New_message.Source = "AddEnd.png";
+        }
+
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new UserPage());
         }
     }
 }

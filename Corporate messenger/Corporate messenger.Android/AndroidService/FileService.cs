@@ -19,11 +19,26 @@ namespace Corporate_messenger.Droid
             return Application.Context.GetExternalFilesDir(null).ToString();
         }
 
+        public string GetDb()
+        {
+            var filename = "MyDB.db";
+            var destination = Path.Combine(GetRootPath(), filename);
+            return destination;
 
+
+        }
         public string GetPath(string name)
         {
           string  filename = Path.Combine(GetRootPath(), name);
             return filename ;
+        }
+        public void CreateDb()
+        {
+            var filename = "MyDB.db";
+            var destination = Path.Combine(GetRootPath(), filename);
+            File.Create(destination);
+
+
         }
         public string CreateFile()
         {

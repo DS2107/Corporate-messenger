@@ -1,4 +1,5 @@
-﻿using Corporate_messenger.Models.Chat;
+﻿using Corporate_messenger.DB;
+using Corporate_messenger.Models.Chat;
 using Corporate_messenger.Service;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,9 +13,13 @@ namespace Corporate_messenger.Models.Abstract
 {
     public abstract class ApiAbstract
     {
+
+        UserDataModel model;
         public SpecialDataModel SpecDataUser = new SpecialDataModel();
+        
         public static string addressWS = "ws://192.168.0.105:6001";   
         public WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
+      
         // Устанавливаем соеденение 
         HttpClient client;
         
@@ -26,6 +31,7 @@ namespace Corporate_messenger.Models.Abstract
         {
             client = new HttpClient();
             client.Timeout = TimeSpan.FromSeconds(20);
+            model = await UserDbService.GetUser();
             try
             {
                 // Тип Запроса
@@ -39,7 +45,7 @@ namespace Corporate_messenger.Models.Abstract
                 };
 
                 // Отправка заголовка
-                request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
+                request.Headers.Add("Authorization", "Bearer " + model.Token);
 
                 // Отправка данных 
                 var httpResponse = await client.SendAsync(request);
@@ -59,9 +65,10 @@ namespace Corporate_messenger.Models.Abstract
             }
             
         }
-        public async Task<JObject> GetInfo_HttpMethod_Post_Async(string jsonLog,string url)
+        public async Task<JObject> GetInfo_HttpMethod_Post_Async(string jsonLog,string url,bool login)
         {
             client = new HttpClient();
+            model = await UserDbService.GetUser();
             try
             {
                 // Тип данных который мы принимаем от сервера 
@@ -78,7 +85,8 @@ namespace Corporate_messenger.Models.Abstract
                 };
                 // Отправка заголовка
                 request.Headers.Add("Accept", "application/json");
-                request.Headers.Add("Authorization", "Bearer " + SpecDataUser.Token);
+                if(login == false)
+                    request.Headers.Add("Authorization", "Bearer " + model.Token);
                 // Отправка данных авторизации
                 var httpResponse = await client.SendAsync(request);
                 // Ответ от сервера 

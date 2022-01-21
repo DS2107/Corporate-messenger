@@ -33,6 +33,7 @@ namespace Corporate_messenger.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+        
             var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
             var data = token.Split('/');
 

@@ -23,6 +23,8 @@ namespace Corporate_messenger.Service
         /// </summary>
         /// <returns></returns>
         string CreateFile();
+        public string GetDb();
+        public void CreateDb();
 
         /// <summary>
         /// Создать файл Token

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Corporate_messenger.Service.Notification;
 using System;
+using Corporate_messenger.DB;
 
 namespace Corporate_messenger.Views
 {
@@ -18,13 +19,12 @@ namespace Corporate_messenger.Views
 
         public LoginPage()
         {
+            OnAppearing();
             InitializeComponent();
          
             
             BindingContext = new LoginViewModel(Navigation);
-           // Shell.ItemsProperty.cl
-            // отправляем сообщение
-            MessagingCenter.Send<LoginPage>(this, "ListClear");
+          
             DependencyService.Get<IForegroundService>().LoginPosition = true;
             DependencyService.Get<IForegroundService>().StopService();
             DependencyService.Get<IForegroundService>().SocketFlag = false;
@@ -38,8 +38,7 @@ namespace Corporate_messenger.Views
         
             special.Id = 0;
             special.Token = null;
-            UsernameTxt.Text = "";
-            PasswordTxt.Text = "";
+          
             if (UsernameTxt.Text == null || UsernameTxt.Text.Length == 0)
             {
                 LabelUserName.IsVisible = false;
@@ -57,29 +56,21 @@ namespace Corporate_messenger.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            Shell.SetTabBarIsVisible(this, false);
+
+            //UsernameTxt.Text = "";
+            //PasswordTxt.Text = "";
+
            
-        
-                var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
-                var data = token.Split('/');
-
-                if (data[0] != "")
-                {
-                    SpecialDataModel special = new SpecialDataModel();
-                    special.Token = data[0];
-                    special.Id = Int32.Parse(data[1]);
-                    special.Name = data[2];
-
-                    if(Shell.Current!=null)
-                        await Shell.Current.GoToAsync($"//chats_list");
-
-                    DependencyService.Get<IFileService>().Delete();
-
-                }
-
-
-            
-           
-            
+            UserDataModel user = await UserDbService.GetUser();
+            if (user != null)
+            {
+               
+                if (Shell.Current != null)
+                    await Shell.Current.GoToAsync($"//chats_list");
+            }
+    
         }
 
 

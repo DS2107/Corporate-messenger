@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Corporate_messenger.Views.UserPage" Shell.BackgroundColor="#0B6EA3" Background="#04283C">
+    <Shell.TitleView>
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+
+              
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Text="Профиль" Margin="0,0,30,0" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Title" TextColor="White" VerticalOptions="Center" />
+        </Grid>
+    </Shell.TitleView>
+
+    <ContentPage.Content >
+        <Grid BackgroundColor="#0B6EA3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200" />
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+           
+           
+                <StackLayout  Padding="0,50,0,0">
+                    <Image 
+                  
+                   
+                    Source="logan.jpg" 
+                    Aspect="AspectFill" 
+                    FlexLayout.AlignSelf="Center"
+                    WidthRequest="110"   
+                    HeightRequest="110"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                        <Image.Clip >
+                            <EllipseGeometry
+                            Center="55,55"
+                            RadiusX="55"
+                            RadiusY="55"/>
+                        </Image.Clip>
+                    </Image>
+                <Label Text="{Binding TitleName}" FontSize="Title" HorizontalTextAlignment="Center" TextColor="WhiteSmoke">
+
+                    </Label>
+                </StackLayout>
+
+
+            <StackLayout   Grid.Row="1" Background="white" Padding="0,0,30,0">
+                <Label Text="Аккаунт" TextColor="#0B6EA3" FontSize="Subtitle" HorizontalTextAlignment="Start" Margin="40,20,0,0"/>
+
+                <StackLayout Margin="40,20,0,0" >
+                    <Label Text="ФИО" TextColor="Black" FontSize="Title" HorizontalTextAlignment="Start" />
+                    <Label Text="{Binding Name}" TextColor="DimGray" FontSize="Subtitle" HorizontalTextAlignment="Start" />
+                </StackLayout>
+                <StackLayout Margin="40,20,0,0">
+                    <Label Text="Логин" TextColor="Black" FontSize="Title" HorizontalTextAlignment="Start" />
+                    <Label Text="{Binding Email}" TextColor="DimGray" FontSize="Subtitle" HorizontalTextAlignment="Start" />
+                </StackLayout>
+                <StackLayout Margin="40,20,0,0">
+                    <Label Text="Токен" TextColor="Black" FontSize="Title" HorizontalTextAlignment="Start" />
+                    <Label Text="{Binding Token}" TextColor="DimGray" FontSize="Subtitle" HorizontalTextAlignment="Start" />
+                </StackLayout>
+                <StackLayout Margin="40,20,0,0">
+                    <Button 
+                        Text="Выход"
+                        Margin="0,20,0,0"
+                        x:Name="B_login"
+                        BackgroundColor="#DF0024"
+                        TextColor="White"
+                        CornerRadius="20"
+                        Command="{Binding ExitCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>
+

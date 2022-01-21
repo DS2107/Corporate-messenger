@@ -1,18 +1,20 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel;
 using Corporate_messenger.Models.Abstract;
+using SQLite;
 
 namespace Corporate_messenger.Models
 {
+    
     class UserDataModel:UserAbstract, INotifyPropertyChanged
     {
         private static string last_login { get; set; }
         private static string created_at { get; set; }
-        private static string updated_at { get; set; }
-       
+        private static string updated_at { get; set; }      
         private static string avatar { get; set; }
         private static string active { get; set; }
         private static string email { get; set; }
+        private static string token { get; set; }
         private static int id;
         private static string username;
 
@@ -29,6 +31,7 @@ namespace Corporate_messenger.Models
         /// <summary>
         /// ID пользователя
         /// </summary>
+        [PrimaryKey]
         [JsonProperty("id")]
         public override int Id
         {
@@ -43,6 +46,22 @@ namespace Corporate_messenger.Models
             }
         }
 
+        /// <summary>
+        /// Token
+        /// </summary>
+        [JsonProperty("token")]
+        public  string Token
+        {
+            get { return token; }
+            set
+            {
+                if (token != value)
+                {
+                    token = value;
+                    OnPropertyChanged("Token");
+                }
+            }
+        }
         /// <summary>
         /// Имя пользователя пользователя
         /// </summary>

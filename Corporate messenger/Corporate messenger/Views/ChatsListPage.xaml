@@ -5,7 +5,7 @@
              Title="Чаты" 
              IconImageSource="chat1.png" 
              Shell.PresentationMode="ModalAnimated" 
-             Shell.BackgroundColor="#084C71" 
+             Shell.BackgroundColor="#04283C" 
              Shell.TitleColor="White"  
              Background="#04283C">
 
@@ -18,12 +18,19 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
               
-                <ColumnDefinition Width="*"  />
+              
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Text="Мои сообщения" FontSize="Subtitle" TextColor="White" VerticalOptions="Center" />
+            <Label Grid.Row="0" Grid.Column="0" Text="Чаты" FontSize="Title" TextColor="White" VerticalOptions="Center" />
+            <Frame CornerRadius="8" HorizontalOptions="End" Grid.Row="0" Grid.Column="1" Margin="0,5,5,5"  Padding="8" BackgroundColor="Transparent" HasShadow="True" 
+       OutlineColor="Transparent"  x:Name="MyFrame">
+              
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
 
-            <StackLayout Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Margin="0,0,15,0">
-                <FlexLayout 
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                    </StackLayout.GestureRecognizers>
+
+                    <FlexLayout 
                    
                     HorizontalOptions="EndAndExpand" 
                     VerticalOptions="Center"                
@@ -43,9 +50,9 @@
                         </Image.Clip>
                     </Image>
                 </FlexLayout>
-                <Label  FontSize="Small" TextColor="White" Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+              
             </StackLayout>
-            
+            </Frame>
         </Grid>
     </Shell.TitleView>
 

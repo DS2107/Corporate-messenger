@@ -25,7 +25,7 @@ namespace Corporate_messenger.Models
         /// ID пользователя 
         /// </summary>
         [JsonProperty("id")]
-        [PrimaryKey, AutoIncrement, Column("_id")]
+        [PrimaryKey]
         public int Id
         {
             get { return id; }

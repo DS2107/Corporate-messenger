@@ -1,4 +1,5 @@
-﻿using Corporate_messenger.Models;
+﻿using Corporate_messenger.DB;
+using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Service;
 using Corporate_messenger.Views;
@@ -16,6 +17,7 @@ namespace Corporate_messenger.ViewModels
 {
     class ChatListViewModel : ApiAbstract, INotifyPropertyChanged
     {
+       public UserDataModel user;
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
@@ -23,25 +25,13 @@ namespace Corporate_messenger.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         public INavigation Navigation { get; set; }
-       public Thread ThreadChats;
+
+        public Thread ThreadChats;
+
         INavigation navigation;
 
 
-        public string Name
-        {
-            get {
-
-                
-                return SpecDataUser.Name; }
-            set
-            {
-                
-                    SpecDataUser.Name = value;
-                    OnPropertyChanged("Name");
-                
-            }
-
-        }
+     
         /// <summary>
         /// Флаг Обновление списка
         /// </summary>
@@ -101,9 +91,9 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async () =>
                 {
                     IsRefreshing = true;
-
+                    user = await UserDbService.GetUser();
                     //****** РАСШИФРОВКА_ОТВЕТА ******
-                    contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + SpecDataUser.Id + "/chatroom");
+                    contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
 
                     if (contentJobjects == null)
                     {

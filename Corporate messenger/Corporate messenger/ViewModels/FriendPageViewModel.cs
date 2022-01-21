@@ -62,7 +62,7 @@ namespace Corporate_messenger.ViewModels
                         string jsonLog = JsonConvert.SerializeObject(new { sender_id = SpecDataUser.Id, receiver_id = item.Id, title = item.Name });
 
                         //****** РАСШИФРОВКА_ОТВЕТА ******//
-                        dynamic contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/chatroom");
+                        dynamic contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/chatroom",false);
 
                         if (contentJobjects == null)
                             DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
