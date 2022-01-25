@@ -17,7 +17,7 @@ using Xamarin.Forms;
 using Java.Util;
 using Android.Content;
 using System.Linq;
-
+using AndroidX.AppCompat.App;
 
 namespace Corporate_messenger.Droid
 {
@@ -38,8 +38,8 @@ namespace Corporate_messenger.Droid
                 
                 flag = true;
             }
-            LoadApplication(new App(flag));
            
+            LoadApplication(new App(flag));
             //Intent.RemoveExtra()
             flag = false;
            /* TinyAccountManager.Droid.AccountManager.Initialize();

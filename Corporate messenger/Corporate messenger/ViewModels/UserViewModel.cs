@@ -100,8 +100,10 @@ namespace Corporate_messenger.ViewModels
                 {
                     user = await UserDbService.GetUser();
                     await UserDbService.RemoveUser(user.Id);
-                    Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
-                    await Shell.Current.GoToAsync("//LoginPage",false);
+                    await ChatListDbService.DeleteAllChat();
+                   await navigation.PushAsync(new LoginPage());
+                   // Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
+                   // await Shell.Current.GoToAsync("//LoginPage",false);
 
                 });
             }

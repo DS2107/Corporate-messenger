@@ -59,17 +59,7 @@ namespace Corporate_messenger.Views
 
             Shell.SetTabBarIsVisible(this, false);
 
-            //UsernameTxt.Text = "";
-            //PasswordTxt.Text = "";
-
-           
-            UserDataModel user = await UserDbService.GetUser();
-            if (user != null)
-            {
-               
-                if (Shell.Current != null)
-                    await Shell.Current.GoToAsync($"//chats_list");
-            }
+            
     
         }
 

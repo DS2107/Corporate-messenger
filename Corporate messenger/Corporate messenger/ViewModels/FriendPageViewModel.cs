@@ -1,4 +1,5 @@
-﻿using Corporate_messenger.Models.Abstract;
+﻿using Corporate_messenger.DB;
+using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Models.UserData;
 using Corporate_messenger.Service;
 using Corporate_messenger.Views;
@@ -57,9 +58,9 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async (object obj) =>{
                     // Ищем нужный элемент
                     if (obj is FriendsModel item){
-
+                        var user = await UserDbService.GetUser();
                         // Перед отправкой , превращаем все в json "/api/chatroom"
-                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = SpecDataUser.Id, receiver_id = item.Id, title = item.Name });
+                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = user.Id, receiver_id = item.Id, title = item.Name });
 
                         //****** РАСШИФРОВКА_ОТВЕТА ******//
                         dynamic contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/chatroom",false);

@@ -9,6 +9,7 @@ using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Service;
 using System.IO;
 using Corporate_messenger.DB;
+using System.Collections.Generic;
 
 namespace Corporate_messenger.Views
 {
@@ -31,12 +32,15 @@ namespace Corporate_messenger.Views
 
         }
 
+        Thread ThreadSql;
+        
         protected override async void OnAppearing()
         {
-            clvm.IsRefreshing = true;
+            
           
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
-            UserDataModel user = await UserDbService.GetUser();
+          
+         
 
 
 
@@ -47,21 +51,14 @@ namespace Corporate_messenger.Views
                 DependencyService.Get<IForegroundService>().LoginPosition = false;
             }
 
-            //****** РАСШИФРОВКА_ОТВЕТА ******
-            clvm.contentJobjects = await clvm.GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
+            await clvm.GetSqlChats();
 
-            if (clvm.contentJobjects == null)
-            {
+        }
 
-                DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
-                clvm.IsRefreshing = false;
-            }
-            else
-            {
-                clvm.ThreadChats = new Thread(new ThreadStart(clvm.SendToken_GetChats));
-                clvm.ThreadChats.Start();
-            }
-
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            clvm.ChatList = null;
         }
 
 

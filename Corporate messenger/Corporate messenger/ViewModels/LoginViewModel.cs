@@ -2,6 +2,7 @@
 using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Service;
+using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
@@ -178,8 +179,17 @@ namespace Corporate_messenger.ViewModels
 
                 if (status != false)
                 {
-                    Autorize();
-                    await Shell.Current.GoToAsync($"//chats_list");
+                    if (DependencyService.Get<IFileService>().MyProperty != null)
+                    {
+                        Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
+                        await Shell.Current.GoToAsync("//chats_list");
+                    }
+                    else
+                    {
+                        Application.Current.MainPage = new AuthorizationMainPage();
+                        await Shell.Current.GoToAsync("//chats_list");
+                    }
+                   
                 }
                 else
                 {

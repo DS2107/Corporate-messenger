@@ -11,6 +11,7 @@ using System.Timers;
 using System;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Corporate_messenger.DB;
 
 namespace Corporate_messenger.ViewModels
 {
@@ -50,7 +51,7 @@ namespace Corporate_messenger.ViewModels
             ws = DependencyService.Get<ISocket>().MyWebSocket;
             TimeCall = "Инициализация звонка...";
             DependencyService.Get<IAudioWebSocketCall>().callView = this;
-            DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCall(user.Id);
+            DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCallAsync();
             FlagInitCall = init_call;
             navigate = nav;
             SourceHold = "HoldCall.png";
@@ -305,7 +306,7 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
-        SpecialDataModel user = new SpecialDataModel();
+       
         WebSocketSharp.WebSocket ws;
       
         /// Ответиьт на звонок
@@ -316,6 +317,7 @@ namespace Corporate_messenger.ViewModels
             {
                 return new Command(async (object obj) => {
                     ws = DependencyService.Get<ISocket>().MyWebSocket;
+                    var user = await UserDbService.GetUser();
                     ws.Send(JsonConvert.SerializeObject(new { type = "init_call", sender_id = user.Id,status ="200",receiver_id =1, DependencyService.Get<IForegroundService>().call_id}));
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                    

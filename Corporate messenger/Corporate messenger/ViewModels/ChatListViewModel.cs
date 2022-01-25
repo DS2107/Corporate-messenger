@@ -6,10 +6,13 @@ using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -53,17 +56,17 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public ObservableCollection<ChatListModel> ChatList
         {
-            get { return chatList; }
+            get { return chats; }
             set
             {
-                if (chatList != value)
+                if (chats != value)
                 {
-                    chatList = value;
+                    chats = value;
                     OnPropertyChanged("ChatList");
                 }
             }
         }
-        public ObservableCollection<ChatListModel> chatList = new ObservableCollection<ChatListModel>();
+       
         /// <summary>
         /// Конструктор
         /// </summary>
@@ -127,14 +130,92 @@ namespace Corporate_messenger.ViewModels
                     {
                         case "chats":
                             var ValueJobject = JsonConvert.SerializeObject(KeyJobject.Value);
-                            chatList = null;
-                            ChatList = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
+                            
+
+                        var buffer = JsonConvert.DeserializeObject<ObservableCollection<ChatListModel>>(ValueJobject);
+                        if (ChatList.Count == 0)
+                        {
+                            ChatList = buffer;
+                            foreach (var item in ChatList)
+                            {
+                                _ = ChatListDbService.AddChat(item);
+                               // ChatList.Add(item);
+
+                            }
+                        }
+                        else
+                        {
+                         
+                            foreach (var item in buffer)
+                            {
+                                foreach(var EditItem in ChatList)
+                                {
+                                    if(EditItem.Id == item.Id && EditItem.Updated_at != item.Updated_at)
+                                    {
+                                        isRefreshing = true;
+                                        EditItem.Last_message = item.Last_message;
+                                        EditItem.Updated_at = item.Updated_at;
+                                        _ = ChatListDbService.UpdateChat(EditItem);
+                                    }
+                                        
+                                }
+                               
+                            }
+                        }
                             IsRefreshing = false;
+                           
                         break;
                     }
                 }
                 ThreadChats.Abort();
            
-         }     
+         }
+       
+        ObservableCollection<ChatListModel> chats ;
+        public async Task GetSqlChats()
+        {
+            ChatList = null;
+            ChatList = await ChatListDbService.GetChats();
+            UserDataModel user = await UserDbService.GetUser();
+            if (ChatList.Count != 0)
+            {
+                
+
+                //****** РАСШИФРОВКА_ОТВЕТА ******
+                contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
+                if (contentJobjects == null)
+                {
+
+                    DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                    IsRefreshing = false;
+                }
+                else
+                {
+                    ThreadChats = new Thread(new ThreadStart(SendToken_GetChats));
+                    ThreadChats.Start();
+                }
+            }
+            else
+            {
+                IsRefreshing = true;
+
+                //****** РАСШИФРОВКА_ОТВЕТА ******
+                contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + user.Id + "/chatroom");
+                if (contentJobjects == null)
+                {
+
+                    DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
+                    IsRefreshing = false;
+                }
+                else
+                {
+                    ThreadChats = new Thread(new ThreadStart(SendToken_GetChats));
+                    ThreadChats.Start();
+                }
+            }
+        }
+
+
+       
     }
 }

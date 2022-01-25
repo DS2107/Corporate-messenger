@@ -13,7 +13,8 @@ namespace Corporate_messenger.Models
         private string last_message { get; set; }
         private string title { get; set; }    
         private  int id { get; set; }
-  
+        private string updated_at { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
@@ -80,6 +81,26 @@ namespace Corporate_messenger.Models
                 {
                     last_message = value;
                     OnPropertyChanged("Last_message");
+                }
+            }
+        }
+
+        /// <summary>
+        /// время изменения чата 
+        /// </summary>
+        [JsonProperty("updated_at")]
+        public string Updated_at
+        {
+            get
+            {    return updated_at;
+
+            }
+            set
+            {
+                if (updated_at != value)
+                {
+                    updated_at = value;
+                    OnPropertyChanged("Updated_at");
                 }
             }
         }

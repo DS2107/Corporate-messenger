@@ -16,6 +16,7 @@ using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
 using System.Threading;
 using Corporate_messenger.Models.Abstract;
+using Corporate_messenger.DB;
 
 namespace Corporate_messenger.ViewModels
 {
@@ -92,6 +93,7 @@ namespace Corporate_messenger.ViewModels
         }
         private bool isRefreshing = false;
         UserDataModel user;
+        public WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
         /// <summary>
         /// Конструктор с параметрами 
         /// </summary>
@@ -117,9 +119,10 @@ namespace Corporate_messenger.ViewModels
         /// </summary>
         public  ICommand  SendMessage{
             get{
-                return new Command( (object obj) =>{
+                return new Command(async (object obj) =>{
                     if (Input_message != null){
                         byte[] audio = null;
+                        user = await UserDbService.GetUser();
                         SendMyMessage(audio);
                     }
                 });
@@ -203,9 +206,10 @@ namespace Corporate_messenger.ViewModels
         {
             try
             {
-                var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = chat.Sender_id, Message = Input_message, Receiver_id = SpecDataUser.receiverId, TypeMessage = "message", Audio = audio };
+                var new_message = new ChatModel { Chat_room_id = chat.Chat_room_id, Sender_id = user.Id, Message = Input_message, Receiver_id = SpecDataUser.receiverId, TypeMessage = "message", Audio = audio,MaximumSlider =1,ValueSlider =0.01 };
                 var message = JsonConvert.SerializeObject(new_message);
                 ws.Send(message);
+               
                 Input_message = "";
             }
             catch(Exception ex)
@@ -354,15 +358,7 @@ namespace Corporate_messenger.ViewModels
         }
        
          
-        private void WsOnOpen(object sender, EventArgs e){         
-            var message = JsonConvert.SerializeObject(new { 
-                type = "subscribe", 
-                sender_id = chat.Sender_id, 
-                reciever_id = SpecDataUser.receiverId 
-            });
-            ws.Send(message);
-           
-        }
+      
        
         private void WsOnMEssage(object sender, MessageEventArgs e)
         {

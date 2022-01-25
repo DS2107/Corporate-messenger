@@ -3,30 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.AuthorizationMainPage"
         xmlns:local="clr-namespace:Corporate_messenger.Views" xmlns:local1="clr-namespace:Corporate_messenger.Models">
-    
-    
-    <ShellItem Route="LoginPage" FlyoutItemIsVisible="False">
-        <ShellContent ContentTemplate="{DataTemplate local:LoginPage}"/>
-    </ShellItem>
-    <TabBar  Shell.BackgroundColor="DimGray" Shell.TabBarTitleColor="#04283C">
-        
-   
-    
-   
 
-    <!--Страница друзей пользователя и их поиска-->
+
+
+    <TabBar   Shell.TabBarTitleColor="#04283C" >
+        <!--Страница чатов польователя-->
+
+       
+        <!--Страница друзей пользователя и их поиска-->
 
         <Tab Icon="createGroupTitle.png" Title="Друзья">
             <ShellContent 
                 ContentTemplate="{DataTemplate local:FriendPage}" 
                 Route="contact_page" />
         </Tab>
-        <!--Страница чатов польователя-->
-
-        <Tab Icon="messageTitle.png" Title="Сообщения">
+        <Tab Icon="messageTitle.png" Title="Сообщения" Route="chats_list" >
             <ShellContent 
                 ContentTemplate="{DataTemplate local:ChatsListPage}" 
-                Route="chats_list"/>
+                />
         </Tab>
 
         <Tab Icon="Settings.png"  Title="Настройки">
@@ -34,12 +28,7 @@
                 ContentTemplate="{DataTemplate local:Settings}" 
                 Route="Setting_page"/>
         </Tab>
-    
 
-  
-
-      
-    
     </TabBar>
 
 </Shell>

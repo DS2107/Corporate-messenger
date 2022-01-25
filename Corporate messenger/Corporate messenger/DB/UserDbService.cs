@@ -8,9 +8,10 @@ using Xamarin.Forms;
 
 namespace Corporate_messenger.DB
 {
-    class UserDbService
+   public class UserDbService
     {
         static SQLiteAsyncConnection db;
+      
         static async Task Init()
         {
             
@@ -29,6 +30,7 @@ namespace Corporate_messenger.DB
                 DependencyService.Get<IFileService>().CreateDb();
                 db = new SQLiteAsyncConnection(DependencyService.Get<IFileService>().GetDb());
                 await db.CreateTableAsync<UserDataModel>();
+                await db.CreateTableAsync<ChatListModel>();
             }
                 
 
@@ -52,8 +54,10 @@ namespace Corporate_messenger.DB
         public static async Task<UserDataModel> GetUser()
         {
             await Init();
-           var user = await db.Table<UserDataModel>().FirstOrDefaultAsync();
+            var user = await db.Table<UserDataModel>().FirstOrDefaultAsync();
             return user;
         }
+      
+
     }
 }

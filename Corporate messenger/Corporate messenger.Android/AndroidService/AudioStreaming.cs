@@ -1,4 +1,5 @@
 ﻿using Android.Media;
+using Corporate_messenger.DB;
 using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Service;
 using Corporate_messenger.ViewModels;
@@ -28,10 +29,11 @@ namespace Corporate_messenger.Droid.AndroidService
         {
            
         }
-        public void InitAudioWebSocketCall(int sender_id)
+        public async Task InitAudioWebSocketCallAsync()
         {
             Frequency_Audio = 22050;
-            User_id = sender_id;
+            var user = await UserDbService.GetUser();
+            User_id = user.Id;
             StartStopAudioStream_Flag = true;
 
 

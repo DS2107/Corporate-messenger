@@ -18,7 +18,7 @@ namespace Corporate_messenger.Models.Abstract
         public SpecialDataModel SpecDataUser = new SpecialDataModel();
         
         public static string addressWS = "ws://192.168.0.105:6001";   
-        public WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
+      
       
         // Устанавливаем соеденение 
         HttpClient client;

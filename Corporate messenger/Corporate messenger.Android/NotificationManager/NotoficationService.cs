@@ -4,6 +4,7 @@ using Android.OS;
 using Android.Widget;
 using Corporate_messenger.Droid.NotificationManager;
 using Corporate_messenger.Models;
+using Corporate_messenger.DB;
 using Corporate_messenger.Models.Chat;
 using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
@@ -15,6 +16,7 @@ using System;
 using System.ComponentModel;
 using System.Timers;
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 [assembly: Xamarin.Forms.Dependency(typeof(startServiceAndroid))]
 [assembly: Xamarin.Forms.Dependency(typeof(GetSocket))]
@@ -102,7 +104,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         public const int ServiceRunningNotifID = 8999;
         WebSocketSharp.WebSocket ws;
         INotificationManager notificationManager;
-
+        UserDataModel user;
 
         public override void OnTaskRemoved(Intent rootIntent)
         {
@@ -110,6 +112,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         }
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
+          
             notificationManager = DependencyService.Get<INotificationManager>();
             notificationManager.NotificationReceived += (sender, eventArgs) =>
             {
@@ -137,6 +140,7 @@ namespace Corporate_messenger.Droid.NotificationManager
             return StartCommandResult.Sticky;
         }
 
+       
         private void Ws_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
             var s = e;
@@ -147,10 +151,10 @@ namespace Corporate_messenger.Droid.NotificationManager
             throw new NotImplementedException();
         }
 
-        SpecialDataModel user = new SpecialDataModel();
-        private void Ws_OnOpen(object sender, EventArgs e)
+        
+        private async void Ws_OnOpen(object sender, EventArgs e)
         {
-           
+            user = await UserDbService.GetUser();
             var message = JsonConvert.SerializeObject(new  { type = "subscribe", sender_id = user.Id, });
             ws.Send(message);
         }
@@ -170,15 +174,15 @@ namespace Corporate_messenger.Droid.NotificationManager
                     DependencyService.Get<IAudioWebSocketCall>().callView.TStart();
                     break;
                 case "400":
-                    DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
+                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
                     DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
-                    DependencyService.Get<IAudio>().StopAudioFile();      
-                    DependencyService.Get<IAudioWebSocketCall>().callView.TStopAsync();
+                    DependencyService.Get<IAudio>().StopAudioFile();
+                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.TStopAsync();
                     
                     break;
                 case "450":
-                    DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
+                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
                     DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();

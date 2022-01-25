@@ -2,6 +2,7 @@
 using Corporate_messenger.Service;
 using Corporate_messenger.ViewModels;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,6 +15,7 @@ namespace Corporate_messenger.Views
       
         public AuthorizationMainPage()
         {
+           
             OnAppearing();
             InitializeComponent();
             Routing.RegisterRoute(nameof(LoginPage),
@@ -30,21 +32,11 @@ namespace Corporate_messenger.Views
         MainPageViewModel main = new MainPageViewModel();
         public ICommand ExecuteLogout => new Command(async () => await GoToAsync("//login"));
 
-        protected override void OnAppearing()
+        protected override  void OnAppearing()
         {
             base.OnAppearing();
-        
-            var token = DependencyService.Get<IFileService>().ReadFile(DependencyService.Get<IFileService>().GetRootPath());
-            var data = token.Split('/');
 
-            if (data[0] != "")
-            {
-                SpecialDataModel special = new SpecialDataModel();
-                special.Token = data[0];
-                special.Id = Int32.Parse(data[1]);
-                main.Name = data[2];
-             
-            }
+           
 
         }
     }

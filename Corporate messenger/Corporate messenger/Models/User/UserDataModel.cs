@@ -6,7 +6,7 @@ using SQLite;
 namespace Corporate_messenger.Models
 {
     
-    class UserDataModel:UserAbstract, INotifyPropertyChanged
+    public class UserDataModel:UserAbstract, INotifyPropertyChanged
     {
         private static string last_login { get; set; }
         private static string created_at { get; set; }
@@ -31,7 +31,7 @@ namespace Corporate_messenger.Models
         /// <summary>
         /// ID пользователя
         /// </summary>
-        [PrimaryKey]
+        [PrimaryKey,Unique]
         [JsonProperty("id")]
         public override int Id
         {
