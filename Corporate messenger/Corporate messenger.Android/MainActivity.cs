@@ -18,13 +18,14 @@ using Java.Util;
 using Android.Content;
 using System.Linq;
 using AndroidX.AppCompat.App;
+using Corporate_messenger.Service.Notification;
 
 namespace Corporate_messenger.Droid
 {
     [Activity(Label = "Corporate_messenger", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize,ScreenOrientation =ScreenOrientation.Portrait )]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-      
+    
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -38,7 +39,7 @@ namespace Corporate_messenger.Droid
                 
                 flag = true;
             }
-           
+  
             LoadApplication(new App(flag));
             //Intent.RemoveExtra()
             flag = false;

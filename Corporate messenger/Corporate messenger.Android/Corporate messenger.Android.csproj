@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <AndroidErrorOnCustomJavaObject>false</AndroidErrorOnCustomJavaObject>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0EB5F6B7-4436-4CBF-9505-5478961BDDC5}</ProjectGuid>
@@ -148,6 +149,10 @@
     <AndroidResource Include="Resources\drawable\createGroupTitle.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\VoipTestXamarin\SDKBind\SDKBind.csproj">
+      <Project>{CC6C3ADA-48D6-4D41-AFEC-A6B3A72C5697}</Project>
+      <Name>SDKBind</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Corporate messenger\Corporate messenger.csproj">
       <Project>{6086ED53-27F7-4EDE-B0C5-D74D9485739B}</Project>
       <Name>Corporate messenger</Name>

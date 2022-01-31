@@ -159,6 +159,7 @@
             </Grid.RowDefinitions>
             <!--Список сообщений-->
             <ListView
+                
                 IsRefreshing="{Binding IsRefreshing}" 
                 RefreshCommand="{Binding UpdateList}"
                 ItemTemplate="{StaticResource chatDataTemplateSelector}"  

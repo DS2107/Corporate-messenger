@@ -101,6 +101,7 @@ namespace Corporate_messenger.ViewModels
                     user = await UserDbService.GetUser();
                     await UserDbService.RemoveUser(user.Id);
                     await ChatListDbService.DeleteAllChat();
+                    await ChatDbService.DeleteAllMessage();
                    await navigation.PushAsync(new LoginPage());
                    // Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
                    // await Shell.Current.GoToAsync("//LoginPage",false);

@@ -1,4 +1,5 @@
 ﻿using Corporate_messenger.Models;
+using Corporate_messenger.Models.Chat;
 using Corporate_messenger.Service;
 using SQLite;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Corporate_messenger.DB
                     return;
 
                 db = new SQLiteAsyncConnection(DependencyService.Get<IFileService>().GetDb());
-
+                
                
             }
             else
@@ -31,6 +32,7 @@ namespace Corporate_messenger.DB
                 db = new SQLiteAsyncConnection(DependencyService.Get<IFileService>().GetDb());
                 await db.CreateTableAsync<UserDataModel>();
                 await db.CreateTableAsync<ChatListModel>();
+                await db.CreateTableAsync<ChatModel>();
             }
                 
 

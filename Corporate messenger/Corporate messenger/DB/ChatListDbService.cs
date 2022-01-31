@@ -15,11 +15,11 @@ namespace Corporate_messenger.DB
     class ChatListDbService
     {
         static SQLiteAsyncConnection db;
-      
 
-        static async Task Init()
+
+        static void Init()
         {
-           
+
 
             if (File.Exists(DependencyService.Get<IFileService>().GetDb()))
             {
@@ -34,13 +34,13 @@ namespace Corporate_messenger.DB
             {
                 DependencyService.Get<IFileService>().CreateDb();
                 db = new SQLiteAsyncConnection(DependencyService.Get<IFileService>().GetDb());
-               
+
             }
         }
 
         public static async Task AddChat(ChatListModel data)
         {
-            await Init();
+            Init();
             ChatListModel chat = data;
 
             await db.InsertAsync(chat);
@@ -48,13 +48,13 @@ namespace Corporate_messenger.DB
 
         public static async Task RemoveChat(int id)
         {
-            await Init();
+            Init();
             await db.DeleteAsync<ChatListModel>(id);
         }
 
         public static async Task<ObservableCollection<ChatListModel>> GetChats()
         {
-            await Init();
+            Init();
             var chats = await db.Table<ChatListModel>().ToListAsync();
             var myObservableCollection = new ObservableCollection<ChatListModel>(chats);
             return myObservableCollection;
@@ -62,7 +62,7 @@ namespace Corporate_messenger.DB
 
         public static async Task UpdateChat(ChatListModel model)
         {
-            await Init();
+            Init();
             var listchat = await db.QueryAsync<ChatListModel>("select * from ChatList where Id = ?", model.Id);
             ChatListModel chat;
             if (listchat != null)
@@ -74,10 +74,20 @@ namespace Corporate_messenger.DB
             }
         
         }
+       static List<ChatListModel> list = new List<ChatListModel>();
+        public static async Task<ChatListModel> GetChatId(ChatListModel model)
+        {
+            Init();
+             list = await db.QueryAsync<ChatListModel>("select * from ChatList where Id = ?", model.Id);
+            var elem = list.FirstOrDefault();
+            return list.FirstOrDefault();
+                        
+
+        }
 
         public static async Task DeleteAllChat()
         {
-            await Init();
+            Init();
             await db.DeleteAllAsync<ChatListModel>();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,7 +23,7 @@ namespace Corporate_messenger.Models.Chat
         private bool isMessageVisible { get; set; }
         private bool isAuidoVisible { get; set; }
         private double maximumSlider { get; set; }
-
+        private int Message_id { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged(string prop = "")
@@ -163,6 +164,24 @@ namespace Corporate_messenger.Models.Chat
             }
         }
 
+        /// <summary>
+        /// ID смс
+        /// </summary>
+        [PrimaryKey]
+        [JsonProperty("message_id")]
+        public int message_id
+        {
+            get { return Message_id; }
+            set
+            {
+                if (Message_id != value)
+                {
+                    Message_id = value;
+                    OnPropertyChanged("message_id");
+                }
+            }
+        }
+
 
         /// <summary>
         /// Время отправленного сообщения
@@ -231,7 +250,10 @@ namespace Corporate_messenger.Models.Chat
                 
                 if (message != value)
                 {
-                    message = value;
+                    if (value == "Голосовое сообщение")
+                        message = value = "";
+                    else
+                        message = value;
                     OnPropertyChanged("Message");
                 }
             }

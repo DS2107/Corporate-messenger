@@ -17,6 +17,7 @@ using System.ComponentModel;
 using System.Timers;
 using Xamarin.Forms;
 using System.Threading.Tasks;
+using Org.Abtollc.Sdk;
 
 [assembly: Xamarin.Forms.Dependency(typeof(startServiceAndroid))]
 [assembly: Xamarin.Forms.Dependency(typeof(GetSocket))]
@@ -67,6 +68,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
         public bool LoginPosition { get; set ; }
+        public AbtoPhone abtoPhone { get ; set; }
 
         public void MyToast(string message)
         {
@@ -78,6 +80,8 @@ namespace Corporate_messenger.Droid.NotificationManager
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
                 context.StartForegroundService(intent);
+
+
                 DependencyService.Get<IForegroundService>().SocketFlag = true;
             }
             else
@@ -125,6 +129,7 @@ namespace Corporate_messenger.Droid.NotificationManager
             {
                 GetSocket socket = new GetSocket();
                 ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+                
                 ws.OnMessage += Ws_OnMessage;
                 ws.OnOpen += Ws_OnOpen;
                 ws.OnClose += Ws_OnClose;
@@ -234,29 +239,37 @@ namespace Corporate_messenger.Droid.NotificationManager
                 }
             }
         }
-
+        bool flag = false;
         private void TimerStartService()
         {
             Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             {
+               if(ws!=null)
+                     flag = ws.Ping();
                
-                    bool flag = ws.Ping();
-                    if (!flag == true)
+                    if (!flag)
                     {
-                        if (!DependencyService.Get<IForegroundService>().LoginPosition)
-                        {
-                            try
-                            {
+                        try {
+                            if(ws!=null)
                                 ws.ConnectAsync();
-                            }
-                            catch (Exception ex)
-                            {
+                          
+                         }
+                        catch (Exception ex)
+                        {
+                        if (ex.Message == "A series of reconnecting has failed.")
+                        {// refusal of ws object to reconnect; create new ws-object
 
-                            }
+                            ws.Close();
 
+                            ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+                            ws.OnOpen += Ws_OnOpen;
+                            ws.OnMessage += Ws_OnMessage;
+                            ws.OnError += Ws_OnError;
+                            ws.OnClose += Ws_OnClose;
+                            DependencyService.Get<ISocket>().MyWebSocket = ws;
                         }
-
-
+                    }
+                        
                     }
                 
               

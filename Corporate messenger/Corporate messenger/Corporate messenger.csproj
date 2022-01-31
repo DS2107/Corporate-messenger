@@ -6,12 +6,14 @@
     <ApplicationIcon />
     <OutputType>Library</OutputType>
     <StartupObject />
+      <AndroidErrorOnCustomJavaObject>false</AndroidErrorOnCustomJavaObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  <AndroidErrorOnCustomJavaObject>false</AndroidErrorOnCustomJavaObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +34,10 @@
     <PackageReference Include="TinyAccountManager" Version="1.0.9" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2244" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\VoipTestXamarin\SDKBind\SDKBind.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -148,6 +148,7 @@ namespace Corporate_messenger.ViewModels
                          
                             foreach (var item in buffer)
                             {
+                              
                                 foreach(var EditItem in ChatList)
                                 {
                                     if(EditItem.Id == item.Id && EditItem.Updated_at != item.Updated_at)
@@ -157,9 +158,11 @@ namespace Corporate_messenger.ViewModels
                                         EditItem.Updated_at = item.Updated_at;
                                         _ = ChatListDbService.UpdateChat(EditItem);
                                     }
-                                        
+                                   
+
                                 }
-                               
+                                Task.Run(() => AddNewChatTosql(item)).Wait();
+
                             }
                         }
                             IsRefreshing = false;
@@ -171,6 +174,17 @@ namespace Corporate_messenger.ViewModels
            
          }
        
+
+        private async void AddNewChatTosql(ChatListModel item)
+        {
+            var elem = await ChatListDbService.GetChatId(item);
+            if (elem == null)
+            {
+                await  ChatListDbService.AddChat(item);
+                ChatList.Add(item);
+
+            }
+        }
         ObservableCollection<ChatListModel> chats ;
         public async Task GetSqlChats()
         {

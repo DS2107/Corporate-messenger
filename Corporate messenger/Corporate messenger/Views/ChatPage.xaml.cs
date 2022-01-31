@@ -1,4 +1,6 @@
-﻿using Corporate_messenger.Service;
+﻿using Corporate_messenger.DB;
+using Corporate_messenger.Models;
+using Corporate_messenger.Service;
 using Corporate_messenger.Service.Notification;
 using Corporate_messenger.ViewModels;
 using Newtonsoft.Json;
@@ -26,6 +28,7 @@ namespace Corporate_messenger.Views
             Title = title;
             send_message.IsVisible = false;
             mic_message.IsVisible = true;
+            
             MessagingCenter.Subscribe<ChatViewModel>(this, "Scrol", (sender) =>
             {
                 object d = 0;
@@ -45,9 +48,12 @@ namespace Corporate_messenger.Views
         {
             base.OnAppearing();
             Shell.SetTabBarIsVisible(this, false);
+            var user = await UserDbService.GetUser();
+            //await chat.GetSql(id_room);
+           
             if (chat.Next_page_url == null)
             {
-                chat.contentJobjects = await chat.GetInfo_HttpMethod_Get_Async("/api/chat/" + id_room + "/" + chat.SpecDataUser.Id + "/dialog");
+                chat.contentJobjects = await chat.GetInfo_HttpMethod_Get_Async("/api/chat/" + id_room + "/" + user.Id + "/dialog");
                 if (chat.contentJobjects != null)
                 {
                     chat.ThreadMessage = new Thread(new ThreadStart(chat.SendToken_GetChats));
@@ -58,7 +64,7 @@ namespace Corporate_messenger.Views
                     DependencyService.Get<IFileService>().MyToast("Отсутствует соеденение с сервером, проверьте подключение к интернету и потворите попытку");
                 }
             }
-           
+
 
         }
 
@@ -104,7 +110,8 @@ namespace Corporate_messenger.Views
             Navigation.PushAsync(new CallPage(true));
             try
             {
-                chat.ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "100", sender_id = chat.SpecDataUser.Id, receiver_id = chat.SpecDataUser.receiverId }));
+                Task.Run(() => this.GetUser()).Wait();
+                chat.ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "100", sender_id = User.Id, receiver_id = chat.SpecDataUser.receiverId }));
                 DependencyService.Get<IAudio>().PlayAudioFile("gudok.mp3", Android.Media.Stream.VoiceCall);
                 DependencyService.Get<IForegroundService>().AudioCalls_Init = true;
                     
@@ -114,6 +121,7 @@ namespace Corporate_messenger.Views
             {
                 var b = ex;
             }
+
             /* if (!BackColor_Flag)
              {
                  mic_message.IsVisible = false;
@@ -134,6 +142,12 @@ namespace Corporate_messenger.Views
              }*/
 
 
+        }
+
+        UserDataModel User;
+        private async void GetUser()
+        {
+            User = await UserDbService.GetUser();
         }
 
         private void MessageEditor_Completed(object sender, EventArgs e)
