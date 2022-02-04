@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-             x:Class="Corporate_messenger.Views.CallPage" Title="Звонок"  BackgroundColor="White" Shell.BackgroundColor="#04283C" Shell.NavBarIsVisible="False">
+             x:Class="Corporate_messenger.Views.CallPage" Title="Звонок"  BackgroundColor="White" Shell.BackgroundColor="#04283C" Shell.NavBarIsVisible="False" >
     
     <Grid >
         <Grid.RowDefinitions>

@@ -8,8 +8,13 @@ namespace Corporate_messenger.Service
 {
     public interface IAudioUDPSocketCall
     {
-        void InitUDP(int usr_id, int rec_id);
-        public Task StartAudioUDPCallAsync();
+        public void ConnectionToServer();
+        public string GetServerIp();
+        public void StartReceive();
+        public void SendMessage();
+        public void ReceiveMessage();
+        void InitUDP();
+       
 
         public void StopAudioUDPCall();
 

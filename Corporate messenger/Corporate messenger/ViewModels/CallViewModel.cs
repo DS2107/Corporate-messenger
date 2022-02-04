@@ -260,12 +260,13 @@ namespace Corporate_messenger.ViewModels
                     {
                         ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",TimeCall }));
                         DependencyService.Get<IAudioWebSocketCall>().FlagRaised = false;
-                       
+                        DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
                     }
                     else
                     {
                         TimeCall = "Вызов Завершен";
                         ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "450" }));
+                        DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
                     }
                      
                     if (FlagInitCall)
@@ -318,12 +319,34 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async (object obj) => {
                     ws = DependencyService.Get<ISocket>().MyWebSocket;
                     var user = await UserDbService.GetUser();
-                    ws.Send(JsonConvert.SerializeObject(new { type = "init_call", sender_id = user.Id,status ="200",receiver_id =1, DependencyService.Get<IForegroundService>().call_id}));
+                    var vrem = DependencyService.Get<IForegroundService>().receiver_id;
+
+                    DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
+                    DependencyService.Get<IAudioUDPSocketCall>().GetServerIp();
+
+
+                    ws.Send(JsonConvert.SerializeObject(new
+                    {
+                        type = "init_call",
+                        sender_id = user.Id,
+                        status = "200",
+                        receiver_id = DependencyService.Get<IForegroundService>().receiver_id,
+                        call_address = DependencyService.Get<IAudioUDPSocketCall>().GetServerIp(),
+                        call_id = DependencyService.Get<IForegroundService>().call_id
+                    })) ;
+
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                    
-                     DependencyService.Get<IAudio>().StopAudioFile();
-                    DependencyService.Get<IAudioWebSocketCall>().FlagRaised = true;
-                    DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
+                    DependencyService.Get<IAudio>().StopAudioFile();
+                    DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
+                    DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
+                   
+                    DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
+              
+
+                    //DependencyService.Get<IAudioWebSocketCall>().FlagRaised = true;
+                    //DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
+
                     //  ColorBTN = Color.Red;
                     VisibleButtonStart = false;
                     VisibleButtonEnd = false;

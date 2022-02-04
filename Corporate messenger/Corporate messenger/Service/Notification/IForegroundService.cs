@@ -10,7 +10,7 @@ namespace Corporate_messenger.Service.Notification
         public void StartService();
         public void StopService();
 
-      
+        public int receiver_id { get; set; }
         public void MyToast(string message);
         public bool AudioCalls_Init { get; set; }
         public int call_id { get; set; }

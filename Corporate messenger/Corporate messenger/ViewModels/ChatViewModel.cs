@@ -18,12 +18,17 @@ using System.Threading;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.DB;
 using System.Linq;
+using Sockets.Plugin;
+using System.Text;
+using System.Net.Sockets;
+using System.Net;
 
 namespace Corporate_messenger.ViewModels
 {
-
+   
     class ChatViewModel: ApiAbstract, INotifyPropertyChanged
     {
+     
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
@@ -95,6 +100,7 @@ namespace Corporate_messenger.ViewModels
         private bool isRefreshing = false;
         UserDataModel user;
         public WebSocketSharp.WebSocket ws = new WebSocketSharp.WebSocket(addressWS);
+        UdpSocketClient client;
         /// <summary>
         /// Конструктор с параметрами 
         /// </summary>
@@ -108,18 +114,20 @@ namespace Corporate_messenger.ViewModels
             chat.Sender_id = SpecDataUser.Id;
             chat.SourceImage = "play.png";
             SpecDataUser.Input_chat = chat.Chat_room_id;
-          
-           
+
            
         }
-        
-       
+
+      
+
+
         /// <summary>
         /// Отправить сообщение
         /// </summary>
         public  ICommand  SendMessage{
             get{
                 return new Command(async (object obj) =>{
+              
                     if (Input_message != null){
                         byte[] audio = null;
                         user = await UserDbService.GetUser();
@@ -204,6 +212,8 @@ namespace Corporate_messenger.ViewModels
         {
             try
             {
+               
+               
                 ws = DependencyService.Get<ISocket>().MyWebSocket;
                 ws.OnMessage += WsOnMEssage;
                 var message = JsonConvert.SerializeObject(new {

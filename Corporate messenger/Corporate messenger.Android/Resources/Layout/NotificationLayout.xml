@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="200px"
+	android:background="#F0F0F0"
+	android:minWidth="25px"
+	android:minHeight="25px">
+
+	<Button
+		android:id="@+id/button_accept_call"
+		android:layout_width="130px"
+		android:layout_height="70px"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
+		android:text="Accept"
+		android:background="#ff7ccf17" 
+		 />
+
+
+</RelativeLayout>

@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
+using Android.Widget;
 using AndroidX.Core.App;
 using Corporate_messenger.Service.Notification;
 using System;
@@ -13,8 +14,8 @@ namespace Corporate_messenger.Droid.NotificationManager
 {
     public class AndroidNotificationManager : INotificationManager
     {
-        const string channelId = "default";
-        const string channelName = "Default";
+        const string channelId = "Message";
+        const string channelName = "MessageNotification";
         const string channelDescription = "The default channel for notifications.";
 
         public static  string TitleKey = "title";
@@ -87,27 +88,38 @@ namespace Corporate_messenger.Droid.NotificationManager
             {
                 intent.PutExtra(TitleKey, "message");
             }
-                
+
             // intent.PutExtra(MessageKey, message);
 
+            var view = new RemoteViews("com.companyname.corporate_messenger", Resource.Layout.NotificationLayout);
+            view.SetTextViewText(Resource.Id.title, "Title Text");
+            view.SetImageViewResource(Resource.Id.image, Resource.Drawable.kot);
 
             PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.UpdateCurrent);
+            Notification s = new Notification();
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
-                .SetAutoCancel(true)
-                
-                .SetPriority((int)NotificationPriority.High)
-                .SetVisibility((int)NotificationVisibility.Public)
-                .SetContentIntent(pendingIntent)
-                .SetContentTitle(title)
-                .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.kot))
+            var notification = new NotificationCompat.Builder(AndroidApp.Context, channelId)
                 .SetSmallIcon(Resource.Drawable.MyChat)
-                
-                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+                .SetAutoCancel(true)
+                .SetContentIntent(pendingIntent)
+                .SetPriority((int)NotificationPriority.Max)
+               .SetContent(view)
+                .SetContentTitle("Incoming call")
+                .SetFullScreenIntent(pendingIntent, true)
+            // Notification text, usually the caller’s name
+            .SetOngoing(true)
+            .SetContentText("James Smith");
 
-            Notification notification = builder.Build();
-            manager.Notify(messageId++, notification);
+
+
+
+
+
+
+           // Notification notification = builder.Build();
+
+
+            manager.Notify(messageId++, notification.Build());
         }
 
         void CreateNotificationChannel()
@@ -117,8 +129,10 @@ namespace Corporate_messenger.Droid.NotificationManager
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
                 var channelNameJava = new Java.Lang.String(channelName);
-                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
+                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Max)
                 {
+                    LockscreenVisibility = NotificationVisibility.Public,
+                    Importance = NotificationImportance.Max,
                     Description = channelDescription
                 };
                 manager.CreateNotificationChannel(channel);

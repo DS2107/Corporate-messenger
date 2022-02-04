@@ -17,7 +17,8 @@ using System.ComponentModel;
 using System.Timers;
 using Xamarin.Forms;
 using System.Threading.Tasks;
-using Org.Abtollc.Sdk;
+using Plugin.LocalNotification;
+
 
 [assembly: Xamarin.Forms.Dependency(typeof(startServiceAndroid))]
 [assembly: Xamarin.Forms.Dependency(typeof(GetSocket))]
@@ -68,7 +69,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
         public bool LoginPosition { get; set ; }
-        public AbtoPhone abtoPhone { get ; set; }
+        public int receiver_id { get ; set ; }
 
         public void MyToast(string message)
         {
@@ -99,28 +100,18 @@ namespace Corporate_messenger.Droid.NotificationManager
     [Service(Exported = true)]
     public class NotoficationService : Android.App.Service
     {
-        CallViewModel callView = new CallViewModel();
-        public override IBinder OnBind(Intent intent)
-        {
-            return null;
-        }
-
-        public const int ServiceRunningNotifID = 8999;
+        public const int ServiceRunningNotifID = 9001;
         WebSocketSharp.WebSocket ws;
         INotificationManager notificationManager;
         UserDataModel user;
-
-        public override void OnTaskRemoved(Intent rootIntent)
-        {
-            base.OnTaskRemoved(rootIntent);
-        }
+      
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
           
             notificationManager = DependencyService.Get<INotificationManager>();
             notificationManager.NotificationReceived += (sender, eventArgs) =>
             {
-                var evtData = (NotificationEventArgs)eventArgs;
+                var evtData = (Service.Notification.NotificationEventArgs)eventArgs;
                 ShowNotification(evtData.Title, evtData.Message);
             };
             Notification notif = DependencyService.Get<IStaticNotification>().ReturnNotif();
@@ -139,9 +130,6 @@ namespace Corporate_messenger.Droid.NotificationManager
                 TimerStartService();
 
             }
-           
-           
-
             return StartCommandResult.Sticky;
         }
 
@@ -172,18 +160,19 @@ namespace Corporate_messenger.Droid.NotificationManager
             switch (type_status) {
 
                 case "200":
-                    DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
+                   
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();
-                    DependencyService.Get<IAudioWebSocketCall>().FlagRaised = true;
-                    DependencyService.Get<IAudioWebSocketCall>().callView.TStart();
+                    DependencyService.Get<IAudioUDPSocketCall>().InitUDP();                 
+                    DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
+                    DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
                     break;
                 case "400":
-                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
-                    DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
+                    DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();           
                     DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();
-                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.TStopAsync();
+              
                     
                     break;
                 case "450":
@@ -196,19 +185,22 @@ namespace Corporate_messenger.Droid.NotificationManager
                     DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall((byte[])Json_obj.voice_audio);
                     break;
                 case "100": // 100
+                    DependencyService.Get<IForegroundService>().receiver_id = (int)Json_obj.sender_id;
                     DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
-                    notificationManager.SendNotification("Звонок", "Звонок");
+                   notificationManager.SendNotification("Звонок", "Звонок");
+                   // LocalNotificationBuilder(e);
                     DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
                     break;
                 case "message":
-                    if (DependencyService.Get<IForegroundService>().chat_room_id != (int)Json_obj.chat_room_id)                  
+                    if (DependencyService.Get<IForegroundService>().chat_room_id != (int)Json_obj.chat_room_id)
                         NotificationMessage(e);
+                      //  LocalNotificationBuilder(e);
                     break;
             }
        
         }
        
-        CallViewModel CallView = new CallViewModel();
+        
         
         private void NotificationMessage(WebSocketSharp.MessageEventArgs args)
         {
@@ -239,6 +231,69 @@ namespace Corporate_messenger.Droid.NotificationManager
                 }
             }
         }
+        int Message_id = 0;
+        private void LocalNotificationBuilder(WebSocketSharp.MessageEventArgs args)
+        {
+
+            dynamic Json_obj = JObject.Parse(args.Data);
+            long[] pattern = { 0, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500 };
+            if ((string)Json_obj.type == "message")
+            {
+                if ((int)Json_obj.sender_id != user.Id)
+                {
+                    var notification = new NotificationRequest
+                    {
+                        BadgeNumber = 1,
+                        Description = (string)Json_obj.message,
+                        Title = (string)Json_obj.username,
+                        NotificationId = Message_id,
+
+                        CategoryType = NotificationCategoryType.Alarm,
+                        Silent = true,
+                        Android = new Plugin.LocalNotification.AndroidOption.AndroidOptions {
+                            AlarmType = Plugin.LocalNotification.AndroidOption.AndroidAlarmType.ElapsedRealtimeWakeup,
+                            Priority = Plugin.LocalNotification.NotificationPriority.Max,
+                            AutoCancel = false,
+                            
+                            IsProgressBarIndeterminate = true,
+                            VibrationPattern = pattern,
+                            Group = "Message",
+                            IsGroupSummary = true,
+                            ChannelId = "Message"
+                            
+
+                        }
+
+                    };
+                    NotificationCenter.Current.Show(notification);
+                }
+            }
+            if((string)Json_obj.type == "init_call")
+            {
+                if ((int)Json_obj.sender_id != user.Id)
+                {
+                    var notification = new NotificationRequest
+                    {
+                        BadgeNumber = 1,
+                        Description = "Звонок",
+                        Title = (string)Json_obj.username,
+                        NotificationId = 1337,
+                        Android = new Plugin.LocalNotification.AndroidOption.AndroidOptions
+                        {
+                            AlarmType = Plugin.LocalNotification.AndroidOption.AndroidAlarmType.Rtc,
+
+                        }
+
+                    };
+                    NotificationCenter.Current.Show(notification);
+                }
+            }
+
+           
+           
+               
+        }
+
         bool flag = false;
         private void TimerStartService()
         {
@@ -274,8 +329,6 @@ namespace Corporate_messenger.Droid.NotificationManager
                 
               
                     return true;
-                
-
             });
         }
 
@@ -300,6 +353,16 @@ namespace Corporate_messenger.Droid.NotificationManager
         public override bool StopService(Intent name)
         {
             return base.StopService(name);
+        }
+
+        public override IBinder OnBind(Intent intent)
+        {
+            return null;
+        }
+
+        public override void OnTaskRemoved(Intent rootIntent)
+        {
+            base.OnTaskRemoved(rootIntent);
         }
     }
 

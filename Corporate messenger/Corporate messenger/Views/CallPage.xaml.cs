@@ -22,8 +22,9 @@ namespace Corporate_messenger.Views
         {
             InitializeComponent();
             BindingContext = new CallViewModel(Navigation,init_call);
-          //  CallClass call = new CallClass();
-          //  call.LessPort();
+            Shell.SetTabBarIsVisible(this, false);
+            //  CallClass call = new CallClass();
+            //  call.LessPort();
 
         }
 

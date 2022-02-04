@@ -25,6 +25,7 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
+    <PackageReference Include="Plugin.LocalNotification" Version="9.1.3" />
     <PackageReference Include="rda.SocketsForPCL" Version="2.0.2" />
     <PackageReference Include="SIPSorcery" Version="5.2.3" />
     <PackageReference Include="SIPSorcery.WebSocketSharp" Version="0.0.1" />
@@ -34,10 +35,6 @@
     <PackageReference Include="TinyAccountManager" Version="1.0.9" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2244" />
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\VoipTestXamarin\SDKBind\SDKBind.csproj" />
   </ItemGroup>
 
   <ItemGroup>
