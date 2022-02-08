@@ -34,6 +34,7 @@ namespace Corporate_messenger.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             bool flag = false;
             int noteId = Intent.GetIntExtra("title", 0);
+          
             if (Intent.HasExtra("init_call"))
             {
                 
@@ -43,19 +44,24 @@ namespace Corporate_messenger.Droid
             LoadApplication(new App(flag));
             //Intent.RemoveExtra()
             flag = false;
-           /* TinyAccountManager.Droid.AccountManager.Initialize();
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
-            {
-                
-                Window.SetStatusBarColor(Android.Graphics.Color.Black);
-            }
-          */
+            /* TinyAccountManager.Droid.AccountManager.Initialize();
+             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+             {
 
-          
+                 Window.SetStatusBarColor(Android.Graphics.Color.Black);
+             }
+           */
+           // SetContentView(Resource.Layout.NotificationLayoutCall);
            
 
 
+
+
+
         }
+
+      
+
         private static Context context = global::Android.App.Application.Context;
   
 

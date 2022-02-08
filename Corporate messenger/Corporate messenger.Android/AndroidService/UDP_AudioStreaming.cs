@@ -1,6 +1,7 @@
 ﻿using Android.Media;
 using Corporate_messenger.DB;
 using Corporate_messenger.Droid.AndroidService;
+using Corporate_messenger.Models;
 using Corporate_messenger.Service;
 using Corporate_messenger.ViewModels;
 using Sockets.Plugin;
@@ -60,11 +61,11 @@ namespace Corporate_messenger.Droid.AndroidService
         {
             StartStopAudioStream_Flag = true;
             byte[] buffer = new byte[Buffer_Size];
-            string message = "Hello world!";
+
+            Task.Run(() => this.GetUserAsync()).Wait();
            
-            var User = UserDbService.GetUser();
             int id = User.Id;
-            byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes("Sender_id:" + id.ToString() +";"); ;
+            byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes("sender_id:" + id.ToString() +";"); ;
             AudioRecord.StartRecording();
             try
             {
@@ -72,7 +73,7 @@ namespace Corporate_messenger.Droid.AndroidService
                 {
 
                     AudioRecord.Read(buffer, 0, Buffer_Size);
-                    //sender.Send(data, data.Length);
+                    sender.Send(data, data.Length);
                     sender.Send(buffer, buffer.Length); // отправка
 
 
@@ -87,6 +88,12 @@ namespace Corporate_messenger.Droid.AndroidService
                 sender.Close();
             }
         }
+        UserDataModel User;
+        private async Task GetUserAsync()
+        {
+             User = await UserDbService.GetUser();
+        }
+
         public  void ReceiveMessage()
         {
            

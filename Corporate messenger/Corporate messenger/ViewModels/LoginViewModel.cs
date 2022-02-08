@@ -69,7 +69,7 @@ namespace Corporate_messenger.ViewModels
 
         private  void Autorize()
         {
-            Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
+            Application.Current.MainPage = DependencyService.Get<IFileService>().MyMainPage;
 
         }
 
@@ -179,9 +179,9 @@ namespace Corporate_messenger.ViewModels
 
                 if (status != false)
                 {
-                    if (DependencyService.Get<IFileService>().MyProperty != null)
+                    if (DependencyService.Get<IFileService>().MyMainPage != null)
                     {
-                        Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
+                        Application.Current.MainPage = DependencyService.Get<IFileService>().MyMainPage;
                         await Shell.Current.GoToAsync("//chats_list");
                     }
                     else

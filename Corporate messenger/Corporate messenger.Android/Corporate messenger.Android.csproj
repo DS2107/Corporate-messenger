@@ -106,10 +106,12 @@
     <Compile Include="AndroidService\CloseApplication.cs" />
     <Compile Include="AndroidService\FileService.cs" />
     <Compile Include="AndroidService\UDP_AudioStreaming.cs" />
+    <Compile Include="Broadcast\AcceptClickReceiver.cs" />
+    <Compile Include="Broadcast\CancelReceiver.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="NotificationManager\AlarmHandler.cs" />
-    <Compile Include="NotificationManager\AndroidNotificationManager.cs" />
+    <Compile Include="NotificationManager\NotificationMessage.cs" />
     <Compile Include="NotificationManager\IStaticNotification.cs" />
+    <Compile Include="NotificationManager\NotificationCall.cs" />
     <Compile Include="NotificationManager\NotificationHelper.cs" />
     <Compile Include="NotificationManager\NotoficationService.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
@@ -300,6 +302,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Layout\NotificationLayout.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Layout\NotificationLayoutCall.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

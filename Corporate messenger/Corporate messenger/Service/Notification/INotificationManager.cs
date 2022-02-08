@@ -9,7 +9,7 @@ namespace Corporate_messenger.Service.Notification
         event EventHandler NotificationReceived;
         void Initialize();
 
-        void SendNotification(string title, string message, DateTime? notifyTime = null);
+        void SendNotification(string title, string message);
 
         void ReceiveNotification(string title, string message);
     }

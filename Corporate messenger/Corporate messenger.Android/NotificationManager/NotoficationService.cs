@@ -63,13 +63,14 @@ namespace Corporate_messenger.Droid.NotificationManager
     {
 
         private static Context context = global::Android.App.Application.Context;
-
+       
         public bool AudioCalls_Init { get; set; }
         public bool SocketFlag { get; set; }
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
         public bool LoginPosition { get; set ; }
         public int receiver_id { get ; set ; }
+        public Android.App.NotificationManager manager { get ; set; }
 
         public void MyToast(string message)
         {
@@ -102,14 +103,21 @@ namespace Corporate_messenger.Droid.NotificationManager
     {
         public const int ServiceRunningNotifID = 9001;
         WebSocketSharp.WebSocket ws;
-        INotificationManager notificationManager;
+        INotificationManager NotificationMessageManager;
+        NotificationCall NotificationCalllManager = new NotificationCall();
         UserDataModel user;
       
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
           
-            notificationManager = DependencyService.Get<INotificationManager>();
-            notificationManager.NotificationReceived += (sender, eventArgs) =>
+            NotificationMessageManager = (NotificationMessage)DependencyService.Get<INotificationManager>();
+            
+            NotificationMessageManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (Service.Notification.NotificationEventArgs)eventArgs;
+                ShowNotification(evtData.Title, evtData.Message);
+            };
+            NotificationCalllManager.NotificationReceived += (sender, eventArgs) =>
             {
                 var evtData = (Service.Notification.NotificationEventArgs)eventArgs;
                 ShowNotification(evtData.Title, evtData.Message);
@@ -187,7 +195,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                 case "100": // 100
                     DependencyService.Get<IForegroundService>().receiver_id = (int)Json_obj.sender_id;
                     DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
-                   notificationManager.SendNotification("Звонок", "Звонок");
+                    NotificationCalllManager.SendNotification("Звонок", (string)Json_obj.username);
                    // LocalNotificationBuilder(e);
                     DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
                     break;
@@ -217,7 +225,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                     new_message.SourceImage = "play.png";
                     new_message.ValueSlider = 1;
 
-                    notificationManager.SendNotification((string)Json_obj.username, new_message.Message);
+                    NotificationMessageManager.SendNotification((string)Json_obj.username, new_message.Message);
                 }
                 else
                 {
@@ -226,7 +234,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                     new_message.IsAuidoVisible = true;
                     new_message.IsMessageVisible = false;
                     new_message.MaximumSlider = 1;
-                    notificationManager.SendNotification("Вам сообщение", "Голосовое");
+                    NotificationMessageManager.SendNotification("Вам сообщение", "Голосовое");
 
                 }
             }

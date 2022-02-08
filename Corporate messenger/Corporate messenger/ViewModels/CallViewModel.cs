@@ -340,7 +340,7 @@ namespace Corporate_messenger.ViewModels
                     DependencyService.Get<IAudio>().StopAudioFile();
                     DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
                     DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
-                   
+                
                     DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
               
 

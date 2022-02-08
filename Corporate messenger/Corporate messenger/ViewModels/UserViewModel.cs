@@ -103,7 +103,7 @@ namespace Corporate_messenger.ViewModels
                     await ChatListDbService.DeleteAllChat();
                     await ChatDbService.DeleteAllMessage();
                    await navigation.PushAsync(new LoginPage());
-                   // Application.Current.MainPage = DependencyService.Get<IFileService>().MyProperty;
+                   // Application.Current.MainPage = DependencyService.Get<IFileService>().MyMainPage;
                    // await Shell.Current.GoToAsync("//LoginPage",false);
 
                 });

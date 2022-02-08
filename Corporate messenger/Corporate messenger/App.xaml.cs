@@ -28,7 +28,7 @@ namespace Corporate_messenger
                 if (MyUser != null)
                 {
                     MainPage = new AuthorizationMainPage();
-                    DependencyService.Get<IFileService>().MyProperty = MainPage;
+                    DependencyService.Get<IFileService>().MyMainPage = MainPage;
                     _ = Shell.Current.GoToAsync("//chats_list");
                 }
                 else

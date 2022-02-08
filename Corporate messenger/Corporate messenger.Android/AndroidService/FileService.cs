@@ -12,7 +12,7 @@ namespace Corporate_messenger.Droid
     class FileService : IFileService
     {
         public bool flag { get ; set; }
-        public Xamarin.Forms.Page MyProperty { get ; set ; }
+        public Xamarin.Forms.Page MyMainPage { get ; set ; }
 
         public string GetRootPath()
         {

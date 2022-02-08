@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="250dp"
+	android:background="#F0F0F0"
+	android:minHeight="250dp"
+	>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Звонок от User 1"
+				android:textSize="20dp"
+				android:layout_centerHorizontal="true"
+				 android:id="@+id/title_user"
+				/>
+			
+
+			 <Button
+				android:id="@+id/button_accept_call"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Ответить"
+				android:background="#30D158"
+				android:textColor="#ffffffff"
+				android:layout_marginRight="20dp"
+				android:layout_centerHorizontal="true"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
+				android:layout_marginBottom="10dp"
+				 />
+			<Button
+				android:id="@+id/button_stop_call"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Сбросить"
+				android:background="#FF453A"
+				android:textColor="#ffffffff"
+				android:layout_marginLeft="20dp"
+				android:layout_marginBottom="10dp"
+				android:layout_alignParentLeft="true"
+				android:layout_centerHorizontal="true"
+				android:layout_alignParentBottom="true"
+		
+				 />
+	</RelativeLayout>
+		
+	
+
+	
+	
+
+
+
+
+
+

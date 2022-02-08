@@ -3,20 +3,39 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="200px"
+	android:layout_height="wrap_content"
 	android:background="#F0F0F0"
 	android:minWidth="25px"
 	android:minHeight="25px">
 
-	<Button
-		android:id="@+id/button_accept_call"
-		android:layout_width="130px"
-		android:layout_height="70px"
-		android:layout_centerHorizontal="true"
-		android:layout_alignParentBottom="true"
-		android:text="Accept"
-		android:background="#ff7ccf17" 
-		 />
+	
+		
+		>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="User 1"
+			android:layout_marginLeft="40px"
+			android:layout_marginTop="15px"
+			android:textSize="20sp"
+			/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Сообщение пользователя котор.."
+		android:layout_marginLeft="40px"
+		android:layout_marginTop="40dp"
+		android:textSize="15sp"
+			/>
+
+		<ImageView
+			android:layout_width="62dp"
+			android:layout_height="62dp"
+			android:src="@drawable/kot"
+			android:layout_alignParentRight="true"
+			/>
+
+	</RelativeLayout>
 
 
-</RelativeLayout>

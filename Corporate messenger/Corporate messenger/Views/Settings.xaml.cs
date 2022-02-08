@@ -28,11 +28,8 @@ namespace Corporate_messenger.Views
         }
 
         private void Button_Clicked(object sender, EventArgs e)
-        {
-            notificationNumber++;
-            string title = "Chat1";
-            string message = "hi";
-            notificationManager.SendNotification(title, message, DateTime.Now.AddSeconds(10));
+        { 
+
         }
 
         private void Button_Clicked_1(object sender, EventArgs e)

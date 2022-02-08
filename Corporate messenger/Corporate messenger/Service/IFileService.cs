@@ -8,7 +8,7 @@ namespace Corporate_messenger.Service
 {
     public interface IFileService
     {
-        public Page MyProperty { get; set; }
+        public Page MyMainPage { get; set; }
 
         public string GetPath(string name);
         public bool flag { get; set; }
