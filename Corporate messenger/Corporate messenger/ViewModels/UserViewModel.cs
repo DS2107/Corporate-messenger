@@ -2,6 +2,7 @@
 using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Views;
 using System;
 using System.Collections.Generic;
@@ -98,13 +99,15 @@ namespace Corporate_messenger.ViewModels
             {
                 return new Command(async (object obj) =>
                 {
+                    // Чистим Бд
                     user = await UserDbService.GetUser();
                     await UserDbService.RemoveUser(user.Id);
                     await ChatListDbService.DeleteAllChat();
                     await ChatDbService.DeleteAllMessage();
-                   await navigation.PushAsync(new LoginPage());
-                   // Application.Current.MainPage = DependencyService.Get<IFileService>().MyMainPage;
-                   // await Shell.Current.GoToAsync("//LoginPage",false);
+                    // Остановка сервиса 
+                    DependencyService.Get<IForegroundService>().StopService();
+                    Application.Current.MainPage = new LoginPage();
+                
 
                 });
             }

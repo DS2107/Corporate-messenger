@@ -63,7 +63,7 @@ namespace Corporate_messenger.Droid.NotificationManager
     {
 
         private static Context context = global::Android.App.Application.Context;
-       
+       public bool Flag_On_Off_Service { get; set; }
         public bool AudioCalls_Init { get; set; }
         public bool SocketFlag { get; set; }
         public int call_id { get; set; }
@@ -82,19 +82,20 @@ namespace Corporate_messenger.Droid.NotificationManager
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
                 context.StartForegroundService(intent);
-
-
-                DependencyService.Get<IForegroundService>().SocketFlag = true;
-            }
+                Flag_On_Off_Service = true;
+    }
             else
             {
                 context.StartService(intent);
+                Flag_On_Off_Service = true;
             }
         }
 
         public void StopService()
         {
             var intent = new Intent(context, typeof(NotoficationService));
+            Flag_On_Off_Service = false;
+            DependencyService.Get<ISocket>().MyWebSocket.CloseAsync();
             context.StopService(intent);
         }
     }
@@ -132,10 +133,11 @@ namespace Corporate_messenger.Droid.NotificationManager
                 ws.OnMessage += Ws_OnMessage;
                 ws.OnOpen += Ws_OnOpen;
                 ws.OnClose += Ws_OnClose;
-                ws.OnError += Ws_OnError;            
+                ws.OnError += Ws_OnError;
+                ws.Connect();
                 socket.MyWebSocket = ws;
                
-                TimerStartService();
+               
 
             }
             return StartCommandResult.Sticky;
@@ -156,8 +158,12 @@ namespace Corporate_messenger.Droid.NotificationManager
         private async void Ws_OnOpen(object sender, EventArgs e)
         {
             user = await UserDbService.GetUser();
-            var message = JsonConvert.SerializeObject(new  { type = "subscribe", sender_id = user.Id, });
-            ws.Send(message);
+            if (user != null)
+            {
+                var message = JsonConvert.SerializeObject(new { type = "subscribe", sender_id = user.Id, });
+                ws.Send(message);
+            }
+         
         }
 
         private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
@@ -303,42 +309,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         }
 
         bool flag = false;
-        private void TimerStartService()
-        {
-            Device.StartTimer(TimeSpan.FromSeconds(2), () =>
-            {
-               if(ws!=null)
-                     flag = ws.Ping();
-               
-                    if (!flag)
-                    {
-                        try {
-                            if(ws!=null)
-                                ws.ConnectAsync();
-                          
-                         }
-                        catch (Exception ex)
-                        {
-                        if (ex.Message == "A series of reconnecting has failed.")
-                        {// refusal of ws object to reconnect; create new ws-object
-
-                            ws.Close();
-
-                            ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
-                            ws.OnOpen += Ws_OnOpen;
-                            ws.OnMessage += Ws_OnMessage;
-                            ws.OnError += Ws_OnError;
-                            ws.OnClose += Ws_OnClose;
-                            DependencyService.Get<ISocket>().MyWebSocket = ws;
-                        }
-                    }
-                        
-                    }
-                
-              
-                    return true;
-            });
-        }
+       
 
         private void ShowNotification(string title, string message)
         {

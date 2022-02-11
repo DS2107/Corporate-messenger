@@ -56,53 +56,9 @@ namespace Corporate_messenger.ViewModels
                 }
             }
         }
-        private INavigation Nav { get; set; }
-        /// <summary>
-        /// Конструктор класса
-        /// </summary>
-        public LoginViewModel(INavigation navigation)
-        {
-            _ = Permission();                  
-            Nav = navigation;
-           // Application.Current.MainPage = new LoginPage();
-        }
+     
 
-        private  void Autorize()
-        {
-            Application.Current.MainPage = DependencyService.Get<IFileService>().MyMainPage;
-
-        }
-
-        /// <summary>
-        /// Разрешения
-        /// </summary>
-        /// <returns></returns>
-        async Task Permission()
-        {
-            // Даю разрешения для микрофона и (зписи/чтения файлов)
-            var PermissionsStrorage_Write = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
-
-            
-            var PermissionsStrorage_Read = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
-
-            var PermissionsRecord = await Permissions.CheckStatusAsync<Permissions.Microphone>();
-            // Прверка разрешенний
-            if (PermissionsRecord != PermissionStatus.Granted )
-            {
-                PermissionsRecord = await Permissions.RequestAsync<Permissions.Microphone>();
-              
-            }
-            // Прверка разрешенний
-            if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
-            {
-                PermissionsStrorage_Write = await Permissions.RequestAsync<Permissions.StorageWrite>();
-                PermissionsStrorage_Read = await Permissions.RequestAsync<Permissions.StorageRead>();
-            }
-            if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
-            {
-                return;
-            }
-        }
+      
         /// <summary>
         /// Команда для кнопки авторизации
         /// </summary>
@@ -125,6 +81,7 @@ namespace Corporate_messenger.ViewModels
         /// <returns></returns>
         private async Task AuthorizationUserAsync( )
         {           
+
             // Данные о пользователе которые пришли с сервера в случае удачной авторизации
             UserDataModel userdata = null;          
             //********** ЛОГИРОВАНИЕ **********
@@ -179,17 +136,9 @@ namespace Corporate_messenger.ViewModels
 
                 if (status != false)
                 {
-                    if (DependencyService.Get<IFileService>().MyMainPage != null)
-                    {
-                        Application.Current.MainPage = DependencyService.Get<IFileService>().MyMainPage;
-                        await Shell.Current.GoToAsync("//chats_list");
-                    }
-                    else
-                    {
-                        Application.Current.MainPage = new AuthorizationMainPage();
-                        await Shell.Current.GoToAsync("//chats_list");
-                    }
-                   
+                   await Permission();
+                    Application.Current.MainPage = new AuthorizationMainPage();
+                    await Shell.Current.GoToAsync("//chats_list");    
                 }
                 else
                 {

@@ -10,6 +10,7 @@ namespace Corporate_messenger.Service.Notification
         public void StartService();
         public void StopService();
 
+        public bool Flag_On_Off_Service { get; set; }
         public Android.App.NotificationManager manager { get; set; }
         public int receiver_id { get; set; }
         public void MyToast(string message);

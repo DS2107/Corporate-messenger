@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Corporate_messenger.Models.Abstract
@@ -103,6 +104,36 @@ namespace Corporate_messenger.Models.Abstract
                 return null;
             }
            
+        }
+        /// <summary>
+        /// Разрешения
+        /// </summary>
+        /// <returns></returns>
+       public async Task Permission()
+        {
+            // Даю разрешения для микрофона и (зписи/чтения файлов)
+            var PermissionsStrorage_Write = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
+
+
+            var PermissionsStrorage_Read = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+
+            var PermissionsRecord = await Permissions.CheckStatusAsync<Permissions.Microphone>();
+            // Прверка разрешенний
+            if (PermissionsRecord != PermissionStatus.Granted)
+            {
+                PermissionsRecord = await Permissions.RequestAsync<Permissions.Microphone>();
+
+            }
+            // Прверка разрешенний
+            if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
+            {
+                PermissionsStrorage_Write = await Permissions.RequestAsync<Permissions.StorageWrite>();
+                PermissionsStrorage_Read = await Permissions.RequestAsync<Permissions.StorageRead>();
+            }
+            if (PermissionsStrorage_Write != PermissionStatus.Granted && PermissionsStrorage_Read != PermissionStatus.Granted)
+            {
+                return;
+            }
         }
     }
 }

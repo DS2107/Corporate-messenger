@@ -15,7 +15,7 @@ namespace Corporate_messenger.Views
     public partial class LoginPage : ContentPage
     {
         const double SmallScreen = 720;
-        const double BigScreen = 1280;
+     
 
         public LoginPage()
         {
@@ -23,45 +23,27 @@ namespace Corporate_messenger.Views
             InitializeComponent();
          
             
-            BindingContext = new LoginViewModel(Navigation);
+            BindingContext = new LoginViewModel();
           
-            DependencyService.Get<IForegroundService>().LoginPosition = true;
-            DependencyService.Get<IForegroundService>().StopService();
-            DependencyService.Get<IForegroundService>().SocketFlag = false;
-            if (DependencyService.Get<ISocket>().MyWebSocket != null)
-            {
-                DependencyService.Get<ISocket>().MyWebSocket.CloseAsync();
-            }
-           
-            SpecialDataModel special = new SpecialDataModel();
-            SizeChanged += LoginPage_SizeChanged;
         
-            special.Id = 0;
-            special.Token = null;
-          
+
             if (UsernameTxt.Text == null || UsernameTxt.Text.Length == 0)
-            {
                 LabelUserName.IsVisible = false;
               
-            }
-            if (PasswordTxt.Text == null || PasswordTxt.Text.Length == 0)
-            {
-              
+            
+            if (PasswordTxt.Text == null || PasswordTxt.Text.Length == 0)             
                 LabelPassword.IsVisible = false;
-            }
+            
 
 
         }
 
-        protected override async void OnAppearing()
+        protected override  void OnAppearing()
         {
             base.OnAppearing();
-
-            Shell.SetTabBarIsVisible(this, false);
-
-            
-    
-        }
+           // подгоняем размер экрана
+            SizeChanged += LoginPage_SizeChanged;
+        } // OnAppearing
 
 
 

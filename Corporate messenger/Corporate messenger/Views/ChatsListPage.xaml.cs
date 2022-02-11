@@ -17,42 +17,24 @@ namespace Corporate_messenger.Views
     public partial class ChatsListPage : ContentPage
     {
 
-
-
         ChatListViewModel clvm;
         public ChatsListPage()
         {
             InitializeComponent();
-            DependencyService.Get<IFileService>().flag = true;
+
+          
             clvm = new ChatListViewModel(Navigation);
             BindingContext = clvm;
-          
-
-            New_message.Source = "AddStart.png";
-
         }
 
-        Thread ThreadSql;
+
         
         protected override async void OnAppearing()
         {
-            
-          
+            New_message.Source = "AddStart.png";
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
-          
-         
-
-
-
-            if (DependencyService.Get<IForegroundService>().SocketFlag == false)
-            {
-                DependencyService.Get<IForegroundService>().StartService();
-              
-                DependencyService.Get<IForegroundService>().LoginPosition = false;
-            }
-
             await clvm.GetSqlChats();
-
+           
         }
 
         protected override void OnDisappearing()
@@ -65,16 +47,13 @@ namespace Corporate_messenger.Views
         // Нажатие по ячейке чата
         async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-           
-
             if (e.Item == null)
                 return;
 
-            var v = (ChatListModel)e.Item;
+            var ItemSelect = (ChatListModel)e.Item;
 
-            var i = v.Id;
-            //ChatPage s = new ChatPage(v.Id, v.Title);
-            await Navigation.PushAsync(new ChatPage(v.Id, v.Title));
+         
+            await Navigation.PushAsync(new ChatPage(ItemSelect.Id, ItemSelect.Title));
 
         }
 

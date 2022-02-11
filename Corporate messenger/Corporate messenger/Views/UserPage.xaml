@@ -17,7 +17,7 @@
         </Grid>
     </Shell.TitleView>
 
-    <ContentPage.Content >
+    <ScrollView >
         <Grid BackgroundColor="#0B6EA3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200" />
@@ -78,6 +78,6 @@
             </StackLayout>
         </Grid>
 
-    </ContentPage.Content>
+    </ScrollView>
 </ContentPage>
 

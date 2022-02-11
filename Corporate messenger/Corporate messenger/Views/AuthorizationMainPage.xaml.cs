@@ -1,5 +1,6 @@
 ﻿using Corporate_messenger.Models;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -12,10 +13,10 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AuthorizationMainPage : Shell
     {
-      
+
         public AuthorizationMainPage()
         {
-           
+
             OnAppearing();
             InitializeComponent();
             Routing.RegisterRoute(nameof(LoginPage),
@@ -27,16 +28,9 @@ namespace Corporate_messenger.Views
             Routing.RegisterRoute(nameof(ChatPage),
                 typeof(ChatPage));
 
-            BindingContext = main;
-        }
-        MainPageViewModel main = new MainPageViewModel();
-        public ICommand ExecuteLogout => new Command(async () => await GoToAsync("//login"));
 
-        protected override  void OnAppearing()
-        {
-            base.OnAppearing();
-
-           
+            if(DependencyService.Get<IForegroundService>().Flag_On_Off_Service ==false)
+                 DependencyService.Get<IForegroundService>().StartService();
 
         }
     }

@@ -3,6 +3,7 @@ using Corporate_messenger.DB;
 using Corporate_messenger.Droid.AndroidService;
 using Corporate_messenger.Models;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.ViewModels;
 using Sockets.Plugin;
 using System;
@@ -10,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(UDP_AudioStreaming))]
 namespace Corporate_messenger.Droid.AndroidService
@@ -27,8 +29,7 @@ namespace Corporate_messenger.Droid.AndroidService
 
         private AudioRecord AudioRecord = null;
         private AudioTrack AudioTrack = null;
-        int port = 1234;
-        string address = "192.168.0.105";
+       
 
         UdpSocketClient client  = new UdpSocketClient();
         public UDP_AudioStreaming()
@@ -65,7 +66,7 @@ namespace Corporate_messenger.Droid.AndroidService
             Task.Run(() => this.GetUserAsync()).Wait();
            
             int id = User.Id;
-            byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes("sender_id:" + id.ToString() +";"); ;
+            byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes("sender_id:" + id.ToString() +";" + " call_id:"+DependencyService.Get<IForegroundService>().call_id+";");
             AudioRecord.StartRecording();
             try
             {
