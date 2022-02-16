@@ -21,16 +21,29 @@ namespace Corporate_messenger.Droid.Broadcast
     [IntentFilter(new[] { "com.companyname.corporate_messenger.Accept_Receiver" })]
     public class AcceptClickReceiver : BroadcastReceiver
     {
+        public static string TitleKey = "Call_title";
         public override async void OnReceive(Context context, Intent intent)
         {
-           await DependencyService.Get<IFileService>().MyMainPage.Navigation.PushModalAsync(new CallPage(true));
-     
+           Intent mycallIntent = new Intent(context, typeof(CallActivity));
+            DependencyService.Get<IForegroundService>().CallPageFlag = true;
+            mycallIntent.AddFlags(ActivityFlags.NewTask);
+            Android.App.Application.Context.StartActivity(mycallIntent);
+
+            /*Intent intent2 = new Intent(context, typeof(MainActivity));
+             intent2.AddFlags(ActivityFlags.ClearTop);         
+             intent2.AddFlags(ActivityFlags.NewTask);
+
+             Android.App.Application.Context.StartActivity(intent2);*/
+            DependencyService.Get<IForegroundService>().manager.Cancel(0);
+            DependencyService.Get<IAudio>().StopAudioFile();
+
+
+            Toast.MakeText(context, "Приятного общения", ToastLength.Short).Show();
             var user = await UserDbService.GetUser();
+
             var vrem = DependencyService.Get<IForegroundService>().receiver_id;
 
             DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
-            DependencyService.Get<IAudioUDPSocketCall>().GetServerIp();
-
 
              DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
             {
@@ -41,12 +54,7 @@ namespace Corporate_messenger.Droid.Broadcast
                 call_address = DependencyService.Get<IAudioUDPSocketCall>().GetServerIp(),
                 call_id = DependencyService.Get<IForegroundService>().call_id
             }));
-            DependencyService.Get<IForegroundService>().manager.Cancel(0);
-            DependencyService.Get<IAudio>().StopAudioFile();
-            DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
-            DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
-            DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
-            Toast.MakeText(context, "Приятного общения", ToastLength.Short).Show();
+            
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Corporate_messenger.Service
        
 
         public void StopAudioUDPCall();
-
+        public bool FlagRaised { get; set; }
         public CallViewModel callView { get; set; }
      
     }

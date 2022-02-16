@@ -29,18 +29,19 @@ namespace Corporate_messenger
                 {
                     MainPage = new AuthorizationMainPage();
                     DependencyService.Get<IFileService>().MyMainPage = MainPage;
-                    _ = Shell.Current.GoToAsync("//chats_list");
+                    Task.Run(()=> Shell.Current.GoToAsync("//chats_list")).Wait(); 
                 }
                 else
                 {
                     MainPage = new LoginPage();
-                }
-              
-               
+                   
+                }    
             }
             else
             {
-                MainPage = new CallPage(false);
+                MainPage = new AuthorizationMainPage();
+                DependencyService.Get<IFileService>().MyMainPage = MainPage;
+                Task.Run(()=>MainPage.Navigation.PushModalAsync(new CallPage(false))).Wait();
             }
         }
         UserDataModel MyUser;

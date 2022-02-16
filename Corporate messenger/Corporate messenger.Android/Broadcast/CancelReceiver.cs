@@ -25,7 +25,7 @@ namespace Corporate_messenger.Droid.Broadcast
        
             DependencyService.Get<IAudio>().StopAudioFile();
             DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400" }));
-            Toast.MakeText(context, "Received intent!", ToastLength.Short).Show();
+            Toast.MakeText(context, "Сбросил звонок", ToastLength.Short).Show();
         }
     }
 }

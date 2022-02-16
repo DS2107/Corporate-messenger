@@ -16,7 +16,7 @@ namespace Corporate_messenger.Models.Abstract
     {
 
         UserDataModel model;
-        public SpecialDataModel SpecDataUser = new SpecialDataModel();
+       
         
         public static string addressWS = "ws://192.168.0.105:6001";   
       

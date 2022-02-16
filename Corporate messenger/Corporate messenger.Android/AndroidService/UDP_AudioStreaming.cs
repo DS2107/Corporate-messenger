@@ -19,8 +19,10 @@ namespace Corporate_messenger.Droid.AndroidService
 
     class UDP_AudioStreaming : IAudioUDPSocketCall
     {
-        static UdpClient sender = new UdpClient(); // создаем UdpClient для отправки сообщений
+        public bool FlagRaised { get; set; }
+        static UdpClient sender; // создаем UdpClient для отправки сообщений
         private bool StartStopAudioStream_Flag { get; set; }
+        private bool StartStopAudioReceiver_Flag { get; set; }
         private int Frequency_Audio { get; set; }
         private int Receiver_id { get; set; }
         private int User_id { get; set; }
@@ -40,6 +42,8 @@ namespace Corporate_messenger.Droid.AndroidService
 
         public void ConnectionToServer()
         {
+
+            sender = new UdpClient();
             sender.Connect("192.168.0.105", 1234);
         }
         public string GetServerIp()
@@ -97,12 +101,12 @@ namespace Corporate_messenger.Droid.AndroidService
 
         public  void ReceiveMessage()
         {
-           
-            IPAddress ipserv = IPAddress.Parse("192.168.0.105");
+            StartStopAudioReceiver_Flag = true;
+             IPAddress ipserv = IPAddress.Parse("192.168.0.105");
             IPEndPoint RemoteIpEndPoint = new IPEndPoint(ipserv, 1234);
             try
             {
-                while (true)
+                while (StartStopAudioReceiver_Flag)
                 {
                     byte[] data = sender.Receive(ref RemoteIpEndPoint); // получаем данные
                     AudioTrack.SetPlaybackRate(Frequency_Audio);
@@ -158,12 +162,17 @@ namespace Corporate_messenger.Droid.AndroidService
             
            
         }
+       
         public void StopAudioUDPCall()
         {
-            AudioRecord.Stop();
-            AudioTrack.Stop();
-            StartStopAudioStream_Flag = false;
-            sender.Close();
+          
+                StartStopAudioReceiver_Flag = false;
+                StartStopAudioStream_Flag = false;
+                AudioRecord.Stop();
+                AudioTrack.Stop();
+              //  sender.Close();
+             //   sender = null;
+                    
         }
     }
 }

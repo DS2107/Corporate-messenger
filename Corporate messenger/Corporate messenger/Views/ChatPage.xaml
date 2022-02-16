@@ -212,6 +212,7 @@
                     BackgroundColor="Transparent" 
                     WidthRequest="32" HeightRequest="32" 
                     x:Name="send_message"  
+                    IsVisible="false"
                   />
 
                 <!--Кнопка отправить голсовое сообщение-->
@@ -226,6 +227,7 @@
                     WidthRequest="32" 
                     HeightRequest="32" 
                     x:Name="mic_message" 
+                    IsVisible="true"
                     Margin="0,0,10,0"/>
             </Grid>
         </Grid>

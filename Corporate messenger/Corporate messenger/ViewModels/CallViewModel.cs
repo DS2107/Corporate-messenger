@@ -33,14 +33,11 @@ namespace Corporate_messenger.ViewModels
        
         public async Task ClosePageAsync()
         {
-            try
-            {
-               // await navigate.PopAsync();
-            }
-            catch (Exception ex)
-            {
-                var b = ex;
-            }
+
+            //var main = DependencyService.Get<IFileService>().MyMainPage;
+            // main = new AuthorizationMainPage();
+            var main = DependencyService.Get<IFileService>().MyMainPage;
+           await main.Navigation.PopToRootAsync();
           
         }
 
@@ -48,7 +45,7 @@ namespace Corporate_messenger.ViewModels
          public CallViewModel(INavigation nav,bool init_call)
         {
             
-            ws = DependencyService.Get<ISocket>().MyWebSocket;
+           
             TimeCall = "Инициализация звонка...";
             DependencyService.Get<IAudioWebSocketCall>().callView = this;
             DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCallAsync();
@@ -207,7 +204,7 @@ namespace Corporate_messenger.ViewModels
         {
             get
             {
-                return new Command(async (object obj) => {
+                return new Command( (object obj) => {
                     if (holdflag== false)
                     {
 
@@ -229,18 +226,18 @@ namespace Corporate_messenger.ViewModels
         {
             get
             {
-                return new Command(async (object obj) => {
+                return new Command( (object obj) => {
                     if (micflag == false)
                     {
                         SourceMic = "MicOff24.png";
                         micflag = true;
-                        DependencyService.Get<IAudioWebSocketCall>().StopAudioRecord();
+                     
                     }
                     else
                     {
                         SourceMic = "MicOn24.png";
                         micflag = false;
-                        DependencyService.Get<IAudioWebSocketCall>().StartAudioWebSocketCallAsync(ws);
+                      
                     }
                 });
             }
@@ -255,32 +252,21 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) => {
-                    var flag = DependencyService.Get<IAudioWebSocketCall>().FlagRaised;
-                    if (flag)
+                  
+                    if (DependencyService.Get<IAudioUDPSocketCall>().FlagRaised == true)
                     {
-                        ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",TimeCall }));
-                        DependencyService.Get<IAudioWebSocketCall>().FlagRaised = false;
-                        DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                        DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",TimeCall }));
+                        await DependencyService.Get<IFileService>().MyMainPage.Navigation.PopAsync();
+
                     }
                     else
                     {
                         TimeCall = "Вызов Завершен";
-                        ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "450" }));
-                        DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                        DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "450" }));
+                       // DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
                     }
                      
-                    if (FlagInitCall)
-                    {
-                      await navigate.PopAsync();
-                    }                                      
-                    else
-                    {
-                        Application.Current.MainPage = new AuthorizationMainPage();
-                        navigate = Application.Current.MainPage.Navigation;
-                       
-                        await navigate.PopToRootAsync();
-
-                    }
+                    
                        
                    
                 });
@@ -294,9 +280,9 @@ namespace Corporate_messenger.ViewModels
         {
             get
             {
-                return new Command(async (object obj) => {
-                    ws = DependencyService.Get<ISocket>().MyWebSocket;
-                    ws.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400" }));
+                return new Command( (object obj) => {
+
+                    DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400" }));
 
                     if (!FlagInitCall)
                     {
@@ -308,7 +294,7 @@ namespace Corporate_messenger.ViewModels
             }
         }
        
-        WebSocketSharp.WebSocket ws;
+      
       
         /// Ответиьт на звонок
         /// </summary>
@@ -317,7 +303,7 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) => {
-                    ws = DependencyService.Get<ISocket>().MyWebSocket;
+                
                     var user = await UserDbService.GetUser();
                     var vrem = DependencyService.Get<IForegroundService>().receiver_id;
 
@@ -325,7 +311,7 @@ namespace Corporate_messenger.ViewModels
                     DependencyService.Get<IAudioUDPSocketCall>().GetServerIp();
 
 
-                    ws.Send(JsonConvert.SerializeObject(new
+                    DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
                     {
                         type = "init_call",
                         sender_id = user.Id,
@@ -335,7 +321,7 @@ namespace Corporate_messenger.ViewModels
                         call_id = DependencyService.Get<IForegroundService>().call_id
                     })) ;
 
-                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
+                    DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
                    
                     DependencyService.Get<IAudio>().StopAudioFile();
                     DependencyService.Get<IAudioUDPSocketCall>().InitUDP();

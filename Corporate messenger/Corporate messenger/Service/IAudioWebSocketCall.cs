@@ -42,6 +42,6 @@ namespace Corporate_messenger.Service
         void ListenerWebSocketCall(byte[] audio_message);
         public CallViewModel callView { get; set; }
 
-        public bool FlagRaised {get;set;}
+      
     }
 }

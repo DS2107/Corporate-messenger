@@ -68,12 +68,13 @@ namespace Corporate_messenger.Droid.NotificationManager
         NotificationCompat.Builder notification;
         public void Show(string title, string message)
         {
-            Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
+            Intent intent = new Intent(AndroidApp.Context, typeof(CallActivity));
+            DependencyService.Get<IForegroundService>().CallPageFlag = false;
             Intent IntentAcceptCall = new Intent("com.companyname.corporate_messenger.Accept_Receiver");
             Intent intentCancelCall = new Intent("com.companyname.corporate_messenger.Cancel_Receiver");
             intent.AddFlags(ActivityFlags.ClearTop);
-
-                TitleKey = "init_call";
+         
+            TitleKey = "init_call";
                 intent.PutExtra(TitleKey, "init_call");
                 // intent.PutExtra(MessageKey, message);
 

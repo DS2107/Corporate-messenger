@@ -1,4 +1,5 @@
 ﻿using Corporate_messenger.DB;
+using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Models.UserData;
 using Corporate_messenger.Service;
@@ -58,9 +59,9 @@ namespace Corporate_messenger.ViewModels
                 return new Command(async (object obj) =>{
                     // Ищем нужный элемент
                     if (obj is FriendsModel item){
-                        var user = await UserDbService.GetUser();
+                       
                         // Перед отправкой , превращаем все в json "/api/chatroom"
-                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = user.Id, receiver_id = item.Id, title = item.Name });
+                        string jsonLog = JsonConvert.SerializeObject(new { sender_id = User.Id, receiver_id = item.Id, title = item.Name });
 
                         //****** РАСШИФРОВКА_ОТВЕТА ******//
                         dynamic contentJobjects = await GetInfo_HttpMethod_Post_Async(jsonLog, "/api/chatroom",false);
@@ -75,15 +76,19 @@ namespace Corporate_messenger.ViewModels
                 });
             }
         }
-   
 
-       
-       
+
+
+        UserDataModel User;
         public FriendPageViewModel(INavigation page) {
             nav = page;
-           _ =  SendToken_GetFriendsAsync(); 
+            Task.Run(() => GetUser()).Wait();
+          Task.Run(()=>  SendToken_GetFriendsAsync()).Wait(); 
         }
-      
+      private async Task GetUser()
+        {
+            User = await UserDbService.GetUser();
+        }
         /// <summary>
         /// ОТправить токен и получить друзей
         /// </summary>
@@ -91,7 +96,7 @@ namespace Corporate_messenger.ViewModels
         async Task SendToken_GetFriendsAsync()
         {
             //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + SpecDataUser.Id + "/friends");
+            JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + User.Id + "/friends");
             foreach (var KeyJobject in contentJobjects)
             {
                 switch (KeyJobject.Key){
@@ -114,7 +119,7 @@ namespace Corporate_messenger.ViewModels
         public async Task SearchFriendAsync(string userParam)
         {
             //****** РАСШИФРОВКА_ОТВЕТА ******
-            JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + SpecDataUser.Id + "/search/" + userParam);
+            JObject contentJobjects = await GetInfo_HttpMethod_Get_Async("/api/user/" + User.Id + "/search/" + userParam);
 
             foreach (var KeyJobject in contentJobjects)
             {

@@ -11,14 +11,16 @@ namespace Corporate_messenger.Service.Notification
         public void StopService();
 
         public bool Flag_On_Off_Service { get; set; }
+        public bool CallPageFlag { get; set; }
         public Android.App.NotificationManager manager { get; set; }
         public int receiver_id { get; set; }
         public void MyToast(string message);
-        public bool AudioCalls_Init { get; set; }
+        public bool Flag_AudioCalls_Init { get; set; }
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
-        public bool SocketFlag { get; set; }
+       public bool Flag_On_Off_Socket { get; set; }
 
-        public bool LoginPosition { get; set; }
+
+
     }
 }

@@ -18,7 +18,8 @@ using System.Timers;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using Plugin.LocalNotification;
-
+using System.Net.NetworkInformation;
+using System.Net;
 
 [assembly: Xamarin.Forms.Dependency(typeof(startServiceAndroid))]
 [assembly: Xamarin.Forms.Dependency(typeof(GetSocket))]
@@ -28,12 +29,9 @@ namespace Corporate_messenger.Droid.NotificationManager
 
     public class GetSocket:ISocket, INotifyPropertyChanged
     {
-        SpecialDataModel user = new SpecialDataModel();
+      
        
-        public GetSocket()
-        {
-            
-        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string prop = "")
         {
@@ -61,14 +59,14 @@ namespace Corporate_messenger.Droid.NotificationManager
 
     public class startServiceAndroid : IForegroundService
     {
-
+        public bool CallPageFlag { get; set; }
         private static Context context = global::Android.App.Application.Context;
-       public bool Flag_On_Off_Service { get; set; }
-        public bool AudioCalls_Init { get; set; }
-        public bool SocketFlag { get; set; }
+        public bool Flag_On_Off_Service { get; set; }
+        public bool Flag_AudioCalls_Init { get; set; }
+       public bool Flag_On_Off_Socket { get; set; }
         public int call_id { get; set; }
         public int chat_room_id { get; set; }
-        public bool LoginPosition { get; set ; }
+       
         public int receiver_id { get ; set ; }
         public Android.App.NotificationManager manager { get ; set; }
 
@@ -83,7 +81,7 @@ namespace Corporate_messenger.Droid.NotificationManager
             {
                 context.StartForegroundService(intent);
                 Flag_On_Off_Service = true;
-    }
+            }
             else
             {
                 context.StartService(intent);
@@ -102,15 +100,22 @@ namespace Corporate_messenger.Droid.NotificationManager
     [Service(Exported = true)]
     public class NotoficationService : Android.App.Service
     {
+        // ID Уведомления о включении службы
         public const int ServiceRunningNotifID = 9001;
-        WebSocketSharp.WebSocket ws;
-        INotificationManager NotificationMessageManager;
-        NotificationCall NotificationCalllManager = new NotificationCall();
-        UserDataModel user;
+        // Сокет
+        GetSocket socket = new GetSocket();
+        // Локальные уведомления для сообщений 
+        private INotificationManager NotificationMessageManager;
+        // Локальные уведомления для Звонков
+        private NotificationCall NotificationCalllManager = new NotificationCall();
+        // Пользователь 
+        private UserDataModel MyUser;
       
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
-          
+            // Запуск сервиса 
+            Notification notif = DependencyService.Get<IStaticNotification>().ReturnNotif();
+            StartForeground(ServiceRunningNotifID, notif);
             NotificationMessageManager = (NotificationMessage)DependencyService.Get<INotificationManager>();
             
             NotificationMessageManager.NotificationReceived += (sender, eventArgs) =>
@@ -123,26 +128,58 @@ namespace Corporate_messenger.Droid.NotificationManager
                 var evtData = (Service.Notification.NotificationEventArgs)eventArgs;
                 ShowNotification(evtData.Title, evtData.Message);
             };
-            Notification notif = DependencyService.Get<IStaticNotification>().ReturnNotif();
-            StartForeground(ServiceRunningNotifID, notif);
-            if (ws == null)
-            {
-                GetSocket socket = new GetSocket();
-                ws = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
-                
-                ws.OnMessage += Ws_OnMessage;
-                ws.OnOpen += Ws_OnOpen;
-                ws.OnClose += Ws_OnClose;
-                ws.OnError += Ws_OnError;
-                ws.Connect();
-                socket.MyWebSocket = ws;
-               
-               
 
-            }
+           
+
+           
+               
+                socket.MyWebSocket = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+                socket.MyWebSocket.OnMessage += Ws_OnMessage;
+                socket.MyWebSocket.OnOpen += Ws_OnOpen;
+                socket.MyWebSocket.OnClose += Ws_OnClose;
+                socket.MyWebSocket.OnError += Ws_OnError;
+                DependencyService.Get<IForegroundService>().Flag_On_Off_Socket = true;
+                Task.Run(()=> socket.MyWebSocket.ConnectAsync());
+                MyTimer();
+             
+            
             return StartCommandResult.Sticky;
         }
+        Ping x = new Ping();
+        private  void MyTimer()
+        {
+            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
+            {
+                try
+                {
+                    var pingFlag = socket.MyWebSocket.Ping();
 
+                    if (!pingFlag)
+                    {
+                        Task.Run(() => socket.MyWebSocket.CloseAsync());
+                        Task.Run(() => socket.MyWebSocket.ConnectAsync()).Wait();                          
+                    
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var s = ex;
+                    DependencyService.Get<IForegroundService>().Flag_On_Off_Socket = false;
+                    Task.Run(() => socket.MyWebSocket.CloseAsync());
+                    socket.MyWebSocket = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+                    socket.MyWebSocket.OnMessage += Ws_OnMessage;
+                    socket.MyWebSocket.OnOpen += Ws_OnOpen;
+                    socket.MyWebSocket.OnClose += Ws_OnClose;
+                    socket.MyWebSocket.OnError += Ws_OnError;
+                    //  Task.Run(() => socket.MyWebSocket.ConnectAsync()).Wait();
+                }
+               
+              
+               
+                return true; // return true to repeat counting, false to stop timer
+            });
+        }
        
         private void Ws_OnError(object sender, WebSocketSharp.ErrorEventArgs e)
         {
@@ -157,16 +194,15 @@ namespace Corporate_messenger.Droid.NotificationManager
         
         private async void Ws_OnOpen(object sender, EventArgs e)
         {
-            user = await UserDbService.GetUser();
-            if (user != null)
+            MyUser = await UserDbService.GetUser();
+            if (MyUser != null)
             {
-                var message = JsonConvert.SerializeObject(new { type = "subscribe", sender_id = user.Id, });
-                ws.Send(message);
-            }
-         
+                var message = JsonConvert.SerializeObject(new { type = "subscribe", sender_id = MyUser.Id, });
+                socket.MyWebSocket.Send(message);
+            }       
         }
 
-        private void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
+        private  void Ws_OnMessage(object sender, WebSocketSharp.MessageEventArgs e)
         {
             dynamic Json_obj = JObject.Parse(e.Data);         
             string type_status = (string)Json_obj.status != null? (string)Json_obj.status : (string)Json_obj.type;
@@ -174,33 +210,30 @@ namespace Corporate_messenger.Droid.NotificationManager
             switch (type_status) {
 
                 case "200":
-                   
-                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
+                 
+                    DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();
+                    DependencyService.Get<IAudioUDPSocketCall>().FlagRaised = true;
                     DependencyService.Get<IAudioUDPSocketCall>().InitUDP();                 
                     DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
                     DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
                     break;
                 case "400":
-                    DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
-                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();           
-                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
+                    // DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                    //Task.Run(()=> DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync()).Wait();        
+                    //DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
+                       
+                    break;
+                case "450":                
+                    DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
                     DependencyService.Get<IAudio>().StopAudioFile();
-              
-                    
-                    break;
-                case "450":
-                    _ = DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync();
-                    DependencyService.Get<IAudioWebSocketCall>().StopAudioWebSocketCall();
-                    DependencyService.Get<IForegroundService>().AudioCalls_Init = false;
-                    DependencyService.Get<IAudio>().StopAudioFile();
-                    break;
-                case "call":
-                    DependencyService.Get<IAudioWebSocketCall>().ListenerWebSocketCall((byte[])Json_obj.voice_audio);
-                    break;
-                case "100": // 100
+                    if (DependencyService.Get<IForegroundService>().manager!=null)
+                        DependencyService.Get<IForegroundService>().manager.Cancel(0);
+                    break;            
+                case "100": 
                     DependencyService.Get<IForegroundService>().receiver_id = (int)Json_obj.sender_id;
                     DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
+                   var s = (string)Json_obj.username;
                     NotificationCalllManager.SendNotification("Звонок", (string)Json_obj.username);
                    // LocalNotificationBuilder(e);
                     DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
@@ -219,7 +252,7 @@ namespace Corporate_messenger.Droid.NotificationManager
         private void NotificationMessage(WebSocketSharp.MessageEventArgs args)
         {
             dynamic Json_obj = JObject.Parse(args.Data);
-            if ((int)Json_obj.sender_id != user.Id)
+            if ((int)Json_obj.sender_id != MyUser.Id)
             {
 
                 ChatModel new_message = JsonConvert.DeserializeObject<ChatModel>(args.Data);
@@ -245,72 +278,6 @@ namespace Corporate_messenger.Droid.NotificationManager
                 }
             }
         }
-        int Message_id = 0;
-        private void LocalNotificationBuilder(WebSocketSharp.MessageEventArgs args)
-        {
-
-            dynamic Json_obj = JObject.Parse(args.Data);
-            long[] pattern = { 0, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500 };
-            if ((string)Json_obj.type == "message")
-            {
-                if ((int)Json_obj.sender_id != user.Id)
-                {
-                    var notification = new NotificationRequest
-                    {
-                        BadgeNumber = 1,
-                        Description = (string)Json_obj.message,
-                        Title = (string)Json_obj.username,
-                        NotificationId = Message_id,
-
-                        CategoryType = NotificationCategoryType.Alarm,
-                        Silent = true,
-                        Android = new Plugin.LocalNotification.AndroidOption.AndroidOptions {
-                            AlarmType = Plugin.LocalNotification.AndroidOption.AndroidAlarmType.ElapsedRealtimeWakeup,
-                            Priority = Plugin.LocalNotification.NotificationPriority.Max,
-                            AutoCancel = false,
-                            
-                            IsProgressBarIndeterminate = true,
-                            VibrationPattern = pattern,
-                            Group = "Message",
-                            IsGroupSummary = true,
-                            ChannelId = "Message"
-                            
-
-                        }
-
-                    };
-                    NotificationCenter.Current.Show(notification);
-                }
-            }
-            if((string)Json_obj.type == "init_call")
-            {
-                if ((int)Json_obj.sender_id != user.Id)
-                {
-                    var notification = new NotificationRequest
-                    {
-                        BadgeNumber = 1,
-                        Description = "Звонок",
-                        Title = (string)Json_obj.username,
-                        NotificationId = 1337,
-                        Android = new Plugin.LocalNotification.AndroidOption.AndroidOptions
-                        {
-                            AlarmType = Plugin.LocalNotification.AndroidOption.AndroidAlarmType.Rtc,
-
-                        }
-
-                    };
-                    NotificationCenter.Current.Show(notification);
-                }
-            }
-
-           
-           
-               
-        }
-
-        bool flag = false;
-       
-
         private void ShowNotification(string title, string message)
         {
             Device.BeginInvokeOnMainThread(() =>
@@ -325,12 +292,12 @@ namespace Corporate_messenger.Droid.NotificationManager
 
         public override void OnDestroy()
         {
-            ws.CloseAsync();
             base.OnDestroy();
         }
 
         public override bool StopService(Intent name)
         {
+            socket.MyWebSocket.CloseAsync();
             return base.StopService(name);
         }
 

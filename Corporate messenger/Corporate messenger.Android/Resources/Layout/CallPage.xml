@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#F0F0F0"
+	android:minWidth="25px"
+	android:minHeight="25px">
+	<Button
+		android:id="@+id/btncall"
+		android:layout_width="70dp"
+		android:layout_height="70dp"
+		android:layout_marginRight="50dp"
+		android:layout_marginBottom="50dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:background="@drawable/mybutton1"
+    />
+	<Button
+		android:id="@+id/btnendcallCenter"
+		android:layout_width="70dp"
+		android:layout_height="70dp"	
+		android:layout_marginBottom="50dp"
+		android:layout_centerHorizontal="true"		
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/endbutton"
+    />
+	<Button
+		android:id="@+id/btnendcall"
+		android:layout_width="70dp"
+		android:layout_height="70dp"
+		android:layout_marginLeft="50dp"
+		android:layout_marginBottom="50dp"
+	android:layout_alignParentBottom="true"
+		android:background="@drawable/endbutton"
+    />
+
+</RelativeLayout>
+
+
