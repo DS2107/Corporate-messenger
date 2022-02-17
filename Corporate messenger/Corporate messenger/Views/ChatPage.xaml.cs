@@ -85,7 +85,7 @@ namespace Corporate_messenger.Views
             }
             catch (Exception ex)
             {
-                var b = ex;
+                DependencyService.Get<IForegroundService>().MyToast("Не удается позвонить, возможно потеряно соединение с сервором: "+ex.Message);
             }
         }
 

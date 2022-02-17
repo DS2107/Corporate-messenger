@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.corporate_messenger" android:installLocation="preferExternal">
 	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="29" />
-	<application android:requestLegacyExternalStorage="true" android:label="Corporate_messenger.Android" android:theme="@style/MainTheme" android:usesCleartextTraffic="true" android:icon="@drawable/MyChat">
+	<application android:requestLegacyExternalStorage="true" android:label="Мессенджер" android:theme="@style/MainTheme" android:usesCleartextTraffic="true" android:icon="@drawable/MyChat">
     <receiver android:name="com.companyname.corporate_messenger.AcceptReceiver" android:enabled="true" android:label="Accept Click Receiver" android:exported="true">
       <intent-filter>
         <action android:name="com.companyname.corporate_messenger.Accept_Receiver" />

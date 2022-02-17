@@ -208,45 +208,110 @@ namespace Corporate_messenger.Droid.NotificationManager
             string type_status = (string)Json_obj.status != null? (string)Json_obj.status : (string)Json_obj.type;
 
             switch (type_status) {
-
+                // Если приходит Уведомление о звонке
+                case "100":
+                    Status100(Json_obj);
+                    break;
+                // Если пользователь, которому звонили поднял трубку 
                 case "200":
-                 
-                    DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
-                    DependencyService.Get<IAudio>().StopAudioFile();
-                    DependencyService.Get<IAudioUDPSocketCall>().FlagRaised = true;
-                    DependencyService.Get<IAudioUDPSocketCall>().InitUDP();                 
-                    DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
-                    DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
+                    Status200();
                     break;
+                 // Если сбросил Звонящий 
                 case "400":
-                    // DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
-                    //Task.Run(()=> DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync()).Wait();        
-                    //DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
-                       
+                    Status400();                 
                     break;
-                case "450":                
-                    DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
-                    DependencyService.Get<IAudio>().StopAudioFile();
-                    if (DependencyService.Get<IForegroundService>().manager!=null)
-                        DependencyService.Get<IForegroundService>().manager.Cancel(0);
-                    break;            
-                case "100": 
-                    DependencyService.Get<IForegroundService>().receiver_id = (int)Json_obj.sender_id;
-                    DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
-                   var s = (string)Json_obj.username;
-                    NotificationCalllManager.SendNotification("Звонок", (string)Json_obj.username);
-                   // LocalNotificationBuilder(e);
-                    DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
+                // Если сбросил звонок отвечающий
+                case "401":
+                    Status401();                                  
                     break;
+                // Если сбросил Звонящий до поднятия трубки 
+                case "402":
+                    Status402();
+                    break;
+                // Если сбросил Отвечающий до поднятия трубки 
+                case "403":
+                    Status403();                 
+                    break;
+             
                 case "message":
                     if (DependencyService.Get<IForegroundService>().chat_room_id != (int)Json_obj.chat_room_id)
                         NotificationMessage(e);
-                      //  LocalNotificationBuilder(e);
+                   
                     break;
             }
        
         }
        
+        
+
+        private void Status100(dynamic Json_obj)
+        {
+            // Узнать кто звонит
+            DependencyService.Get<IForegroundService>().receiver_id = (int)Json_obj.sender_id;
+            // Узнать какая комната 
+            DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
+
+            // Кинуть Уведомление о Звонке
+            NotificationCalllManager.SendNotification("Звонок", (string)Json_obj.username);
+            // Включить музыку
+            DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
+        }
+
+        private void Status200()
+        {
+            // Флаг Для отключения музыки 
+            DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
+
+            // Полное выключение музыки
+            DependencyService.Get<IAudio>().StopAudioFile();
+
+            // Установить флаг который уведомляет Звонящего пользователя , что его звонок был принят 
+            DependencyService.Get<IAudioUDPSocketCall>().FlagRaised = true;
+
+            // Запустить протокол UDP
+            DependencyService.Get<IAudioUDPSocketCall>().InitUDP();
+            DependencyService.Get<IAudioUDPSocketCall>().SendMessage();
+            DependencyService.Get<IAudioUDPSocketCall>().StartReceive();
+        }
+
+        private void Status400()
+        {
+            // Выключить UDP 
+            DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+
+            // Перейти в приложение
+            Intent mainActivity = new Intent(Android.App.Application.Context, typeof(MainActivity));
+            mainActivity.AddFlags(ActivityFlags.NewTask);
+            Android.App.Application.Context.StartActivity(mainActivity);
+        }
+
+        private void Status401()
+        {
+            DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+            Task.Run(() => DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync()).Wait();
+            DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
+        }
+
+        private void Status402()
+        {
+            // Полностью выключаем музыку
+            DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
+            DependencyService.Get<IAudio>().StopAudioFile();
+            // Убираем уведомление 
+            if (DependencyService.Get<IForegroundService>().manager != null)
+                DependencyService.Get<IForegroundService>().manager.Cancel(0);
+        }
+
+        private void Status403()
+        { 
+            // Полностью выключаем музыку
+            DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
+            DependencyService.Get<IAudio>().StopAudioFile();
+
+            // Выхожу со страницы
+            Task.Run(() => DependencyService.Get<IAudioWebSocketCall>().callView.ClosePageAsync()).Wait();
+        }
+
         
         
         private void NotificationMessage(WebSocketSharp.MessageEventArgs args)

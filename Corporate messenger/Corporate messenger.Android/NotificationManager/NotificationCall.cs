@@ -79,7 +79,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                 // intent.PutExtra(MessageKey, message);
 
                 var view = new RemoteViews("com.companyname.corporate_messenger", Resource.Layout.NotificationLayoutCall);
-                view.SetTextViewText(Resource.Id.title_user, "Звонок от "+ message );
+                view.SetTextViewText(Resource.Id.title_user,  message );
                 view.SetImageViewResource(Resource.Id.image, Resource.Drawable.kot);
                 
                 PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.UpdateCurrent);

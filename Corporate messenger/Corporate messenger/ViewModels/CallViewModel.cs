@@ -34,11 +34,9 @@ namespace Corporate_messenger.ViewModels
         public async Task ClosePageAsync()
         {
 
-            //var main = DependencyService.Get<IFileService>().MyMainPage;
-            // main = new AuthorizationMainPage();
-            var main = DependencyService.Get<IFileService>().MyMainPage;
-           await main.Navigation.PopToRootAsync();
-          
+            await navigate.PopToRootAsync();
+
+
         }
 
 
@@ -252,18 +250,26 @@ namespace Corporate_messenger.ViewModels
             get
             {
                 return new Command(async (object obj) => {
-                  
+                    var MyUser = await UserDbService.GetUser();
                     if (DependencyService.Get<IAudioUDPSocketCall>().FlagRaised == true)
                     {
-                        DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",TimeCall }));
-                        await DependencyService.Get<IFileService>().MyMainPage.Navigation.PopAsync();
-
+                      
+                        DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",sender_id = MyUser.Id }));
+                        await navigate.PopToRootAsync();
+                        DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                      
                     }
                     else
                     {
                         TimeCall = "Вызов Завершен";
-                        DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "450" }));
-                       // DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                        DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "402", sender_id = MyUser.Id }));
+                        await navigate.PopToRootAsync();
+                      //  DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
+                        // Флаг Для отключения музыки 
+                        DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
+
+                        // Полное выключение музыки
+                        DependencyService.Get<IAudio>().StopAudioFile();
                     }
                      
                     

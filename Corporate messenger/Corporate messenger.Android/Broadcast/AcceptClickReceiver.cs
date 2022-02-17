@@ -24,28 +24,22 @@ namespace Corporate_messenger.Droid.Broadcast
         public static string TitleKey = "Call_title";
         public override async void OnReceive(Context context, Intent intent)
         {
-           Intent mycallIntent = new Intent(context, typeof(CallActivity));
-            DependencyService.Get<IForegroundService>().CallPageFlag = true;
-            mycallIntent.AddFlags(ActivityFlags.NewTask);
-            Android.App.Application.Context.StartActivity(mycallIntent);
 
-            /*Intent intent2 = new Intent(context, typeof(MainActivity));
-             intent2.AddFlags(ActivityFlags.ClearTop);         
-             intent2.AddFlags(ActivityFlags.NewTask);
-
-             Android.App.Application.Context.StartActivity(intent2);*/
             DependencyService.Get<IForegroundService>().manager.Cancel(0);
             DependencyService.Get<IAudio>().StopAudioFile();
 
 
             Toast.MakeText(context, "Приятного общения", ToastLength.Short).Show();
+
             var user = await UserDbService.GetUser();
 
-            var vrem = DependencyService.Get<IForegroundService>().receiver_id;
 
+
+            // Соеденияся 
             DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
 
-             DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
+            // отвечаем на звонок 
+            DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
             {
                 type = "init_call",
                 sender_id = user.Id,
@@ -54,6 +48,14 @@ namespace Corporate_messenger.Droid.Broadcast
                 call_address = DependencyService.Get<IAudioUDPSocketCall>().GetServerIp(),
                 call_id = DependencyService.Get<IForegroundService>().call_id
             }));
+
+
+            Intent mycallIntent = new Intent(context, typeof(CallActivity));
+            DependencyService.Get<IForegroundService>().CallPageFlag = true;
+            mycallIntent.AddFlags(ActivityFlags.NewTask);
+            Android.App.Application.Context.StartActivity(mycallIntent);
+
+          
             
         }
     }

@@ -114,6 +114,7 @@ namespace Corporate_messenger.Droid.AndroidService
                     AudioTrack.Write(data, 0, data.Length);
                     
                 }
+              
             }
             catch (Exception ex)
             {
@@ -165,14 +166,17 @@ namespace Corporate_messenger.Droid.AndroidService
        
         public void StopAudioUDPCall()
         {
-          
+            sender.Close();
                 StartStopAudioReceiver_Flag = false;
                 StartStopAudioStream_Flag = false;
                 AudioRecord.Stop();
                 AudioTrack.Stop();
+            AudioRecord = null;
+            AudioTrack = null;
+
               //  sender.Close();
-             //   sender = null;
-                    
+              //   sender = null;
+
         }
     }
 }

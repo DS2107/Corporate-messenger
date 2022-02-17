@@ -91,10 +91,11 @@ namespace Corporate_messenger.Droid
 
         }
 
-        private void BtnEndCallCenter_Click(object sender, EventArgs e)
+        private async void BtnEndCallCenter_Click(object sender, EventArgs e)
         {
+            var MyUser = await UserDbService.GetUser();
             // Уведомление для собеседника о прекращении звонка 
-            DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400" }));
+            DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "401", sender_id =  MyUser.Id }));
 
             // Выключить UDP 
             DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
@@ -105,11 +106,19 @@ namespace Corporate_messenger.Droid
             Android.App.Application.Context.StartActivity(mainActivity);
         }
 
-        private void BtnEndCall_Click(object sender, EventArgs e)
+        private async void BtnEndCall_Click(object sender, EventArgs e)
         {
+            var MyUser = await UserDbService.GetUser();
+            // Убрать Уведомление 
             DependencyService.Get<IForegroundService>().manager.Cancel(0);
-            DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400" }));
+
+            // Бросить Уведомление о что я не хочу поднимать трубку 
+            DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "403", sender_id = MyUser.Id }));
+            
+            // Выключить музыку
             DependencyService.Get<IAudio>().StopAudioFile();
+
+            // Перейти на главный экран
             Intent mainActivity = new Intent(Android.App.Application.Context, typeof(MainActivity));         
             mainActivity.AddFlags(ActivityFlags.NewTask);
             Android.App.Application.Context.StartActivity(mainActivity);
@@ -117,6 +126,7 @@ namespace Corporate_messenger.Droid
 
         private async void BtnStartCall_Click(object sender, EventArgs e)
         {
+            // Настройки сенсора 
             sensorManager = (SensorManager)GetSystemService(Context.SensorService);
             sensorManager.RegisterListener(this, sensorManager.GetDefaultSensor(SensorType.Proximity), SensorDelay.Ui);
             DependencyService.Get<IAudio>().StopAudioFile();
@@ -133,6 +143,7 @@ namespace Corporate_messenger.Droid
             // Авторизуемся на UDP
             DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
 
+            // Говорим Звонящему, что мы приняли звонок
             DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
             {
                 type = "init_call",
