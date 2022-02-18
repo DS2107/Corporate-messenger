@@ -98,7 +98,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                    .SetContentTitle("Incoming call")
                    .SetFullScreenIntent(pendingIntent, true)             
                    .SetOngoing(true)
-                   .SetContentText("James Smith");
+                   .SetContentText(message);
 
             Notification notif = notification.Build();
            

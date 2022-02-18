@@ -19,21 +19,19 @@ namespace Corporate_messenger.Droid.AndroidService
 
     class UDP_AudioStreaming : IAudioUDPSocketCall
     {
-        public bool FlagRaised { get; set; }
+        public bool FlagRaised { get; set; } // Отметка что пользователь поднял трубку
         static UdpClient sender; // создаем UdpClient для отправки сообщений
-        private bool StartStopAudioStream_Flag { get; set; }
-        private bool StartStopAudioReceiver_Flag { get; set; }
-        private int Frequency_Audio { get; set; }
-        private int Receiver_id { get; set; }
-        private int User_id { get; set; }
-        private int Buffer_Size { get; set; }
+        private bool StartStopAudioStream_Flag { get; set; } // флаг остановки передачи голоса
+        private bool StartStopAudioReceiver_Flag { get; set; } // флаг отсановки прослушивания
+        private int Frequency_Audio { get; set; } // частота звука
+        private int Buffer_Size { get; set; } 
         public CallViewModel callView { get; set; }
 
         private AudioRecord AudioRecord = null;
         private AudioTrack AudioTrack = null;
        
 
-        UdpSocketClient client  = new UdpSocketClient();
+       
         public UDP_AudioStreaming()
         {
           
@@ -50,18 +48,34 @@ namespace Corporate_messenger.Droid.AndroidService
         {
             return sender.Client.LocalEndPoint.ToString(); 
         }
+        Thread receiveThread;
         public void StartReceive()
         {
-            Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
+            receiveThread = new Thread(new ThreadStart(ReceiveMessage));
             receiveThread.Start();
         }
+        Thread SendThread;
         public  void SendMessage()
         {
-            Thread receiveThread = new Thread(new ThreadStart(SendVoice));
-            receiveThread.Start();
+            SendThread = new Thread(new ThreadStart(SendVoice));
+            SendThread.Start();
           
         }
         
+        public void MicOff()
+        {
+            StartStopAudioStream_Flag = false;
+            AudioRecord.Stop();
+            SendThread.Abort();
+        }
+
+        public void MicOn()
+        {
+            StartStopAudioStream_Flag = true;
+            SendThread = new Thread(new ThreadStart(SendVoice));
+            SendThread.Start();
+        }
+
         private void SendVoice()
         {
             StartStopAudioStream_Flag = true;
@@ -87,11 +101,10 @@ namespace Corporate_messenger.Droid.AndroidService
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
-            finally
-            {
                 sender.Close();
+                SendThread.Abort();
             }
+          
         }
         UserDataModel User;
         private async Task GetUserAsync()
@@ -99,7 +112,7 @@ namespace Corporate_messenger.Droid.AndroidService
              User = await UserDbService.GetUser();
         }
 
-        public  void ReceiveMessage()
+        private  void ReceiveMessage()
         {
             StartStopAudioReceiver_Flag = true;
              IPAddress ipserv = IPAddress.Parse("192.168.0.105");
@@ -119,10 +132,11 @@ namespace Corporate_messenger.Droid.AndroidService
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                sender.Close();
             }
             finally
             {
-                sender.Close();
+              //  sender.Close();
             }
         }
 
