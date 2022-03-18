@@ -29,7 +29,9 @@ namespace Corporate_messenger.Droid.AndroidService
 
         private AudioRecord AudioRecord = null;
         private AudioTrack AudioTrack = null;
-       
+
+        private string address = "192.168.10.254";
+        private int port = 1234;
 
        
         public UDP_AudioStreaming()
@@ -42,7 +44,7 @@ namespace Corporate_messenger.Droid.AndroidService
         {
 
             sender = new UdpClient();
-            sender.Connect("192.168.0.105", 1234);
+            sender.Connect(address, port);
         }
         public string GetServerIp()
         {
@@ -115,8 +117,8 @@ namespace Corporate_messenger.Droid.AndroidService
         private  void ReceiveMessage()
         {
             StartStopAudioReceiver_Flag = true;
-             IPAddress ipserv = IPAddress.Parse("192.168.0.105");
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(ipserv, 1234);
+             IPAddress ipserv = IPAddress.Parse(address);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(ipserv, port);
             try
             {
                 while (StartStopAudioReceiver_Flag)

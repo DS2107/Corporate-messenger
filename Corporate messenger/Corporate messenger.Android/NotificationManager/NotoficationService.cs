@@ -100,6 +100,8 @@ namespace Corporate_messenger.Droid.NotificationManager
     [Service(Exported = true)]
     public class NotoficationService : Android.App.Service
     {
+        // address
+        private string address = "192.168.10.254:55201";
         // ID Уведомления о включении службы
         public const int ServiceRunningNotifID = 9001;
         // Сокет
@@ -133,7 +135,7 @@ namespace Corporate_messenger.Droid.NotificationManager
 
            
                
-                socket.MyWebSocket = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+                socket.MyWebSocket = new WebSocketSharp.WebSocket("ws://"+ address);
                 socket.MyWebSocket.OnMessage += Ws_OnMessage;
                 socket.MyWebSocket.OnOpen += Ws_OnOpen;
                 socket.MyWebSocket.OnClose += Ws_OnClose;
@@ -167,7 +169,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                     var s = ex;
                     DependencyService.Get<IForegroundService>().Flag_On_Off_Socket = false;
                     Task.Run(() => socket.MyWebSocket.CloseAsync());
-                    socket.MyWebSocket = new WebSocketSharp.WebSocket("ws://192.168.0.105:6001");
+                    socket.MyWebSocket = new WebSocketSharp.WebSocket("ws://"+ address);
                     socket.MyWebSocket.OnMessage += Ws_OnMessage;
                     socket.MyWebSocket.OnOpen += Ws_OnOpen;
                     socket.MyWebSocket.OnClose += Ws_OnClose;

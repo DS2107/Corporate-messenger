@@ -18,7 +18,7 @@ namespace Corporate_messenger.Models.Abstract
         UserDataModel model;
        
         
-        public static string addressWS = "ws://192.168.0.105:6001";   
+        public static string addressWS = "ws://"+"192.168.10.254:55201";   
       
       
         // Устанавливаем соеденение 

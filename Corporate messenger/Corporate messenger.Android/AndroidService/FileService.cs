@@ -46,7 +46,7 @@ namespace Corporate_messenger.Droid
             if (!File.Exists(filename))
             {
                 // File.Create(filename);
-                File.WriteAllText(filename, "http://192.168.0.105:8098");
+                File.WriteAllText(filename, "http://192.168.10.254:55200");
 
                 //File.WriteAllText(filename, "http://185.114.136.198:8098");
             }
