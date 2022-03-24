@@ -10,6 +10,7 @@ namespace Corporate_messenger.Service.Notification
         public void StartService();
         public void StopService();
 
+        public string NameUserCall { get; set; }
         public bool Flag_On_Off_Service { get; set; }
         public bool CallPageFlag { get; set; }
         public Android.App.NotificationManager manager { get; set; }

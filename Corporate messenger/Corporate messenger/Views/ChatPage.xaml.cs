@@ -20,14 +20,14 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatPage : ContentPage
     {
-
+      
         private ChatViewModel chat;
         private int id_room ;
         private UserDataModel User;
         public ChatPage(int id, string title)
         {
             OnAppearing();
-            InitializeComponent();
+            this.InitializeComponent();
           
             DependencyService.Get<IForegroundService>().chat_room_id = id_room = id;
             if(User !=null)
@@ -67,10 +67,13 @@ namespace Corporate_messenger.Views
 
         private async void VoiceRecord_Clicked(object sender, EventArgs e)
         {
-          await  Navigation.PushAsync(new CallPage(true));
+            CallPage callPage = new CallPage(true);
+            callPage.SetName(Title);
+          await  Navigation.PushAsync(callPage);
             try
             {
                 DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
+                var s = DependencyService.Get<IAudioUDPSocketCall>().GetServerIp();
                 chat.ws.Send(JsonConvert.SerializeObject(new { 
                     type = "init_call",
                     status = "100", 

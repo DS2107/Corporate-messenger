@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace Corporate_messenger.Service
 {
-    class ClassDataTemplateSelector : DataTemplateSelector
+   public class ClassDataTemplateSelector : DataTemplateSelector
     {
         public DataTemplate FromTemplate { get; set; }
         public DataTemplate ToTemplate { get; set; }
@@ -18,7 +18,7 @@ namespace Corporate_messenger.Service
 
 
 
-        ClassDataTemplateSelector()
+       public ClassDataTemplateSelector()
         {
 
             Task.Run(() => this.GetUser()).Wait();

@@ -80,6 +80,7 @@ namespace Corporate_messenger.Droid.NotificationManager
 
                 var view = new RemoteViews("com.companyname.corporate_messenger", Resource.Layout.NotificationLayoutCall);
                 view.SetTextViewText(Resource.Id.title_user,  message );
+            DependencyService.Get<IForegroundService>().NameUserCall = message;
                 view.SetImageViewResource(Resource.Id.image, Resource.Drawable.kot);
                 
                 PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.UpdateCurrent);

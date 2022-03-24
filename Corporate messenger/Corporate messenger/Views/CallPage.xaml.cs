@@ -17,7 +17,7 @@ namespace Corporate_messenger.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CallPage : ContentPage
     {
-       
+      
         public CallPage(bool init_call)
         {
             InitializeComponent();
@@ -25,6 +25,11 @@ namespace Corporate_messenger.Views
             Shell.SetTabBarIsVisible(this, false);
             //  CallClass call = new CallClass();
             //  call.LessPort();
+        }
+
+        public void SetName(string name)
+        {
+            User_Name_Label.Text = name;
 
         }
 

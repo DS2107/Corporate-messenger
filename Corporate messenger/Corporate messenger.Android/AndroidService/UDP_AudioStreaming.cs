@@ -31,13 +31,44 @@ namespace Corporate_messenger.Droid.AndroidService
         private AudioTrack AudioTrack = null;
 
         private string address = "192.168.10.254";
-        private int port = 1234;
+        private int port = 55202;
 
        
         public UDP_AudioStreaming()
         {
           
             
+        }
+
+        public void InitUDP()
+        {
+            Frequency_Audio = 22050;
+            Buffer_Size = AudioRecord.GetMinBufferSize
+                (
+                     Frequency_Audio,
+                     ChannelIn.Mono,
+                     Android.Media.Encoding.Pcm16bit
+                );
+            AudioRecord = new AudioRecord
+                (
+                    AudioSource.Mic,
+                    Frequency_Audio,
+                    ChannelIn.Mono,
+                    Android.Media.Encoding.Pcm16bit,
+                    Buffer_Size
+                );
+
+            AudioTrack = new AudioTrack
+                (
+                    Android.Media.Stream.VoiceCall,
+                    Frequency_Audio,
+                    ChannelConfiguration.Mono,
+                    Android.Media.Encoding.Pcm16bit,
+                    Buffer_Size,
+                    AudioTrackMode.Stream
+                );
+
+
         }
 
         public void ConnectionToServer()
@@ -77,7 +108,7 @@ namespace Corporate_messenger.Droid.AndroidService
             SendThread = new Thread(new ThreadStart(SendVoice));
             SendThread.Start();
         }
-
+       
         private void SendVoice()
         {
             StartStopAudioStream_Flag = true;
@@ -86,7 +117,7 @@ namespace Corporate_messenger.Droid.AndroidService
             Task.Run(() => this.GetUserAsync()).Wait();
            
             int id = User.Id;
-            byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes("sender_id:" + id.ToString() +";" + " call_id:"+DependencyService.Get<IForegroundService>().call_id+";");
+            byte[] data = System.Text.UTF8Encoding.UTF8.GetBytes("sender_id:" + id.ToString() +";" + " call_id:" + DependencyService.Get<IForegroundService>().call_id.ToString() + ";");
             AudioRecord.StartRecording();
             try
             {
@@ -149,36 +180,7 @@ namespace Corporate_messenger.Droid.AndroidService
             AudioTrack.Write(e.ByteData, 0, e.ByteData.Length);
         }
 
-        public void InitUDP()
-        {
-            Frequency_Audio = 22050;
-            Buffer_Size = AudioRecord.GetMinBufferSize
-                (
-                     Frequency_Audio,
-                     ChannelIn.Mono,
-                     Android.Media.Encoding.Pcm16bit
-                );
-            AudioRecord = new AudioRecord
-                (
-                    AudioSource.Mic,
-                    Frequency_Audio,
-                    ChannelIn.Mono,
-                    Android.Media.Encoding.Pcm16bit,
-                    Buffer_Size
-                );
-
-            AudioTrack = new AudioTrack
-                (
-                    Android.Media.Stream.VoiceCall,
-                    Frequency_Audio,
-                    ChannelConfiguration.Mono,
-                    Android.Media.Encoding.Pcm16bit,
-                    Buffer_Size,
-                    AudioTrackMode.Stream
-                );
-            
-           
-        }
+       
        
         public void StopAudioUDPCall()
         {

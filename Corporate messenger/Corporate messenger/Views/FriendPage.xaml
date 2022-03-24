@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Corporate_messenger.Views.FriendPage" 
              
-             Shell.BackgroundColor="#04283C" 
+             Shell.BackgroundColor="#212D3B" 
              Shell.TitleColor="White"  
-             Background="#04283C">
+             Background="#151D27">
     <Shell.TitleView>
         <Grid >
             <Grid.RowDefinitions>
@@ -45,7 +45,7 @@
                 x:Name="MyListView"                 
                 Margin="0"
                 RowHeight="80"
-                BackgroundColor="Transparent"             
+                BackgroundColor="#1D2733"             
                 SeparatorColor="Transparent"                      
                 CachingStrategy="RecycleElement" >
                 <ListView.ItemTemplate>

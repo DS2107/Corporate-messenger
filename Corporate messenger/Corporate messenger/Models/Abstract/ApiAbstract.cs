@@ -37,7 +37,7 @@ namespace Corporate_messenger.Models.Abstract
             {
                 // Тип Запроса
                 var httpMethod = HttpMethod.Get;
-                var address = DependencyService.Get<IFileService>().CreateFile() + url;
+                var address = "http://192.168.10.254:55200" + url;
 
                 var request = new HttpRequestMessage()
                 {
@@ -76,7 +76,7 @@ namespace Corporate_messenger.Models.Abstract
                 var contentType = "application/json";
                 // Тип Запроса
                 var httpMethod = HttpMethod.Post;
-                var address = DependencyService.Get<IFileService>().CreateFile() + url;
+                var address = "http://192.168.10.254:55200" + url;
                 // StringContent? conten = new StringContent(jsonLog, System.Text.Encoding.UTF8, contentType);
                 var request = new HttpRequestMessage()
                 {

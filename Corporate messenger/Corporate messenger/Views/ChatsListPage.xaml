@@ -5,9 +5,9 @@
              Title="Чаты" 
              IconImageSource="chat1.png" 
              Shell.PresentationMode="ModalAnimated" 
-             Shell.BackgroundColor="#04283C" 
+             Shell.BackgroundColor="#212D3B" 
              Shell.TitleColor="White"  
-             Background="#04283C">
+             Background="#151D27">
 
     <Shell.TitleView>
     <Grid >
@@ -69,7 +69,7 @@
                 Margin="0"
                 RowHeight="80"
                 SeparatorColor="Transparent"
-                BackgroundColor="Transparent"               
+                BackgroundColor="#1D2733"               
                 ItemTapped="Handle_ItemTapped"
                 CachingStrategy="RecycleElement" >
             <ListView.ItemTemplate>

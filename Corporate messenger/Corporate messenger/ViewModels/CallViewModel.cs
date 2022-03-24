@@ -42,8 +42,8 @@ namespace Corporate_messenger.ViewModels
 
          public CallViewModel(INavigation nav,bool init_call)
         {
-            
-           
+
+            TStart();
             TimeCall = "Инициализация звонка...";
             DependencyService.Get<IAudioWebSocketCall>().callView = this;
             DependencyService.Get<IAudioWebSocketCall>().InitAudioWebSocketCallAsync();
@@ -253,7 +253,7 @@ namespace Corporate_messenger.ViewModels
                     var MyUser = await UserDbService.GetUser();
                     if (DependencyService.Get<IAudioUDPSocketCall>().FlagRaised == true)
                     {
-                      
+                        timer.Stop();
                         DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400",sender_id = MyUser.Id }));
                         await navigate.PopToRootAsync();
                         DependencyService.Get<IAudioUDPSocketCall>().StopAudioUDPCall();
@@ -261,6 +261,7 @@ namespace Corporate_messenger.ViewModels
                     }
                     else
                     {
+                        timer.Stop();
                         TimeCall = "Вызов Завершен";
                         DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "402", sender_id = MyUser.Id }));
                         await navigate.PopToRootAsync();
@@ -286,10 +287,10 @@ namespace Corporate_messenger.ViewModels
         {
             get
             {
-                return new Command( (object obj) => {
+                return new Command( (object obj)  => {
 
                     DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new { type = "init_call", status = "400" }));
-
+                    TStopAsync();
                     if (!FlagInitCall)
                     {
                         DependencyService.Get<IAudio>().StopAudioFile();
@@ -371,11 +372,9 @@ namespace Corporate_messenger.ViewModels
             TimeCall = string.Format("{0}:{1}:{2}", h.ToString().PadLeft(2, '0'), mins.ToString().PadLeft(2, '0'), secs.ToString().PadLeft(2, '0'));
 
         }
-        public async Task TStopAsync()
+        public void  TStopAsync()
         {
-          
-            await navigate.PopAsync();
-            
+
             timer.Stop();
         }
 

@@ -1,17 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
-             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#04283C" Shell.TitleColor="White" x:Name="set_pqage" Shell.TabBarIsVisible="True"  >
+             x:Class="Corporate_messenger.Views.ChatPage" Shell.BackgroundColor="#212D3B" Shell.TitleColor="White" x:Name="set_pqage" Shell.TabBarIsVisible="True"  >
 
-    <!--Настройки toolBar-->
-    <ContentPage.ToolbarItems>
-        <!--<ToolbarItem 
-        Icon="callTitle.png" 
-        Text="Search" 
-        x:Name="CallButton" 
-        Clicked="CallButton_Clicked"/>-->
+    
+        <ContentPage.ToolbarItems>
         
-        <!--Кнопка оначать голсовой чат-->
         <ToolbarItem  
             IconImageSource="enableCall.png" 
             x:Name="VoiceRecord" 
@@ -19,33 +13,29 @@
         </ToolbarItem>
     </ContentPage.ToolbarItems>
 
-    <!--Переназначенная кнопка назад и команда к ней из ChatPageViewModel-->
-    <!--<Shell.BackButtonBehavior>
-        <BackButtonBehavior 
-            Command="{Binding GoBack}">
-        </BackButtonBehavior>
-    </Shell.BackButtonBehavior>-->
-
-    <!--Шаблоны для распределения сообщений в чате (С лева чужие, справа свои)-->
     <ContentPage.Resources>
 
         <ResourceDictionary>
-            <!--Левый блок сообщений-->
+           
             <DataTemplate 
             x:Key="FromTemplate">
                 <ViewCell 
                 x:Name="FromUserCell" 
+                
                 IsEnabled="True"  >
                     <ViewCell.View >
                         <FlexLayout 
+                          
                             JustifyContent="Start">
 
                             <Frame 
+                            VerticalOptions="Center"
+                            
                             BackgroundColor="#ECEDF1"
                             CornerRadius="14"                          
                             Padding="5,10,10,10"
                             HasShadow="false"               
-                            Margin="10,10,40,0">
+                            Margin="10,10,40,10">
                                 <StackLayout 
                                     Orientation="Horizontal">
                                     <Label 
@@ -86,7 +76,7 @@
                 </ViewCell>
             </DataTemplate>
 
-            <!--Правый блок сообщений-->
+            
             <DataTemplate 
                 x:Key="ToTemplate">
                 <ViewCell  
@@ -98,7 +88,7 @@
                     CornerRadius="14" 
                     BackgroundColor="#CCE4FF"
                     Padding="5,10,10,10"
-                    Margin="50,10,20,0"
+                    Margin="50,10,20,10"
                     HasShadow="false"      
                     IsClippedToBounds="True">
                             <StackLayout 
@@ -159,12 +149,13 @@
             </Grid.RowDefinitions>
             <!--Список сообщений-->
             <ListView
-                
+              
+                Grid.Row="0" Grid.Column="0"
                 IsRefreshing="{Binding IsRefreshing}" 
                 RefreshCommand="{Binding UpdateList}"
                 ItemTemplate="{StaticResource chatDataTemplateSelector}"  
                 ItemsSource="{Binding MessageList}"
-                Background="#04283C" 
+                Background="#1D2733" 
                 IsPullToRefreshEnabled="True" 
                 RefreshControlColor="Cyan"  
                 Margin="0,0,0,0" 
@@ -175,7 +166,7 @@
             </ListView>
 
             <Grid 
-                RowSpacing="0" 
+                
                 ColumnSpacing="0" Grid.Row="1">
 
                 <Grid.RowDefinitions>
@@ -188,7 +179,7 @@
                 </Grid.ColumnDefinitions>
                  <!--Атрибут для написания сообщения-->
                 <Editor
-                    InputTransparent="False"
+                    Visual="Material"
                     Text="{Binding Input_message}"  
                     Margin="5,0,0,0"  
                     x:Name="MessageEditor" 

@@ -69,6 +69,7 @@ namespace Corporate_messenger.Droid.NotificationManager
        
         public int receiver_id { get ; set ; }
         public Android.App.NotificationManager manager { get ; set; }
+        public string NameUserCall { get ; set ; }
 
         public void MyToast(string message)
         {
@@ -216,7 +217,7 @@ namespace Corporate_messenger.Droid.NotificationManager
                     break;
                 // Если пользователь, которому звонили поднял трубку 
                 case "200":
-                    Status200();
+                    Status200(Json_obj);
                     break;
                  // Если сбросил Звонящий 
                 case "400":
@@ -259,11 +260,14 @@ namespace Corporate_messenger.Droid.NotificationManager
             DependencyService.Get<IAudio>().PlayAudioFile("zvonok.mp3", Android.Media.Stream.Ring);
         }
 
-        private void Status200()
+        private void Status200(dynamic Json_obj)
         {
             // Флаг Для отключения музыки 
             DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = false;
-
+            // Узнать какая комната 
+          
+            DependencyService.Get<IForegroundService>().call_id = (int)Json_obj.call_id;
+            var s = DependencyService.Get<IForegroundService>().call_id;
             // Полное выключение музыки
             DependencyService.Get<IAudio>().StopAudioFile();
 

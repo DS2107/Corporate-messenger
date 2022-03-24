@@ -37,7 +37,7 @@ namespace Corporate_messenger.Droid.Broadcast
 
             // Соеденияся 
             DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
-
+            var s  = DependencyService.Get<IForegroundService>().call_id;
             // отвечаем на звонок 
             DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
             {

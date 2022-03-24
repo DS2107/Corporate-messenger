@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Corporate_messenger.Views.UserPage" Shell.BackgroundColor="#0B6EA3" Background="#04283C">
+             x:Class="Corporate_messenger.Views.UserPage" Shell.BackgroundColor="#212D3B" Background="#151D27">
     <Shell.TitleView>
         <Grid >
             <Grid.RowDefinitions>
@@ -24,10 +24,10 @@
                 <RowDefinition Height="*" />
 
             </Grid.RowDefinitions>
-           
-           
-                <StackLayout  Padding="0,50,0,0">
-                    <Image 
+
+
+            <StackLayout  Padding="0,50,0,0">
+                <Image 
                   
                    
                     Source="logan.jpg" 
@@ -37,17 +37,17 @@
                     HeightRequest="110"
                     HorizontalOptions="Center"
                     VerticalOptions="Center">
-                        <Image.Clip >
-                            <EllipseGeometry
+                    <Image.Clip >
+                        <EllipseGeometry
                             Center="55,55"
                             RadiusX="55"
                             RadiusY="55"/>
-                        </Image.Clip>
-                    </Image>
+                    </Image.Clip>
+                </Image>
                 <Label Text="{Binding TitleName}" FontSize="Title" HorizontalTextAlignment="Center" TextColor="WhiteSmoke">
 
-                    </Label>
-                </StackLayout>
+                </Label>
+            </StackLayout>
 
 
             <StackLayout   Grid.Row="1" Background="white" Padding="0,0,30,0">
@@ -77,7 +77,6 @@
                 </StackLayout>
             </StackLayout>
         </Grid>
-
     </ScrollView>
 </ContentPage>
 

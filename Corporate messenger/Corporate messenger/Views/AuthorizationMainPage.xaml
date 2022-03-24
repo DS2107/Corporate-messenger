@@ -23,9 +23,9 @@
                 />
         </Tab>
 
-        <Tab Icon="Settings.png"  Title="Настройки">
+        <Tab Icon="callBlack.png"  Title="Звонки">
             <ShellContent 
-                ContentTemplate="{DataTemplate local:Settings}" 
+                ContentTemplate="{DataTemplate local:CallListPage}" 
                 Route="Setting_page"/>
         </Tab>
 

@@ -19,19 +19,26 @@ using Android.Content;
 using System.Linq;
 using AndroidX.AppCompat.App;
 using Corporate_messenger.Service.Notification;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
+using Xamarin.Forms.Platform.Android;
 
 namespace Corporate_messenger.Droid
 {
-    [Activity(Label = "Мессенджер", Icon = "@drawable/MyChat", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize,ScreenOrientation =ScreenOrientation.Portrait )]
+    [Activity(Label = "Мессенджер", Icon = "@drawable/MyChat", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize,ScreenOrientation =ScreenOrientation.Portrait)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
     
         protected override void OnCreate(Bundle savedInstanceState)
         {
+           
+         
             base.OnCreate(savedInstanceState);
-
+   
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+
+          
+
             bool flag = false;
             int noteId = Intent.GetIntExtra("title", 0);
           
@@ -40,24 +47,15 @@ namespace Corporate_messenger.Droid
                 
                 flag = true;
             }
-  
+
+
+
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App(flag));
-            //Intent.RemoveExtra()
-            flag = false;
-            /* TinyAccountManager.Droid.AccountManager.Initialize();
-             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
-             {
-
-                 Window.SetStatusBarColor(Android.Graphics.Color.Black);
-             }
-           */
-           // SetContentView(Resource.Layout.NotificationLayoutCall);
+            App.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
            
-
-
-
-
-
+            flag = false;
+           
         }
 
       

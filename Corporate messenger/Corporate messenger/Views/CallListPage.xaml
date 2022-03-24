@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Title="Звонки"
+             x:Class="Corporate_messenger.Views.CallListPage"
+             Shell.BackgroundColor="#212D3B" 
+             Shell.TitleColor="White"  
+             Background="#151D27">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="delete.png"   Text="Удалить все звонки"  Order="Secondary" />
+    </ContentPage.ToolbarItems>
+    <AbsoluteLayout >
+        
+  
+        <ListView
+              
+                AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1"
+                IsPullToRefreshEnabled="True"
+                RefreshControlColor="DarkSeaGreen"
+                x:Name="MyListView"
+                Margin="0"
+                RowHeight="80"
+                SeparatorColor="Transparent"
+                BackgroundColor="#1D2733"               
+                ItemTapped="Handle_ItemTapped"
+                CachingStrategy="RecycleElement" >
+            <ListView.ItemTemplate>
+                <DataTemplate >
+                    <ViewCell >
+                        <!--Блок списка-->
+                        <Frame 
+                            Background="Transparent"
+                            x:Name="Frame1"  
+                            Margin="10,0,10,0"
+                            Padding="0,0,0,0"       
+                          
+                            VerticalOptions="Center"
+                            BorderColor="Transparent" >
+                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start" ColumnSpacing="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="1"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <StackLayout Orientation="Horizontal"  Grid.Column="0" Grid.Row="0">
+                                <Image Source="kot.jpg" 
+                                           
+                                           Aspect="AspectFill" 
+                                           FlexLayout.AlignSelf="Center"
+                                           WidthRequest="60"   
+                                           HeightRequest="60"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center">
+                                    <Image.Clip >
+                                        <EllipseGeometry
+                                                Center="30,30"
+                                                RadiusX="30"
+                                                RadiusY="30"/>
+                                    </Image.Clip>
+                                </Image>
+                                <StackLayout  VerticalOptions="Center" >
+                                    <Label
+                                            Text="Ivan"
+                                            x:Name="LabelAvtor"    
+                                            TextColor="White" 
+                                            FontAttributes="none" 
+                                            FontSize="24"/>
+
+                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Orientation="Horizontal">
+                                        <Image Source="callMade.png" WidthRequest="20" HeightRequest="20">
+
+                                        </Image>
+                                        <Label
+                                            Text="23:14" 
+                                            x:Name="LstMessage" 
+                                            TextColor="#B0BBBF"/>
+                                    </StackLayout>
+
+
+                                </StackLayout >
+                            </StackLayout>
+
+                                <ImageButton Grid.Column="2" Grid.Row="0"  HorizontalOptions="End" Source="callBlue.png" WidthRequest="30" HeightRequest="30"  BackgroundColor="Transparent" Background="Transparent" >
+
+                            </ImageButton>
+
+
+                                <BoxView Grid.Row="1" Grid.Column="0" Margin="60,0,0,0"   BackgroundColor="Black" HeightRequest="0.4" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                                <BoxView Grid.Row="1" Grid.Column="1"   BackgroundColor="Black" HeightRequest="0.4" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                                <BoxView Grid.Row="1" Grid.Column="2"  BackgroundColor="Black" HeightRequest="0.4" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+
+
+
+
+                            </Grid>
+                           
+                    </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Frame  
+           
+            CornerRadius="50"
+            BackgroundColor="#66A9E0"
+            AbsoluteLayout.LayoutFlags="PositionProportional"  
+            AbsoluteLayout.LayoutBounds=".95,.97,55,55">
+            <ImageButton 
+           
+           
+            x:Name="New_message"
+            WidthRequest="80"
+            HeightRequest="80"
+            Source="callWhite.png"
+            BackgroundColor="Transparent"
+          
+         
+            />
+
+        </Frame>
+        
+    </AbsoluteLayout>
+
+</ContentPage>
+
+
+
+<!--"<StackLayout Orientation="Horizontal" BackgroundColor="red"   >
+
+
+    <StackLayout    Orientation="Horizontal" >
+
+        <StackLayout 
+                                        VerticalOptions="Center"
+                                        
+                                         >
+ 
+            <Label
+                                            Text="Ivan"
+                                            x:Name="LabelAvtor"    
+                                            TextColor="White" 
+                                            FontAttributes="none" 
+                                            FontSize="24"/>
+          
+            <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Orientation="Horizontal">
+                <Image Source="callMade.png" WidthRequest="20" HeightRequest="20">
+
+                </Image>
+                <Label
+                                            Text="23:14" 
+                                            x:Name="LstMessage" 
+                                            TextColor="#B0BBBF"/>
+            </StackLayout>
+
+
+        </StackLayout >
+    </StackLayout>
+    <StackLayout FlexLayout.AlignSelf="End" HorizontalOptions="End">
+        <ImageButton  HorizontalOptions="End" Source="callBlue.png" WidthRequest="40" HeightRequest="40"  BackgroundColor="Transparent" Background="Transparent" >
+
+        </ImageButton>
+    </StackLayout>
+
+
+
+</StackLayout>-->
