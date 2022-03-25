@@ -86,7 +86,8 @@
                                 </StackLayout >
                             </StackLayout>
 
-                                <ImageButton Grid.Column="2" Grid.Row="0"  HorizontalOptions="End" Source="callBlue.png" WidthRequest="30" HeightRequest="30"  BackgroundColor="Transparent" Background="Transparent" >
+                                <ImageButton Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Call}" 
+                                            CommandParameter="{Binding .}" Grid.Column="2" Grid.Row="0"  HorizontalOptions="End" Source="callBlue.png" WidthRequest="30" HeightRequest="30"  BackgroundColor="Transparent" Background="Transparent" >
 
                             </ImageButton>
 
@@ -105,26 +106,18 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Frame  
-           
-            CornerRadius="50"
-            BackgroundColor="#66A9E0"
-            AbsoluteLayout.LayoutFlags="PositionProportional"  
-            AbsoluteLayout.LayoutBounds=".95,.97,55,55">
-            <ImageButton 
-           
-           
+        
+        <ImageButton 
             x:Name="New_message"
-            WidthRequest="80"
-            HeightRequest="80"
+            CornerRadius="50"
+            Padding="10"
             Source="callWhite.png"
-            BackgroundColor="Transparent"
-          
-         
+            BackgroundColor="#5FA3DC"
+            AbsoluteLayout.LayoutFlags="PositionProportional"  
+            AbsoluteLayout.LayoutBounds=".95,.97,55,55"
+        
             />
 
-        </Frame>
-        
     </AbsoluteLayout>
 
 </ContentPage>

@@ -31,7 +31,7 @@ namespace Corporate_messenger.Views
         
         protected override async void OnAppearing()
         {
-            New_message.Source = "AddStart.png";
+           
             DependencyService.Get<IForegroundService>().chat_room_id = 0;
             await clvm.GetSqlChats();
            
@@ -59,15 +59,7 @@ namespace Corporate_messenger.Views
 
        
 
-        private void New_message_Released(object sender, EventArgs e)
-        {
-            New_message.Source = "AddStart.png";
-        }
-
-        private void New_message_Pressed(object sender, EventArgs e)
-        {
-            New_message.Source = "AddEnd.png";
-        }
+      
 
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {

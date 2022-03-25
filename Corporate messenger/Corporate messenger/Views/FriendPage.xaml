@@ -53,20 +53,90 @@
                         <ViewCell >
                             <!--Блок списка-->
                             <Frame 
+                            Background="Transparent"
+                            x:Name="Frame1"  
+                            Margin="10,0,10,0"
+                            Padding="0,0,0,0"       
+                          
+                            VerticalOptions="Center"
+                            BorderColor="Transparent" >
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Start" ColumnSpacing="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="1"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <StackLayout Orientation="Horizontal"  Grid.Column="0" Grid.Row="0">
+                                        <Image Source="kot.jpg" 
+                                           
+                                           Aspect="AspectFill" 
+                                           FlexLayout.AlignSelf="Center"
+                                           WidthRequest="60"   
+                                           HeightRequest="60"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center">
+                                            <Image.Clip >
+                                                <EllipseGeometry
+                                                Center="30,30"
+                                                RadiusX="30"
+                                                RadiusY="30"/>
+                                            </Image.Clip>
+                                        </Image>
+                                        <StackLayout  VerticalOptions="Center" >
+
+
+                                            <Label
+                                            Text="{Binding Name}" 
+                                            FontSize="Title"
+                                            x:Name="LstMessage" 
+                                            TextColor="White"/>
+                                        </StackLayout >
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Column="2" Grid.Row="0"   HorizontalOptions="End"  VerticalOptions="Center"  Orientation="Horizontal" >
+                                        <ImageButton   Command="{Binding Source={x:Reference MyListView},Path=BindingContext.Call}" 
+                                            CommandParameter="{Binding .}" Margin="0,0,10,0" HorizontalOptions="End" Source="callBlue.png" WidthRequest="30" HeightRequest="30"  BackgroundColor="Transparent" Background="Transparent" />
+                                        <ImageButton   Command="{Binding Source={x:Reference MyListView},Path=BindingContext.NewChatButton}" 
+                                            CommandParameter="{Binding .}"  HorizontalOptions="End" Source="MessageWhite.png" WidthRequest="30" HeightRequest="30"  BackgroundColor="Transparent" Background="Transparent" />
+                                    </StackLayout>
+
+
+                                    <BoxView Grid.Row="1" Grid.Column="0" Margin="60,0,0,0"   BackgroundColor="Black" HeightRequest="0.4" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                                    <BoxView Grid.Row="1" Grid.Column="1"   BackgroundColor="Black" HeightRequest="0.4" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                                    <BoxView Grid.Row="1" Grid.Column="2"  BackgroundColor="Black" HeightRequest="0.4" VerticalOptions="Start" HorizontalOptions="FillAndExpand" />
+                                </Grid>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
+    <!--
+    <ViewCell >
+                     
+<Frame 
                                 Background="Transparent" 
                                 x:Name="Frame1"  
                                 Margin="0" 
                                 Padding="25,0,0,0" 
                                 HorizontalOptions="StartAndExpand" 
                                 BorderColor="Transparent" >
-                                <StackLayout 
+    <StackLayout 
                                     Orientation="Horizontal" 
                                     BackgroundColor="Transparent">
-                                    <FlexLayout 
+        <FlexLayout 
                                         x:Name="RlB" 
                                         HorizontalOptions="Center" 
                                         VerticalOptions="Center"  >
-                                        <Image 
+            <Image 
                                            Source="kot.jpg" 
                                            Aspect="AspectFill"
                                            FlexLayout.AlignSelf="Center"
@@ -74,19 +144,19 @@
                                            HeightRequest="60"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center">
-                                            <Image.Clip >
-                                                <EllipseGeometry                                            
+                <Image.Clip >
+                    <EllipseGeometry                                            
                                                     Center="30,30"
                                                     RadiusX="30"
                                                     RadiusY="30"/>
-                                            </Image.Clip>
-                                        </Image>
-                                    </FlexLayout>
-                                    <StackLayout 
+                </Image.Clip>
+            </Image>
+        </FlexLayout>
+        <StackLayout 
                                         FlexLayout.AlignSelf="Center" 
                                         Orientation="Horizontal">
-                                        <!--Имя пользователя-->
-                                        <Label
+    
+            <Label
                                             Text="{Binding Name}" 
                                             x:Name="LabelAvtor" 
                                             Margin="15,0,0,0"                                           
@@ -94,8 +164,8 @@
                                             VerticalOptions="Center" 
                                             FontAttributes="None" 
                                             FontSize="24"/>
-                                         <!--Кнопка написать пользователю-->
-                                        <Button 
+      
+            <Button 
                                             Command="{Binding Source={x:Reference MyListView},Path=BindingContext.NewChatButton}" 
                                             CommandParameter="{Binding .}"
                                             Text="Написать"                                                                                               
@@ -107,13 +177,10 @@
                                             BackgroundColor="#0986CE"
                                             TextColor="White"
                                             CornerRadius="20"/>
-                                    </StackLayout>
-                                </StackLayout>
-                            </Frame>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
         </StackLayout>
-    </ContentPage.Content>
-</ContentPage>
+    </StackLayout>
+</Frame>
+</ViewCell>
+
+
+-->

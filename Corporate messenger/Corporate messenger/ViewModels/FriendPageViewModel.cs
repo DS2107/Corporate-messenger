@@ -3,9 +3,11 @@ using Corporate_messenger.Models;
 using Corporate_messenger.Models.Abstract;
 using Corporate_messenger.Models.UserData;
 using Corporate_messenger.Service;
+using Corporate_messenger.Service.Notification;
 using Corporate_messenger.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
@@ -72,6 +74,47 @@ namespace Corporate_messenger.ViewModels
                             // Переход на следующую страницу
                             await nav.PushAsync(new ChatPage((int)contentJobjects.chat_room_id, item.Name));
             
+                    }
+                });
+            }
+        }
+        public ICommand Call
+        {
+            get
+            {
+                return new Command(async (object obj) => {
+                    // Ищем нужный элемент
+                    if (obj is FriendsModel item)
+                    {
+
+                       
+
+
+                        CallPage callPage = new CallPage(true);
+                        callPage.SetName(item.Name);
+                        await nav.PushAsync(callPage);
+                        try
+                        {
+                            DependencyService.Get<IAudioUDPSocketCall>().ConnectionToServer();
+                            var s = DependencyService.Get<IAudioUDPSocketCall>().GetServerIp();
+                            DependencyService.Get<ISocket>().MyWebSocket.Send(JsonConvert.SerializeObject(new
+                            {
+                                type = "init_call",
+                                status = "100",
+                                sender_id = User.Id,
+                                receiver_id = item.Id,
+                                call_address = DependencyService.Get<IAudioUDPSocketCall>().GetServerIp()
+                            }));
+                            DependencyService.Get<IAudio>().PlayAudioFile("gudok.mp3", Android.Media.Stream.VoiceCall);
+                            DependencyService.Get<IForegroundService>().Flag_AudioCalls_Init = true;
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            DependencyService.Get<IForegroundService>().MyToast("Не удается позвонить, возможно потеряно соединение с сервором: " + ex.Message);
+                        }
+
                     }
                 });
             }

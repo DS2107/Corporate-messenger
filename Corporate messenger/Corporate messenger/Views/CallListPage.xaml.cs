@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Corporate_messenger.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,6 +17,8 @@ namespace Corporate_messenger.Views
         public CallListPage()
         {
             InitializeComponent();
+         
+            BindingContext = new CallListViewModel();
 
             Items = new ObservableCollection<string>
             {
