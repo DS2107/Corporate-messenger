@@ -28,7 +28,7 @@ namespace Corporate_messenger.Views
         {
             OnAppearing();
             this.InitializeComponent();
-          
+            MyListView = new ListView( ListViewCachingStrategy.RecycleElementAndDataTemplate);
             DependencyService.Get<IForegroundService>().chat_room_id = id_room = id;
             if(User !=null)
                 BindingContext = chat = new ChatViewModel(id, title, User.Id);

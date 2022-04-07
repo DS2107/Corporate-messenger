@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Corporate_messenger.Service"
+             x:Class="Corporate_messenger.Views.CacheChatPage" Shell.BackgroundColor="#212D3B"
+             Shell.TitleColor="White" x:Name="set_pqage" Shell.TabBarIsVisible="True" Title="{Binding TitlePage}" >
+
+
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem  
+            IconImageSource="enableCall.png" 
+            x:Name="VoiceRecord" 
+            Clicked="VoiceRecord_Clicked">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+
+            <DataTemplate 
+            x:Key="FromTemplate">
+                <ViewCell 
+                x:Name="FromUserCell" 
+                
+                IsEnabled="True"  >
+                    <ViewCell.View >
+                        <FlexLayout 
+                          
+                            JustifyContent="Start">
+
+                            <Frame 
+                            VerticalOptions="Center"
+                            
+                            BackgroundColor="#ECEDF1"
+                            CornerRadius="14"                          
+                            Padding="5,10,10,10"
+                            HasShadow="false"               
+                            Margin="10,10,40,10">
+                                <StackLayout 
+                                    Orientation="Horizontal">
+                                    <Label 
+                                        Text="{Binding Message}" 
+                                        IsEnabled="True"                                      
+                                        HorizontalTextAlignment="Start"   
+                                        TextColor="Black"/>
+                                    <ImageButton 
+                                        x:Name="LeftPlay" 
+                                        Command="{Binding Source={x:Reference MyListView},Path=BindingContext.PlayAudioMessage}" 
+                                        CommandParameter="{Binding .}"  
+                                        Source="{Binding Path=SourceImage,Mode=TwoWay}"                                         
+                                        IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}"       
+                                        WidthRequest="35" HeightRequest="35" 
+                                        CornerRadius="50" 
+                                        BackgroundColor="#0986CE">
+                                    </ImageButton>
+                                    <Slider 
+                                        x:Name="LeftSlider" 
+                                        IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"
+                                        Maximum="{Binding MaximumSlider}" 
+                                        Value="{Binding ValueSlider}"
+                                        IsEnabled="{Binding IsEnableSlider}" 
+                                        MaximumTrackColor="Gray" 
+                                        MinimumTrackColor="#41A9FE"                                         
+                                        WidthRequest="150">
+                                    </Slider>
+                                    <Label   
+                                        Text="{Binding Time_LstMessage}" 
+                                        FontSize="11" MinimumWidthRequest="30" 
+                                        VerticalTextAlignment="End" 
+                                        HorizontalTextAlignment="End"   
+                                        TextColor="DimGray"/>
+                                </StackLayout>
+                            </Frame>
+                        </FlexLayout>
+                    </ViewCell.View>
+                </ViewCell>
+            </DataTemplate>
+
+
+            <DataTemplate 
+                x:Key="ToTemplate">
+                <ViewCell  
+                x:Name="ToUserCell" 
+                IsEnabled="True">
+                    <FlexLayout 
+                    JustifyContent="End" >
+                        <Frame                      
+                    CornerRadius="14" 
+                    BackgroundColor="#CCE4FF"
+                    Padding="5,10,10,10"
+                    Margin="50,10,20,10"
+                    HasShadow="false"      
+                    IsClippedToBounds="True">
+                            <StackLayout 
+                            Orientation="Horizontal">
+                                <Label    
+                                    Text="{Binding Message}" 
+                                    IsVisible="{Binding IsMessageVisible, Mode=TwoWay}"
+                                    IsEnabled="True" 
+                                    HorizontalTextAlignment="Start"   
+                                    TextColor="Black"/>
+                                <ImageButton
+                                    x:Name="RightPlay"
+                                    Command="{Binding Source={x:Reference MyListView},Path=BindingContext.PlayAudioMessage}" 
+                                    CommandParameter="{Binding .}"  
+                                    Source="{Binding Path=SourceImage,Mode=TwoWay}" 
+                                    IsVisible="{ Binding IsAuidoVisible, Mode=TwoWay}" 
+                                    WidthRequest="35" 
+                                    HeightRequest="35" 
+                                    CornerRadius="50" 
+                                    BackgroundColor="#0986CE">
+                                </ImageButton>
+
+                                <Slider 
+                                    Maximum="{Binding MaximumSlider}" 
+                                    Value="{Binding ValueSlider}"                                    
+                                    IsEnabled="{Binding IsEnableSlider}"                                    
+                                    IsVisible="{Binding IsAuidoVisible, Mode=TwoWay}"
+                                    WidthRequest="150"  
+                                    MaximumTrackColor="Gray" 
+                                    MinimumTrackColor="#41A9FE">
+                                </Slider>
+
+                                <Label  
+                                    Text="{Binding Time_LstMessage}" 
+                                    FontSize="11" 
+                                    MinimumWidthRequest="30" 
+                                    VerticalTextAlignment="End" 
+                                    HorizontalTextAlignment="End"   
+                                    TextColor="DimGray"/>
+                            </StackLayout>
+                        </Frame>
+                    </FlexLayout>
+                </ViewCell>
+            </DataTemplate>
+            <local:ClassDataTemplateSelector
+                x:Key="chatDataTemplateSelector" 
+                FromTemplate="{StaticResource FromTemplate}" 
+                ToTemplate="{StaticResource ToTemplate}"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!--Страница сообщений-->
+    <ContentPage.Content>
+        <Grid RowSpacing="0" ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!--Список сообщений-->
+            <ListView
+             
+                Grid.Row="0" Grid.Column="0"
+                IsRefreshing="{Binding IsRefreshing}" 
+                RefreshCommand="{Binding UpdateList}"
+                ItemTemplate="{StaticResource chatDataTemplateSelector}"  
+                ItemsSource="{Binding MessageList}"
+                Background="#1D2733" 
+                IsPullToRefreshEnabled="True" 
+                RefreshControlColor="Cyan"  
+                Margin="0,0,0,0" 
+                SeparatorColor="Transparent"  
+                x:Name="MyListView" 
+                HasUnevenRows="true" 
+                >
+            </ListView>
+
+            <Grid 
+                
+                ColumnSpacing="0" Grid.Row="1">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+
+                </Grid.ColumnDefinitions>
+                <!--Атрибут для написания сообщения-->
+                <Editor
+                    Visual="Material"
+                    Text="{Binding Input_message}"  
+                    Margin="5,0,0,0"  
+                    x:Name="MessageEditor" 
+                    Completed="MessageEditor_Completed"
+                    TextChanged="MessageEditor_TextChanged"
+                    Keyboard="Chat" 
+                    TextColor="Black" 
+                    Placeholder="Введите сообщение..." 
+                    
+                    Grid.Row="0" 
+                    Grid.Column="0">
+                </Editor>
+
+                <!--Кнопка отправить сообщение-->
+                <ImageButton
+                    Command="{Binding SendMessage}"
+                    CommandParameter="{Binding}"
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    Source="send_msg.png" 
+                    BackgroundColor="Transparent" 
+                    WidthRequest="32" HeightRequest="32" 
+                    x:Name="send_message"  
+                    IsVisible="false"
+                  />
+
+                <!--Кнопка отправить голсовое сообщение-->
+                <ImageButton  
+                    Pressed="mic_message_Pressed" 
+                    Released="mic_message_Released" 
+                    Grid.Row="0" 
+                    Grid.Column="1" 
+                    Source="mic.png" 
+                    Padding="0" 
+                    BackgroundColor="Transparent"  
+                    WidthRequest="32" 
+                    HeightRequest="32" 
+                    x:Name="mic_message" 
+                    IsVisible="true"
+                    Margin="0,0,10,0"/>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -125,7 +125,7 @@ namespace Corporate_messenger.Droid.AndroidService
                 {
 
                     AudioRecord.Read(buffer, 0, Buffer_Size);
-                    sender.Send(data, data.Length);
+                   // sender.Send(data, data.Length);
                     sender.Send(buffer, buffer.Length); // отправка
 
 

@@ -149,7 +149,7 @@
             </Grid.RowDefinitions>
             <!--Список сообщений-->
             <ListView
-              
+             
                 Grid.Row="0" Grid.Column="0"
                 IsRefreshing="{Binding IsRefreshing}" 
                 RefreshCommand="{Binding UpdateList}"

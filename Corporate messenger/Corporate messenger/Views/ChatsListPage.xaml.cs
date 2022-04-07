@@ -52,9 +52,9 @@ namespace Corporate_messenger.Views
 
             var ItemSelect = (ChatListModel)e.Item;
 
-         
-            await Navigation.PushAsync(new ChatPage(ItemSelect.Id, ItemSelect.Title),true);
 
+            // await Navigation.PushAsync(new ChatPage(ItemSelect.Id, ItemSelect.Title),true);
+            await Navigation.PushAsync(new CacheChatPage(new CacheChatViewModel(ItemSelect)));
         }
 
        

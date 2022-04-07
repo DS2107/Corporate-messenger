@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System;
 
 namespace Corporate_messenger.DB
 {
@@ -48,22 +49,16 @@ namespace Corporate_messenger.DB
             Init();
             await db.DeleteAsync<ChatModel>(id);
         }
-        public static async Task<ChatModel> GetLastMessages()
+        public static async Task<ObservableCollection<ChatModel>> GetLastMessages(int room_id)
         {
             Init();
-            var messages = await db.Table<ChatModel>().ToListAsync();
+            string query = "SELECT* FROM ChatModel WHERE chat_room_id=" + room_id + " ORDER BY message_id DESC LIMIT 10";
+            var messages = await db.QueryAsync<ChatModel>(query);
             var myObservableCollection = new ObservableCollection<ChatModel>(messages);
-            return myObservableCollection.Last();
-        }
-        public static async Task<ObservableCollection<ChatModel>> GetMessages(int id)
-        {
-            Init();
-            var listchat = await db.QueryAsync<ChatModel>("select * from ChatModel where Chat_room_id = ?", id);
-          //  var messages = await db.Table<ChatModel>().ToListAsync();
-            var myObservableCollection = new ObservableCollection<ChatModel>(listchat);
+            myObservableCollection = new ObservableCollection<ChatModel>(myObservableCollection.Reverse());
             return myObservableCollection;
         }
-
+ 
         public static void UpdateChat(ChatModel model)
         {
             Init();
@@ -83,6 +78,28 @@ namespace Corporate_messenger.DB
         {
             Init();
             await db.DeleteAllAsync<ChatModel>();
+        }
+
+        public static async Task<ObservableCollection<ChatModel>> GetOldMessage(int id_last_message, int Room_id)
+        {
+            int count_message =await CountOldMessage(id_last_message, Room_id);
+            int TempCount = count_message - 5;
+            string query = "Select * from ChatModel where ChatModel.chat_room_id= 1 AND ChatModel.message_id < " + id_last_message + " ORDER BY message_id ASC  limit 5 OFFSET " + TempCount;
+            var listchat = await db.QueryAsync<ChatModel>(query);
+            var myObservableCollection = new ObservableCollection<ChatModel>(listchat);
+            return myObservableCollection;
+
+
+
+        }
+        private static async Task<int> CountOldMessage(int id_last_message,int Room_id)
+        {
+            string query = "Select * from ChatModel where ChatModel.chat_room_id= " + Room_id + " AND ChatModel.message_id < " + id_last_message;
+            var listchat = await db.QueryAsync<ChatModel>(query);
+           
+         
+            int count = listchat.Count();
+            return count;
         }
     }
 }

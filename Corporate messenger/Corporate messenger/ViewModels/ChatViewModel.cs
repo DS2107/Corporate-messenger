@@ -166,7 +166,8 @@ namespace Corporate_messenger.ViewModels
                     IsRefreshing = true;
                     if (Next_page_url != null)
                     {
-                        Next_page_url = Next_page_url.Substring(25);
+                        var array_string = Next_page_url.Split("/a");
+                        Next_page_url = "/a"+array_string[1];
                         ThreadMessage = new Thread(new ThreadStart(ThreadFunc_GetMessage));
                         ThreadMessage.Start();
                     }
