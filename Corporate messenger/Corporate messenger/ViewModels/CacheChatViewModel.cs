@@ -110,6 +110,7 @@ namespace Corporate_messenger.ViewModels
                         MyUser = await UserDbService.GetUser();
 
                         SendMyMessage(audio);
+                        
                     }
                 });
             }
@@ -152,17 +153,18 @@ namespace Corporate_messenger.ViewModels
             try
             {
 
-                var message = JsonConvert.SerializeObject(new
+                var message = JsonConvert.SerializeObject(new 
                 {
                     audio = audio,
                     sender_id = MyUser.Id,
                     receiver_id = Rec_id,
                     type = "message",
                     message = Input_message,
-                    chat_room_id = chat.Chat_room_id,
+                    chat_room_id = SelectChat.Id,
                 });
+               
                 ws.Send(message);
-
+              
                 Input_message = "";
             }
             catch (Exception ex)
@@ -228,11 +230,13 @@ namespace Corporate_messenger.ViewModels
                 if (new_message.Audio == null)
                 {
                     MessageList.Add(SetStartParametr_Message(new_message));
+                    Task.Run(() => ChatDbService.AddMessage(new_message)).Wait();
                     // await ChatDbService.AddMessage(new_message);
                 }
                 else
                 {
                     MessageList.Add(SetStartParametr_Message(new_message));
+                    Task.Run(() => ChatDbService.AddMessage(new_message)).Wait();
                     // await ChatDbService.AddMessage(new_message);
                     DependencyService.Get<IFileService>().SaveFile(new_message.Audio);
                 }
@@ -297,7 +301,8 @@ namespace Corporate_messenger.ViewModels
         private async Task CheckDB()
         {
             MessageList = await ChatDbService.GetLastMessages(SelectChat.Id);
-            var User_Id = UserDbService.GetUser();
+            var User_Id = await UserDbService.GetUser();
+            var ss = Rec_id;
             if (MessageList.Count == 0)
             {
                 FlagNewMessage = false;
